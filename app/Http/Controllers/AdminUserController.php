@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Datatables;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminUserController extends Controller
 {
@@ -25,7 +26,7 @@ class AdminUserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.user.create');
     }
 
     /**
@@ -36,7 +37,32 @@ class AdminUserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'password' => 'required|confirmed|min:6',
+        ];
+        $messages = [
+            'name.required' => 'Bạn phải nhập tên.',
+            'name.max' => 'Tên dài quá 255 ký tự.',
+            'type.required' => 'Bạn phải nhập kiểu người dùng.',
+            'email.required' => 'Bạn phải nhập địa chỉ email.',
+            'email.email' => 'Email sai định dạng.',
+            'email.max' => 'Email dài quá 255 ký tự.',
+            'password.required' => 'Bạn phải nhập mật khẩu.',
+            'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
+            'password.confirmed' => 'Mật khẩu không khớp.',
+        ];
+        $request->validate($rules,$messages);
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        Alert::toast('Tạo người dùng mới thành công!', 'success', 'top-right');
+        return redirect()->route('admin.users.index');
     }
 
     /**
