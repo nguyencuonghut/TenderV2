@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserHomeController;
 use App\Http\Controllers\UserLoginController;
 use Illuminate\Support\Facades\Route;
@@ -24,10 +25,13 @@ Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name
 Route::post('/admin/login', [AdminLoginController::class, 'handleLogin'])->name('admin.handleLogin');
 Route::get('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
-Route::group(['middleware'=>'auth:admin'], function() {
-    Route::get('/admin', [AdminHomeController::class, 'index'])->name('admin.home');
+Route::name('admin.')->prefix('admin')->group(function() {
+    Route::group(['middleware'=>'auth:admin'], function() {
+        Route::get('/', [AdminHomeController::class, 'index'])->name('home');
+        Route::get('users/data', [AdminUserController::class, 'anyData'])->name('users.data');
+        Route::resource('users', AdminUserController::class);
+    });
 });
-
 
 /**
  * User routes

@@ -55,7 +55,7 @@
           @auth('admin')
           <li class="nav-header">HỆ THỐNG</li>
           <li class="nav-item">
-            <a href="#" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
+            <a href="{{route('admin.users.index')}}" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Người dùng
