@@ -9,6 +9,6 @@ class AdminHomeController extends Controller
 {
     public function index()
     {
-        return "Admin home page" . '-' . Auth::user()->name;
+        return view('admin.home');
     }
 }
