@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAdminController;
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminUserController;
@@ -30,6 +31,9 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('/', [AdminHomeController::class, 'index'])->name('home');
         Route::get('users/data', [AdminUserController::class, 'anyData'])->name('users.data');
         Route::resource('users', AdminUserController::class);
+
+        Route::get('admins/data', [AdminAdminController::class, 'anyData'])->name('admins.data');
+        Route::resource('admins', AdminAdminController::class);
     });
 });
 

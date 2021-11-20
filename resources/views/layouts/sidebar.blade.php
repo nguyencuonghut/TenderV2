@@ -62,6 +62,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('admin.admins.index')}}" class="nav-link {{ Request::is('admin/admins*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>
+                Người quản trị
+              </p>
+            </a>
+          </li>
           @endauth
         </ul>
       </nav>
