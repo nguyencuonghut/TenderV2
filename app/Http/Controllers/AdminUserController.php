@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use App\Models\User;
 use Datatables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminUserController extends Controller
@@ -27,7 +27,8 @@ class AdminUserController extends Controller
      */
     public function create()
     {
-        return view('admin.user.create');
+        $suppliers = Supplier::all()->pluck('name', 'id');
+        return view('admin.user.create', ['suppliers' => $suppliers]);
     }
 
     /**
@@ -42,6 +43,7 @@ class AdminUserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'password' => 'required|confirmed|min:6',
+            'supplier_id' => 'required',
         ];
         $messages = [
             'name.required' => 'Bạn phải nhập tên.',
@@ -53,6 +55,7 @@ class AdminUserController extends Controller
             'password.required' => 'Bạn phải nhập mật khẩu.',
             'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
             'password.confirmed' => 'Mật khẩu không khớp.',
+            'supplier_id.required' => 'Bạn phải nhập tên công ty.',
         ];
         $request->validate($rules,$messages);
 
@@ -60,6 +63,7 @@ class AdminUserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
+        $user->supplier_id = $request->supplier_id;
         $user->save();
 
         Alert::toast('Tạo người dùng mới thành công!', 'success', 'top-right');
@@ -86,7 +90,8 @@ class AdminUserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.user.edit', ['user' => $user]);
+        $suppliers = Supplier::all()->pluck('name', 'id');
+        return view('admin.user.edit', ['user' => $user, 'suppliers' => $suppliers]);
     }
 
     /**
@@ -101,7 +106,8 @@ class AdminUserController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
-            'password' => 'confirmed|',
+            'password' => 'confirmed',
+            'supplier_id' => 'required',
         ];
         $messages = [
             'name.required' => 'Bạn phải nhập tên.',
@@ -111,6 +117,7 @@ class AdminUserController extends Controller
             'email.email' => 'Email sai định dạng.',
             'email.max' => 'Email dài quá 255 ký tự.',
             'password.confirmed' => 'Mật khẩu không khớp.',
+            'supplier_id.required' => 'Bạn phải nhập tên công ty.',
         ];
         $request->validate($rules,$messages);
 
@@ -120,6 +127,7 @@ class AdminUserController extends Controller
         if(null != $request->password) {
             $user->password = bcrypt($request->password);
         }
+        $user->supplier_id = $request->supplier_id;
         $user->save();
         Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
         return redirect()->route('admin.users.index');
@@ -141,7 +149,7 @@ class AdminUserController extends Controller
 
     public function anyData()
     {
-        $users = User::select(['id', 'name', 'email'])->get();
+        $users = User::with('supplier')->select(['id', 'name', 'email', 'supplier_id'])->get();
         return Datatables::of($users)
             ->addIndexColumn()
             ->editColumn('name', function ($users) {
@@ -149,6 +157,9 @@ class AdminUserController extends Controller
             })
             ->editColumn('email', function ($users) {
                 return $users->email;
+            })
+            ->editColumn('supplier_id', function ($users) {
+                return $users->supplier->name;
             })
             ->addColumn('edit', function ($users) {
                 return '<a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning"> Sửa</a>';

@@ -2,6 +2,12 @@
 {{ 'Tạo người dùng' }}
 @endsection
 
+@push('styles')
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
+
 @extends('layouts.base')
 @section('content')
 <div class="content-wrapper">
@@ -68,6 +74,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="control-group">
+                                        <label class="required-field" class="control-label">Công ty</label>
+                                        <div class="controls">
+                                            <select name="supplier_id" id="supplier_id" class="form-control select2">
+                                                <option selected="selected">-- Chọn công ty --</option>
+                                                @foreach($suppliers as $key => $value)
+                                                    <option value="{{$key}}">{{$value}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <br>
                             <div class="control-group">
@@ -83,3 +104,16 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+<!-- Select2 -->
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+        theme: 'bootstrap4'
+        })
+    })
+</script>
+@endpush

@@ -1,5 +1,5 @@
 @section('title')
-{{ 'Người dùng' }}
+{{ 'Nhà cung cấp' }}
 @endsection
 @push('styles')
   <!-- DataTables -->
@@ -17,12 +17,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Tất cả người dùng</h1>
+          <h1 class="m-0">Tất cả nhà cung cấp</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Trang chủ</a></li>
-            <li class="breadcrumb-item active">Người dùng</li>
+            <li class="breadcrumb-item active">Nhà cung cấp</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -39,14 +39,14 @@
             <div class="card">
               <!-- /.card-header -->
               <div class="card-body">
-                <a href="{{ route('admin.users.create') }}" class="btn btn-success">Tạo mới người dùng</a>
-                <table id="users-table" class="table table-bordered table-striped">
+                <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success">Tạo mới nhà cung cấp</a>
+                <table id="suppliers-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>STT</th>
-                    <th>Họ tên</th>
-                    <th>Email</th>
-                    <th>Công ty</th>
+                    <th>Mã</th>
+                    <th>Tên nhà cung cấp</th>
+                    <th>Liên hệ</th>
                     <th>Sửa</th>
                     <th>Xóa</th>
                   </tr>
@@ -89,7 +89,7 @@
 
 <script>
     $(function () {
-      $("#users-table").DataTable({
+      $("#suppliers-table").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
         buttons: [
             {
@@ -137,16 +137,16 @@
             }
         ],
         dom: 'Blfrtip',
-        ajax: ' {!! route('admin.users.data') !!}',
+        ajax: ' {!! route('admin.suppliers.data') !!}',
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'code', name: 'code'},
             {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {data: 'supplier_id', name: 'supplier_id'},
+            {data: 'users', name: 'users'},
             {data: 'edit', name: 'edit', orderable: false, searchable: false},
             {data: 'delete', name: 'delete', orderable: false, searchable: false},
        ]
-      }).buttons().container().appendTo('#users-table_wrapper .col-md-6:eq(0)');
+      }).buttons().container().appendTo('#suppliers-table_wrapper .col-md-6:eq(0)');
     });
   </script>
 @endpush

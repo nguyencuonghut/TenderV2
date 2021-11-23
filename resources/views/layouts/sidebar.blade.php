@@ -70,6 +70,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('admin.suppliers.index')}}" class="nav-link {{ Request::is('admin/suppliers*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-truck"></i>
+              <p>
+                Nhà cung cấp
+              </p>
+            </a>
+          </li>
           @endauth
         </ul>
       </nav>
