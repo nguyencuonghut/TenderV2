@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Material;
+use App\Models\MaterialSupplier;
+use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
 use Carbon\Carbon;
@@ -32,7 +34,8 @@ class AdminTenderController extends Controller
     {
         $materials = Material::all()->pluck('name', 'id');
         $creators = Admin::all()->pluck('name', 'id');
-        return view('admin.tender.create', ['materials' => $materials, 'creators' => $creators]);
+        $suppliers = Supplier::all()->pluck('name', 'id');
+        return view('admin.tender.create', ['materials' => $materials, 'creators' => $creators, 'suppliers' => $suppliers]);
     }
 
     /**
@@ -52,6 +55,7 @@ class AdminTenderController extends Controller
             'payment_condition' => 'required',
             'certificate' => 'required',
             'date_range' => 'required',
+            'suppliers' => 'required',
         ];
         $messages = [
             'title.required' => 'Bạn phải nhập tiêu đề.',
@@ -62,6 +66,7 @@ class AdminTenderController extends Controller
             'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
             'certificate.required' => 'Bạn phải nhập chứng từ cung cấp.',
             'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
+            'suppliers.required' => 'Bạn phải chọn nhà thầu',
         ];
         $request->validate($rules,$messages);
 
@@ -84,6 +89,7 @@ class AdminTenderController extends Controller
         $tender->other_term = $request->other_term;
         $tender->creator_id = Auth::user()->id;
         $tender->status = 'Open';
+        $tender->supplier_ids = implode(',', $request->suppliers);
 
         //Parse date range
         $dates = explode(' - ', $request->date_range);
@@ -149,7 +155,7 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->with('material')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status'])->get();
+        $tenders = Tender::with('creator')->with('material')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status', 'supplier_ids'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('title', function ($tenders) {
@@ -167,6 +173,22 @@ class AdminTenderController extends Controller
             ->editColumn('creator_id', function ($tenders) {
                 return $tenders->creator->name;
             })
+            ->editColumn('supplier_ids', function ($tenders) {
+                $supplier_ids = [];
+                $supplier_ids = explode(",", $tenders->supplier_ids);
+                $i = 0;
+                $length = count($supplier_ids);
+                $suppliers_list = '';
+                foreach ($supplier_ids as $key => $value) {
+                    $supplier = Supplier::findOrFail($value);
+                    if(++$i === $length) {
+                        $suppliers_list =  $suppliers_list . $supplier->name;
+                    } else {
+                        $suppliers_list = $suppliers_list . $supplier->name . ', ';
+                    }
+                }
+                return $suppliers_list;
+            })
             ->addColumn('edit', function ($tenders) {
                 return '<a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning"> Sửa</a>';
             })
@@ -179,5 +201,12 @@ class AdminTenderController extends Controller
                 </form>')
             ->rawColumns(['edit', 'delete'])
             ->make(true);
+    }
+    public function getSuppliers($materialId)
+    {
+
+        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$materialId)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        return response()->json($suppliers);
     }
 }

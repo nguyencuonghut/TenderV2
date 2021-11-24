@@ -129,13 +129,21 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-6">
                                     <label class="required-field">Thời gian áp dụng</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                                         </div>
                                         <input type="text" class="form-control float-right" id="date_range" name="date_range">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="required-field" class="control-label">Chọn nhà thầu</label>
+                                    <div class="controls">
+                                        <select name="suppliers[]" id="suppliers" class="select2" multiple="multiple" style="width: 100%;">
+
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -257,5 +265,60 @@
         $(this).summernote("pasteHTML", "<br><br>");
         e.preventDefault();
     });
+
+/*
+    $(document).ready(function() {
+        $('#material_id').on('change', function() {
+            var materialID = $(this).val();
+            if(materialID) {
+                $.ajax({
+                    url: '/admin/tenders/getSuppliers/'+materialID,
+                    type: "GET",
+                    data : {"_token":"{{ csrf_token() }}"},
+                    dataType: "json",
+                    success:function(data)
+                    {
+                        if(data){
+                        $('#suppliers').empty();
+                        $('#suppliers').append('<option hidden>Chọn nhà thầu</option>');
+                        $.each(data, function(key, suppliers){
+                            $('select[name="suppliers"]').append('<option value="'+ key +'">' + suppliers.name + '</option>');
+                        });
+                    }else{
+                        $('#suppliers').empty();
+                    }
+                    }
+                });
+            }else{
+                $('#suppliers').empty();
+            }
+        });
+    });
+    */
+    $('body').on('change', '#material_id', function() {
+        loadOptionSuppliers($(this).val());
+    });
+
+    function loadOptionSuppliers(materialID) {
+        $.ajax({
+            method: "GET",
+            url: '/admin/tenders/getSuppliers/'+materialID,
+            dataType: 'json',
+            data: {
+                "_token":"{{ csrf_token() }}"
+            },
+            beforeSend: function() {},
+            success: function(data) {
+                console.log(data);
+                var supplierList = data;
+                var str = '<option value="0">-- Chọn nhà thầu -- </option>';
+                $.each(supplierList, function(index, value) {
+                    str = str + "<option value='" + value.id + "'>" + value.name + "</option>";
+                });
+                $("#suppliers").html(str);
+
+            }
+        })
+    }
 </script>
 @endpush
