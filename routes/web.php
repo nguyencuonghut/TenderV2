@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAdminController;
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminSupplierController;
+use App\Http\Controllers\AdminTenderController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserHomeController;
 use App\Http\Controllers\UserLoginController;
@@ -38,6 +39,9 @@ Route::name('admin.')->prefix('admin')->group(function() {
 
         Route::get('suppliers/data', [AdminSupplierController::class, 'anyData'])->name('suppliers.data');
         Route::resource('suppliers', AdminSupplierController::class);
+
+        Route::get('tenders/data', [AdminTenderController::class, 'anyData'])->name('tenders.data');
+        Route::resource('tenders', AdminTenderController::class);
     });
 });
 

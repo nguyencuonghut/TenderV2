@@ -43,7 +43,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="#" class="nav-link {{ Request::is('tender*') ? 'active' : '' }}">
+            <a href="{{route('admin.tenders.index')}}" class="nav-link {{ Request::is('tender*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-th-list"></i>
               <p>
                 Tender
