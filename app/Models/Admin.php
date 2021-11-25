@@ -15,4 +15,9 @@ class Admin extends Authenticatable
     protected $fillable = ['email',  'password'];
 
     protected $hidden = ['password',  'remember_token'];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

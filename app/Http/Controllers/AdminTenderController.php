@@ -210,25 +210,28 @@ class AdminTenderController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $rules = [
-            'status' => 'required',
-            'supplier_ids' => 'required',
-        ];
-        $messages = [
-            'status.required' => 'Bạn phải chọn trạng thái.',
-            'supplier_ids.required' => 'Bạn phải chọn nhà thầu',
-        ];
-        $request->validate($rules,$messages);
+        if('Nhân viên Mua Hàng' != Auth::user()->role->name){
+            $rules = [
+                'status' => 'required',
+                'supplier_ids' => 'required',
+            ];
+            $messages = [
+                'status.required' => 'Bạn phải chọn trạng thái.',
+                'supplier_ids.required' => 'Bạn phải chọn nhà thầu',
+            ];
+            $request->validate($rules,$messages);
 
-        $tender = Tender::findOrFail($id);
-        $tender->status = $request->status;
-        /*
-        $tender->supplier_ids = implode(',', $request->supplier_ids);
-        */
-        $tender->save();
+            $tender = Tender::findOrFail($id);
+            $tender->status = $request->status;
+            $tender->save();
 
-        Alert::toast('Cập nhật trạng thái tender thành công!', 'success', 'top-right');
-        return redirect()->route('admin.tenders.index');
+            Alert::toast('Cập nhật trạng thái tender thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        } else {
+            Alert::toast('Bạn không có quyền chuyển trạng thái tender!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
+
     }
 
     public function createSuppliers(Request $request)
