@@ -6,6 +6,12 @@
   <!-- Select2 -->
   <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
+   <style>
+    input[type="checkbox"] {
+        pointer-events: none;
+    }
+    </style>
 @endpush
 
 @extends('layouts.base')
@@ -45,10 +51,9 @@
                                         <label class="required-field" class="control-label">Trạng thái</label>
                                         <div class="controls">
                                             <select name="status" id="status" class="form-control select2">
-                                                <option selected="selected">-- Chọn trạng thái --</option>
-                                                <option value="Open">Open</option>
-                                                <option value="In-progress">In-progress</option>
-                                                <option value="Closed">Closed</option>
+                                                <option value="Open" @if("Open" == $tender->status) selected @endif>Open</option>
+                                                <option value="In-progress" @if("In-progress" == $tender->status) selected @endif>In-progress</option>
+                                                <option value="Closed" @if("Closed" == $tender->status) selected @endif>Closed</option>
                                             </select>
                                         </div>
                                     </div>
