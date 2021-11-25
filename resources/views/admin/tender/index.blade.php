@@ -53,6 +53,7 @@
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
                     <th>Nhà thầu</th>
+                    <th>Chuyển trạng thái</th>
                     <th>Sửa</th>
                     <th>Xóa</th>
                   </tr>
@@ -154,6 +155,7 @@
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
             {data: 'supplier_ids', name: 'supplier_ids'},
+            {data: 'change_status', name: 'change_status', orderable: false, searchable: false},
             {data: 'edit', name: 'edit', orderable: false, searchable: false},
             {data: 'delete', name: 'delete', orderable: false, searchable: false},
        ]

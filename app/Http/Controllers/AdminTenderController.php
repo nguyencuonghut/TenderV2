@@ -189,24 +189,64 @@ class AdminTenderController extends Controller
                 }
                 return $suppliers_list;
             })
+            ->addColumn('change_status', function ($tenders) {
+                return '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-primary"><i class="fas fa-random"></i></a>';
+            })
             ->addColumn('edit', function ($tenders) {
-                return '<a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning"> Sửa</a>';
+                return '<a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>';
             })
             ->addColumn('delete', '
                 <form action="{{ route(\'admin.tenders.destroy\', $id) }}" method="POST">
-                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" name="submit" value="Xóa" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" name="submit" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
+                    <i class="fas fa-trash-alt"></i>
+                    </button>
 
                     {{csrf_field()}}
                 </form>')
-            ->rawColumns(['edit', 'delete'])
+            ->rawColumns(['edit', 'delete', 'change_status'])
             ->make(true);
     }
+
     public function getSuppliers($materialId)
     {
-
         $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$materialId)->pluck('supplier_id')->toArray();
         $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         return response()->json($suppliers);
     }
+
+    public function changeStatus($id)
+    {
+        $tender = Tender::findOrFail($id);
+        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+
+        $selected_supplier_ids = [];
+        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+        return view('admin.tender.changestatus', ['tender' => $tender, 'suppliers' => $suppliers, 'selected_supplier_ids' => $selected_supplier_ids]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $rules = [
+            'status' => 'required',
+            'supplier_ids' => 'required',
+        ];
+        $messages = [
+            'status.required' => 'Bạn phải chọn trạng thái.',
+            'supplier_ids.required' => 'Bạn phải chọn nhà thầu',
+        ];
+        $request->validate($rules,$messages);
+
+        $tender = Tender::findOrFail($id);
+        $tender->status = $request->status;
+        /*
+        $tender->supplier_ids = implode(',', $request->supplier_ids);
+        */
+        $tender->save();
+
+        Alert::toast('Cập nhật trạng thái tender thành công!', 'success', 'top-right');
+        return redirect()->route('admin.tenders.index');
+    }
+
 }

@@ -43,6 +43,8 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('tenders/data', [AdminTenderController::class, 'anyData'])->name('tenders.data');
         Route::resource('tenders', AdminTenderController::class);
         Route::get('tenders/getSuppliers/{id}', [AdminTenderController::class, 'getSuppliers'])->name('tenders.getsuppliers');
+        Route::get('tenders/changeStatus/{id}', [AdminTenderController::class, 'changeStatus'])->name('tenders.changeStatus');
+        Route::patch('tenders/updateStatus/{id}', [AdminTenderController::class, 'updateStatus'])->name('tenders.updateStatus');
     });
 });
 
