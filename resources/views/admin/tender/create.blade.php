@@ -129,21 +129,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <label class="required-field">Thời gian áp dụng</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                                         </div>
                                         <input type="text" class="form-control float-right" id="date_range" name="date_range">
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <label class="required-field" class="control-label">Chọn nhà thầu</label>
-                                    <div class="controls">
-                                        <select name="suppliers[]" id="suppliers" class="select2" multiple="multiple" style="width: 100%;">
-
-                                        </select>
                                     </div>
                                 </div>
                             </div>

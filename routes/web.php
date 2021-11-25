@@ -40,9 +40,11 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('suppliers/data', [AdminSupplierController::class, 'anyData'])->name('suppliers.data');
         Route::resource('suppliers', AdminSupplierController::class);
 
+        Route::patch('tenders/storeSuppliers', [AdminTenderController::class, 'storeSuppliers'])->name('tenders.storeSuppliers');
+        Route::get('tenders/createSuppliers', [AdminTenderController::class, 'createSuppliers'])->name('tenders.createSuppliers');
         Route::get('tenders/data', [AdminTenderController::class, 'anyData'])->name('tenders.data');
         Route::resource('tenders', AdminTenderController::class);
-        Route::get('tenders/getSuppliers/{id}', [AdminTenderController::class, 'getSuppliers'])->name('tenders.getsuppliers');
+        //Route::get('tenders/getSuppliers/{id}', [AdminTenderController::class, 'getSuppliers'])->name('tenders.getsuppliers');
         Route::get('tenders/changeStatus/{id}', [AdminTenderController::class, 'changeStatus'])->name('tenders.changeStatus');
         Route::patch('tenders/updateStatus/{id}', [AdminTenderController::class, 'updateStatus'])->name('tenders.updateStatus');
     });

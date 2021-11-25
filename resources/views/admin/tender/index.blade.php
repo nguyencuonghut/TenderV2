@@ -48,11 +48,9 @@
                     <th>STT</th>
                     <th>Tiêu đề</th>
                     <th>Tên hàng</th>
-                    <th>Người tạo</th>
                     <th>Bắt đầu</th>
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
-                    <th>Nhà thầu</th>
                     <th>Chuyển trạng thái</th>
                     <th>Sửa</th>
                     <th>Xóa</th>
@@ -104,14 +102,14 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
+                    columns: [0,1,2,3,4,5]
                 }
 
             },
@@ -119,28 +117,28 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6,7]
+                    columns: [0,1,2,3,4,5]
                 }
             }
         ],
@@ -150,11 +148,9 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'title', name: 'title'},
             {data: 'material_id', name: 'material_id'},
-            {data: 'creator_id', name: 'creator_id'},
             {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
-            {data: 'supplier_ids', name: 'supplier_ids'},
             {data: 'change_status', name: 'change_status', orderable: false, searchable: false},
             {data: 'edit', name: 'edit', orderable: false, searchable: false},
             {data: 'delete', name: 'delete', orderable: false, searchable: false},

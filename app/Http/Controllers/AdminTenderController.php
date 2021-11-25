@@ -55,7 +55,6 @@ class AdminTenderController extends Controller
             'payment_condition' => 'required',
             'certificate' => 'required',
             'date_range' => 'required',
-            'suppliers' => 'required',
         ];
         $messages = [
             'title.required' => 'Bạn phải nhập tiêu đề.',
@@ -66,7 +65,6 @@ class AdminTenderController extends Controller
             'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
             'certificate.required' => 'Bạn phải nhập chứng từ cung cấp.',
             'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
-            'suppliers.required' => 'Bạn phải chọn nhà thầu',
         ];
         $request->validate($rules,$messages);
 
@@ -89,7 +87,7 @@ class AdminTenderController extends Controller
         $tender->other_term = $request->other_term;
         $tender->creator_id = Auth::user()->id;
         $tender->status = 'Open';
-        $tender->supplier_ids = implode(',', $request->suppliers);
+        $tender->supplier_ids = '';
 
         //Parse date range
         $dates = explode(' - ', $request->date_range);
@@ -97,8 +95,8 @@ class AdminTenderController extends Controller
         $tender->tender_end_time = Carbon::parse($dates[1]);
         $tender->save();
 
-        Alert::toast('Tạo tender mới thành công!', 'success', 'top-right');
-        return redirect()->route('admin.tenders.index');
+        $request->session()->put('tender', $tender);
+        return redirect()->route('admin.tenders.createSuppliers');
     }
 
     /**
@@ -170,25 +168,6 @@ class AdminTenderController extends Controller
             ->editColumn('tender_end_time', function ($tenders) {
                 return $tenders->tender_end_time;
             })
-            ->editColumn('creator_id', function ($tenders) {
-                return $tenders->creator->name;
-            })
-            ->editColumn('supplier_ids', function ($tenders) {
-                $supplier_ids = [];
-                $supplier_ids = explode(",", $tenders->supplier_ids);
-                $i = 0;
-                $length = count($supplier_ids);
-                $suppliers_list = '';
-                foreach ($supplier_ids as $key => $value) {
-                    $supplier = Supplier::findOrFail($value);
-                    if(++$i === $length) {
-                        $suppliers_list =  $suppliers_list . $supplier->name;
-                    } else {
-                        $suppliers_list = $suppliers_list . $supplier->name . ', ';
-                    }
-                }
-                return $suppliers_list;
-            })
             ->addColumn('change_status', function ($tenders) {
                 return '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-primary"><i class="fas fa-random"></i></a>';
             })
@@ -208,12 +187,14 @@ class AdminTenderController extends Controller
             ->make(true);
     }
 
+    /*
     public function getSuppliers($materialId)
     {
         $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$materialId)->pluck('supplier_id')->toArray();
         $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         return response()->json($suppliers);
     }
+    */
 
     public function changeStatus($id)
     {
@@ -249,4 +230,23 @@ class AdminTenderController extends Controller
         return redirect()->route('admin.tenders.index');
     }
 
+    public function createSuppliers(Request $request)
+    {
+        $tender = $request->session()->get('tender');
+        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+
+        return view('admin.tender.createsuppliers', ['suppliers' => $suppliers, 'tender' => $tender]);
+    }
+
+    public function storeSuppliers(Request $request)
+    {
+        $tender = $request->session()->get('tender');
+        $updatedTenderr = Tender::findOrFail($tender->id);
+        $updatedTenderr->supplier_ids = implode(',', $request->supplier_ids);
+        $updatedTenderr->save();
+
+        Alert::toast('Tạo tender thành công!', 'success', 'top-right');
+        return redirect()->route('admin.tenders.index');
+    }
 }
