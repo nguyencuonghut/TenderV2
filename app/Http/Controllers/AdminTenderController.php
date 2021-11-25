@@ -8,6 +8,7 @@ use App\Models\MaterialSupplier;
 use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
+use App\Notifications\TenderCreated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -153,7 +154,7 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->with('material')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status', 'supplier_ids'])->get();
+        $tenders = Tender::with('creator')->with('material')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status', 'supplier_ids'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('title', function ($tenders) {
@@ -242,9 +243,12 @@ class AdminTenderController extends Controller
     public function storeSuppliers(Request $request)
     {
         $tender = $request->session()->get('tender');
-        $updatedTenderr = Tender::findOrFail($tender->id);
-        $updatedTenderr->supplier_ids = implode(',', $request->supplier_ids);
-        $updatedTenderr->save();
+        $updatedTender = Tender::findOrFail($tender->id);
+        $updatedTender->supplier_ids = implode(',', $request->supplier_ids);
+        $updatedTender->save();
+
+        //Send email notification
+        $tender->notify(new TenderCreated($updatedTender->id));
 
         Alert::toast('Tạo tender thành công!', 'success', 'top-right');
         return redirect()->route('admin.tenders.index');

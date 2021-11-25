@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
 class Tender extends Model
 {
     use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'code',
@@ -39,5 +41,10 @@ class Tender extends Model
     public function suppliers()
     {
         return $this->belongsToMany(Tender::class, 'tender_supplier');
+    }
+
+    public function routeNotificationForMail()
+    {
+        return 'kiemsoatmuahang@honghafeed.com.vn';
     }
 }
