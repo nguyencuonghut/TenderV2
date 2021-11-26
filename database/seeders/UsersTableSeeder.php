@@ -21,8 +21,8 @@ class UsersTableSeeder extends Seeder
             0 =>
                 array (
                     'id' => 1,
-                    'name' => 'Mr.Vương',
-                    'email' => 'vuongtanlong@gmail.com',
+                    'name' => 'Cao Thang 1',
+                    'email' => 'caothang1@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -33,20 +33,32 @@ class UsersTableSeeder extends Seeder
             1 =>
                 array (
                     'id' => 2,
-                    'name' => 'Ms.Mơ',
-                    'email' => 'mo@gmail.com',
+                    'name' => 'Cao Thang 2',
+                    'email' => 'caothang2@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
-                    'supplier_id' => 2,
+                    'supplier_id' => 1,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
             ),
             2 =>
                 array (
                     'id' => 3,
-                    'name' => 'Mr.Thường',
-                    'email' => 'teddy.dang@cj.net',
+                    'name' => 'Văn Sơn',
+                    'email' => 'vanson@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 2,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            3 =>
+                array (
+                    'id' => 4,
+                    'name' => 'CJ',
+                    'email' => 'cj@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -54,11 +66,11 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
-            3 =>
+            4 =>
                 array (
-                    'id' => 4,
-                    'name' => 'Ms.Ngan',
-                    'email' => 'thinga.tran@gmail.com',
+                    'id' => 5,
+                    'name' => 'Bunge Singapore',
+                    'email' => 'bungesingapore@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -66,11 +78,11 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
-            4 =>
+            5 =>
                 array (
-                    'id' => 5,
-                    'name' => 'Ms.Huong',
-                    'email' => 'huong.crossland@gmail.com',
+                    'id' => 6,
+                    'name' => 'Cross Land Singapore',
+                    'email' => 'crosslandsingapore@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -78,11 +90,11 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
-            5 =>
+            6 =>
                 array (
-                    'id' => 6,
-                    'name' => 'Mr.Long',
-                    'email' => 'long.enerfo@gmail.com',
+                    'id' => 7,
+                    'name' => 'Enerfo Singapore',
+                    'email' => 'enerfosingapore@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -90,11 +102,11 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
-            6 =>
+            7 =>
                 array (
-                    'id' => 7,
-                    'name' => 'Ms.Tina',
-                    'email' => 'tina-acc@gmail.com',
+                    'id' => 8,
+                    'name' => 'ACC',
+                    'email' => 'acc@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -102,23 +114,11 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
-            7 =>
-                array (
-                    'id' => 8,
-                    'name' => 'Ms.Ngọc',
-                    'email' => 'ngoc.samaco@gmail.com',
-                    'password' => bcrypt('Hongha@123'),
-                    'email_verified_at' => null,
-                    'remember_token' => null,
-                    'supplier_id' => 8,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ),
             8 =>
                 array (
                     'id' => 9,
-                    'name' => 'Ms.Duyên',
-                    'email' => 'duyen.samaco@gmail.com',
+                    'name' => 'Samaco 1',
+                    'email' => 'samaco1@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -129,8 +129,8 @@ class UsersTableSeeder extends Seeder
             9=>
                 array (
                     'id' => 10,
-                    'name' => 'Ms.Trang',
-                    'email' => 'trang.samaco@gmail.com',
+                    'name' => 'Samaco 2',
+                    'email' => 'samaco2@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,
@@ -141,8 +141,8 @@ class UsersTableSeeder extends Seeder
             10 =>
                 array (
                     'id' => 11,
-                    'name' => 'Ms.Kate',
-                    'email' => 'kate.samaco@gmail.com',
+                    'name' => 'Samaco 3',
+                    'email' => 'samaco3@honghafeed.com.vn',
                     'password' => bcrypt('Hongha@123'),
                     'email_verified_at' => null,
                     'remember_token' => null,

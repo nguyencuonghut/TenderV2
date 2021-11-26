@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminTenderController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserHomeController;
 use App\Http\Controllers\UserLoginController;
+use App\Http\Controllers\UserTenderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,5 +60,6 @@ Route::get('/logout', [UserLoginController::class, 'logout'])->name('user.logout
 
 Route::group(['middleware'=>'auth:web'], function() {
     Route::get('/', [UserHomeController::class, 'index'])->name('user.home');
+    Route::get('tenders/{id}', [UserTenderController::class, 'show'])->name('user.tenders.show');
 });
 

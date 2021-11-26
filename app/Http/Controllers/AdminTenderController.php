@@ -8,10 +8,13 @@ use App\Models\MaterialSupplier;
 use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
+use App\Models\User;
 use App\Notifications\TenderCreated;
+use App\Notifications\TenderInProgress;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminTenderController extends Controller
@@ -225,6 +228,16 @@ class AdminTenderController extends Controller
             $tender->status = $request->status;
             $tender->save();
 
+            //Send email to suppliers if status is In-progress
+            if('In-progress' == $request->status) {
+                //Get the mail list
+                $selected_supplier_ids = [];
+                $selected_supplier_ids = explode(",", $tender->supplier_ids);
+                $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
+                foreach($users as $user)  {
+                    Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
+                }
+            }
             Alert::toast('Cập nhật trạng thái tender thành công!', 'success', 'top-right');
             return redirect()->route('admin.tenders.index');
         } else {
