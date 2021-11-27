@@ -50,6 +50,7 @@
                     <th>Bắt đầu</th>
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
+                    <th>Xem</th>
                     <th>Bỏ thầu</th>
                   </tr>
                   </thead>
@@ -148,6 +149,7 @@
             {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
+            {data: 'show', name: 'show', orderable: false, searchable: false},
             {data: 'bid', name: 'bid', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#tenders-table_wrapper .col-md-6:eq(0)');

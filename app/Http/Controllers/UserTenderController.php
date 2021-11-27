@@ -7,6 +7,7 @@ use App\Models\User;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserTenderController extends Controller
 {
@@ -15,12 +16,13 @@ class UserTenderController extends Controller
         $tender = Tender::findOrFail($id);
         $selected_supplier_ids = [];
         $selected_supplier_ids = explode(",", $tender->supplier_ids);
-        $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('supplier_id')->toArray();
+        $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if('Open' !=  $tender->status
             && in_array(Auth::user()->id, $users)) {
-            return Auth::user()->name . " Có quyền xem tender này";
+            return view('user.tender.show', ['tender' => $tender]);
         } else {
-            return 'Oop! ' . Auth::user()->name . " Không quyền xem tender này";
+            Alert::toast('Bạn không quyền xem tender này!', 'error', 'top-right');
+            return redirect()->route('user.tenders.index');
         }
     }
 
@@ -55,10 +57,13 @@ class UserTenderController extends Controller
             ->editColumn('tender_end_time', function ($user_tenders) {
                 return $user_tenders->tender_end_time;
             })
+            ->addColumn('show', function ($user_tenders) {
+                return '<a href="' . route("user.tenders.show", $user_tenders->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';
+            })
             ->addColumn('bid', function ($user_tenders) {
                 return '<a href="' . route("user.tenders.bid", $user_tenders->id) . '" class="btn btn-success"><i class="fas fa-gavel"></i></a>';
             })
-            ->rawColumns(['bid'])
+            ->rawColumns(['show', 'bid'])
             ->make(true);
     }
 
