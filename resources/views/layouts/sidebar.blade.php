@@ -42,14 +42,25 @@
             </ul>
           </li>
 
+          @auth('admin')
           <li class="nav-item">
-            <a href="{{route('admin.tenders.index')}}" class="nav-link {{ Request::is('tender*') ? 'active' : '' }}">
+            <a href="{{route('admin.tenders.index')}}" class="nav-link {{ Request::is('admin/tender*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-th-list"></i>
               <p>
                 Tender
               </p>
             </a>
           </li>
+          @else
+          <li class="nav-item">
+            <a href="{{route('user.tenders.index')}}" class="nav-link {{ Request::is('tender*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-th-list"></i>
+              <p>
+                Tender
+              </p>
+            </a>
+          </li>
+          @endauth
 
 
           @auth('admin')

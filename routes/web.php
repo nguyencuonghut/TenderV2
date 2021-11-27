@@ -60,6 +60,10 @@ Route::get('/logout', [UserLoginController::class, 'logout'])->name('user.logout
 
 Route::group(['middleware'=>'auth:web'], function() {
     Route::get('/', [UserHomeController::class, 'index'])->name('user.home');
+
+    Route::get('tenders/data', [UserTenderController::class, 'anyData'])->name('user.tenders.data');
     Route::get('tenders/{id}', [UserTenderController::class, 'show'])->name('user.tenders.show');
+    Route::get('tenders', [UserTenderController::class, 'index'])->name('user.tenders.index');
+    Route::get('tenders/bid/{id}', [UserTenderController::class, 'bid'])->name('user.tenders.bid');
 });
 
