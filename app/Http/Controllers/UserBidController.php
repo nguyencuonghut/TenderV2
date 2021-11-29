@@ -19,7 +19,7 @@ class UserBidController extends Controller
         $selected_supplier_ids = explode(",", $tender->supplier_ids);
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if(in_array(Auth::user()->id, $users)) {
-            $bids = Bid::where('tender_id', $tender_id)->get();
+            $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
             return view('user.bid.index', ['bids' => $bids, 'tender' => $tender]);
         } else {
             Alert::toast('Bạn không quyền bỏ thầu tender này!', 'error', 'top-right');
