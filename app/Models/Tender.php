@@ -43,6 +43,11 @@ class Tender extends Model
         return $this->belongsToMany(Tender::class, 'tender_supplier');
     }
 
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
+
     public function routeNotificationForMail()
     {
         return 'kiemsoatmuahang@honghafeed.com.vn';

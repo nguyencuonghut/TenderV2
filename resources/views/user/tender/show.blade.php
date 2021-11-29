@@ -114,11 +114,19 @@
                         </div>
 
                         <!-- /.card-body -->
-                        <div class="card-footer clearfix">
-                            <a href="{{route('user.tenders.bid', $tender->id)}}">
-                                <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-gavel"></i> Đấu thầu</button>
-                            </a>
-                        </div>
+                        @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time))
+                            <div class="card-footer clearfix">
+                                <a href="{{route('user.bids.index', $tender->id)}}">
+                                    <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-gavel"></i> Đấu thầu</button>
+                                </a>
+                            </div>
+                        @else
+                            <div class="card-footer clearfix">
+                                <a href="{{route('user.tenders.index')}}">
+                                    <button role="button" type="button" class="btn btn-secondary float-right"><i class="fas fa-gavel"></i> Tender hết hạn</button>
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

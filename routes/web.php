@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminSupplierController;
 use App\Http\Controllers\AdminTenderController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\UserBidController;
 use App\Http\Controllers\UserHomeController;
 use App\Http\Controllers\UserLoginController;
 use App\Http\Controllers\UserTenderController;
@@ -65,5 +66,9 @@ Route::group(['middleware'=>'auth:web'], function() {
     Route::get('tenders/{id}', [UserTenderController::class, 'show'])->name('user.tenders.show');
     Route::get('tenders', [UserTenderController::class, 'index'])->name('user.tenders.index');
     Route::get('tenders/bid/{id}', [UserTenderController::class, 'bid'])->name('user.tenders.bid');
+
+    Route::get('bids/{id}/index', [UserBidController::class, 'index'])->name('user.bids.index');
+    Route::post('bids/{id}/create', [UserBidController::class, 'create'])->name('user.bids.create');
+    Route::delete('bids/{id}/destroy', [UserBidController::class, 'destroy'])->name('user.bids.destroy');
 });
 

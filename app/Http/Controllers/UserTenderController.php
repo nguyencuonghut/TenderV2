@@ -60,15 +60,7 @@ class UserTenderController extends Controller
             ->addColumn('show', function ($user_tenders) {
                 return '<a href="' . route("user.tenders.show", $user_tenders->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';
             })
-            ->addColumn('bid', function ($user_tenders) {
-                return '<a href="' . route("user.tenders.bid", $user_tenders->id) . '" class="btn btn-success"><i class="fas fa-gavel"></i></a>';
-            })
-            ->rawColumns(['show', 'bid'])
+            ->rawColumns(['show'])
             ->make(true);
-    }
-
-    public function bid($id)
-    {
-        return "Bỏ thầu";
     }
 }
