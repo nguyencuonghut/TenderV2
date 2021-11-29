@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use App\Models\Tender;
 use App\Models\User;
 use Datatables;
@@ -19,7 +20,9 @@ class UserTenderController extends Controller
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if('Open' !=  $tender->status
             && in_array(Auth::user()->id, $users)) {
-            return view('user.tender.show', ['tender' => $tender]);
+
+            $bids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->get();
+            return view('user.tender.show', ['tender' => $tender, 'bids' => $bids]);
         } else {
             Alert::toast('Bạn không quyền xem tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');

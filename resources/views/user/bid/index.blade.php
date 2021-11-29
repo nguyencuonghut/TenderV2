@@ -44,7 +44,7 @@
                     <th>Số lượng</th>
                     <th>Giá</th>
                     <th>Ghi chú</th>
-                    <th>Thao tác</th>
+                    <th>Xóa</th>
                   </tr>
                   @foreach ($bids as $bid)
                   <tr>
