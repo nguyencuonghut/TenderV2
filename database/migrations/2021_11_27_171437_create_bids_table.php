@@ -21,9 +21,9 @@ class CreateBidsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('quantity');
-            $table->enum('quantity_unit', ['Tấn', 'Kg']);
+            $table->enum('quantity_unit', ['tấn', 'kg', 'chiếc']);
             $table->float('price');
-            $table->enum('price_unit', ['VND', 'USD']);
+            $table->enum('price_unit', ['đồng/kg', 'USD/tấn', 'USD/kg', 'đồng/chiếc']);
             $table->text('note')->nullable();
             $table->timestamps();
         });

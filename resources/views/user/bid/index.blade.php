@@ -48,9 +48,10 @@
                   </tr>
                   @foreach ($bids as $bid)
                   <tr>
-                    <td>{{ number_format($bid->quantity, 0, '.', ',') }} ({{$bid->quantity_unit}})</td>
-                    @if('VND' == $bid->price_unit)
-                    <td>{{ number_format($bid->price, 0, ',', ',') }} ({{$bid->price_unit}})</td>
+                    <td>{{ number_format($bid->quantity, 0, '.', ' ') }} ({{$bid->quantity_unit}})</td>
+                    @if('đồng/kg' == $bid->price_unit
+                        || 'đồng/chiếc' == $bid->price_unit)
+                    <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
                     @else
                     <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                     @endif
@@ -87,18 +88,21 @@
                         <label class="required-field" class="control-label">Số lượng</label>
                         <div class="input-group">
                             <input type="number" name="quantity" id="quantity" placeholder="0" class="form-control" />
-                            <select name="quantity_unit" id="quantity_unit" class="form-control" style="max-width:9%;">
-                                <option value="Tấn" selected>Tấn</option>
-                                <option value="Kg">Kg</option>
+                            <select name="quantity_unit" id="quantity_unit" class="form-control" style="max-width:15%;">
+                                <option value="tấn" selected>tấn</option>
+                                <option value="kg">kg</option>
+                                <option value="chiếc">chiếc</option>
                             </select>
                         </div>
 
                         <label class="required-field" class="control-label">Giá</label>
                         <div class="input-group">
                             <input type="number" name="price" id="price" placeholder="0" step="any" class="form-control" />
-                            <select name="price_unit" id="price_unit" class="form-control" style="max-width:9%;">
-                                <option value="VND" selected>VND</option>
-                                <option value="USD">USD</option>
+                            <select name="price_unit" id="price_unit" class="form-control" style="max-width:15%;">
+                                <option value="đồng/kg" selected>đồng/kg</option>
+                                <option value="USD/tấn">USD/tấn</option>
+                                <option value="USD/kg">USD/kg</option>
+                                <option value="đồng/tấn">đồng/chiếc</option>
                             </select>
                         </div>
 
