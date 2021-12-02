@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Bid;
 use App\Models\Material;
 use App\Models\MaterialSupplier;
 use App\Models\Supplier;
@@ -111,7 +112,14 @@ class AdminTenderController extends Controller
      */
     public function show($id)
     {
-        //
+        $tender = Tender::findOrFail($id);
+        if(Carbon::now()->greaterThan($tender->tender_end_time)) {
+            $bids = Bid::with('user')->where('tender_id', $tender->id)->get();
+            return view('admin.tender.show', ['tender' => $tender, 'bids' => $bids]);
+        } else {
+            Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
     }
 
     /**
@@ -160,8 +168,8 @@ class AdminTenderController extends Controller
         $tenders = Tender::with('creator')->with('material')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status', 'supplier_ids'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
-            ->editColumn('title', function ($tenders) {
-                return $tenders->title;
+            ->editColumn('titlelink', function ($tenders) {
+                return '<a href="tenders/' . $tenders->id . '" ">' . $tenders->title . '</a>';
             })
             ->editColumn('material_id', function ($tenders) {
                 return $tenders->material->name;
@@ -187,7 +195,7 @@ class AdminTenderController extends Controller
 
                     {{csrf_field()}}
                 </form>')
-            ->rawColumns(['edit', 'delete', 'change_status'])
+            ->rawColumns(['titlelink', 'edit', 'delete', 'change_status'])
             ->make(true);
     }
 

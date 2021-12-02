@@ -146,7 +146,7 @@
         ajax: ' {!! route('admin.tenders.data') !!}',
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'title', name: 'title'},
+            {data: 'titlelink', name: 'title'},
             {data: 'material_id', name: 'material_id'},
             {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
