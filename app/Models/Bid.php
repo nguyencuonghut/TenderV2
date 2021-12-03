@@ -17,6 +17,9 @@ class Bid extends Model
         'price',
         'price_unit',
         'note',
+        'delivery_time',
+        'delivery_place',
+        'payment_condition',
     ];
 
     public function tender()

@@ -159,6 +159,10 @@
                                     <tr>
                                       <th>Số lượng</th>
                                       <th>Giá</th>
+                                      <th>Đóng gói</th>
+                                      <th>Thời gian giao</th>
+                                      <th>Địa điểm giao</th>
+                                      <th>Điều kiện thanh toán</th>
                                       <th>Ghi chú</th>
                                       <th style="Width: 8%;">Xóa</th>
                                     </tr>
@@ -171,6 +175,10 @@
                                       @else
                                       <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                                       @endif
+                                      <td>{{ $bid->pack }}</td>
+                                      <td>{{ $bid->delivery_time }}</td>
+                                      <td>{{ $bid->delivery_place }}</td>
+                                      <td>{{ $bid->payment_condition }}</td>
                                       <td>{{ $bid->note }}</td>
                                       <td>
                                           <form action="{{ route('user.bids.destroy', $bid->id) }}" method="POST">
@@ -217,6 +225,34 @@
                                                         <option value="USD/kg">USD/kg</option>
                                                         <option value="đồng/tấn">đồng/chiếc</option>
                                                     </select>
+                                                </div>
+
+                                                <div class="control-group">
+                                                    <label class="control-label">Đóng gói</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="form-control" name="pack" id="pack" required="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="control-group">
+                                                    <label class="control-label">Thời gian giao</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="form-control" name="delivery_time" id="delivery_time" required="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="control-group">
+                                                    <label class="control-label">Địa điểm giao</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="form-control" name="delivery_place" id="delivery_place" required="">
+                                                    </div>
+                                                </div>
+
+                                                <div class="control-group">
+                                                    <label class="control-label">Điều kiện thanh toán</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="form-control" name="payment_condition" id="payment_condition" required="">
+                                                    </div>
                                                 </div>
 
                                                 <div class="control-group">

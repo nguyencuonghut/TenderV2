@@ -114,7 +114,7 @@ class AdminTenderController extends Controller
     {
         $tender = Tender::findOrFail($id);
         if(Carbon::now()->greaterThan($tender->tender_end_time)) {
-            $bids = Bid::with('user')->where('tender_id', $tender->id)->get();
+            $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('user_id', 'asc')->get();
             return view('admin.tender.show', ['tender' => $tender, 'bids' => $bids]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');

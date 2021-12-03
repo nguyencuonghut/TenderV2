@@ -75,6 +75,10 @@ class UserBidController extends Controller
             $bid->quantity_unit = $request->quantity_unit;
             $bid->price = $request->price;
             $bid->price_unit = $request->price_unit;
+            $bid->pack = $request->pack;
+            $bid->delivery_time = $request->delivery_time;
+            $bid->delivery_place = $request->delivery_place;
+            $bid->payment_condition = $request->payment_condition;
             $bid->note = $request->note;
             $bid->save();
 
