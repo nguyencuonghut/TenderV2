@@ -14,7 +14,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('user.tenders.index') }}">Tất cả tender</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('admin.tenders.index') }}">Tất cả tender</a></li>
               <li class="breadcrumb-item active">Chi tiết tender</li>
             </ol>
           </div><!-- /.col -->
@@ -147,6 +147,31 @@
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                          <label class="control-label">Nhà thầu</label>
+                                          <!-- checkbox -->
+                                          <div class="form-group">
+                                            @foreach($suppliers as $supplier)
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" onclick="return false;"
+                                                name="supplier_ids[]" value="{{$supplier->id}}"
+                                                @if(in_array($supplier->id, $selected_supplier_ids))
+                                                    checked
+                                                @endif
+                                              >
+                                              @if(in_array($supplier->id, $bided_supplier_ids))
+                                                <i class="fas fa-envelope fa-sm" style="color:#007BFF;"></i>
+                                              @else
+                                                <i class="far fa-envelope fa-sm"></i>
+                                              @endif
+                                              <label class="form-check-label">{{$supplier->name}}</label>
+                                            </div>
+                                            @endforeach
+                                          </div>
+                                        </div>
+                                    </div>
+
                                   <table id="bids-table" class="table table-bordered table-striped">
                                     <tr>
                                       <th>STT</th>

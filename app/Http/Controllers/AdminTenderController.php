@@ -113,9 +113,29 @@ class AdminTenderController extends Controller
     public function show($id)
     {
         $tender = Tender::findOrFail($id);
+
+        //Get the array of Selected Supplier Id
+        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        $selected_supplier_ids = [];
+        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+
+        //Get the array of Supplier Id that send the bid
+        $bids = Bid::where('tender_id', $tender->id)->get();
+        $bided_supplier_ids = [];
+        foreach($bids as $bid) {
+            $user = User::findOrFail($bid->user_id);
+            array_push($bided_supplier_ids, $user->supplier_id);
+        }
+
         if(Carbon::now()->greaterThan($tender->tender_end_time)) {
             $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('user_id', 'asc')->get();
-            return view('admin.tender.show', ['tender' => $tender, 'bids' => $bids]);
+            return view('admin.tender.show',
+                        ['tender' => $tender, 'bids' => $bids,
+                         'suppliers' => $suppliers,
+                         'selected_supplier_ids' => $selected_supplier_ids,
+                         'bided_supplier_ids' => $bided_supplier_ids
+                        ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
