@@ -22,7 +22,8 @@ class UserTenderController extends Controller
             && in_array(Auth::user()->id, $users)) {
 
             $bids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->get();
-            return view('user.tender.show', ['tender' => $tender, 'bids' => $bids]);
+            $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
+            return view('user.tender.show', ['tender' => $tender, 'bids' => $bids, 'selected_bids' => $selected_bids]);
         } else {
             Alert::toast('Bạn không quyền xem tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');

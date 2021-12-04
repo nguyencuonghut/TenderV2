@@ -29,6 +29,9 @@ class CreateBidsTable extends Migration
             $table->text('delivery_time')->nullable();
             $table->text('delivery_place')->nullable();
             $table->text('payment_condition')->nullable();
+            $table->integer('tender_quantity')->default(0);
+            $table->enum('tender_quantity_unit', ['tấn', 'kg', 'chiếc'])->default('tấn');
+            $table->boolean('is_selected')->default(false);
             $table->timestamps();
         });
     }

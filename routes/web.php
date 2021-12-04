@@ -49,6 +49,9 @@ Route::name('admin.')->prefix('admin')->group(function() {
         //Route::get('tenders/getSuppliers/{id}', [AdminTenderController::class, 'getSuppliers'])->name('tenders.getsuppliers');
         Route::get('tenders/changeStatus/{id}', [AdminTenderController::class, 'changeStatus'])->name('tenders.changeStatus');
         Route::patch('tenders/updateStatus/{id}', [AdminTenderController::class, 'updateStatus'])->name('tenders.updateStatus');
+        Route::get('tenders/result/{id}', [AdminTenderController::class, 'result'])->name('tenders.result');
+        Route::post('tenders/sendResult/{id}', [AdminTenderController::class, 'sendResult'])->name('tenders.sendResult');
+        Route::delete('tenders/destroyResult/{bid_id}', [AdminTenderController::class, 'destroyResult'])->name('tenders.destroyResult');
     });
 });
 

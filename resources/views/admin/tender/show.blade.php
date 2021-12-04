@@ -36,10 +36,44 @@
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chào hàng</a>
                           </li>
+                          @if ($selected_bids->count())
+                          <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-one-profile-tab-1" data-toggle="pill" href="#custom-tabs-one-profile-1" role="tab" aria-controls="custom-tabs-one-profile-1" aria-selected="false">Kết quả</a>
+                          </li>
+                          @endif
                         </ul>
                       </div>
                       <div class="card-body">
                         <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade" id="custom-tabs-one-profile-1" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab-1">
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                      <table id="bids-table" class="table table-bordered table-striped">
+                                        <tr>
+                                          <th>Nhà cung cấp</th>
+                                          <th>Số lượng chọn</th>
+                                          <th>Giá</th>
+                                          <th>Thời gian giao</th>
+                                        </tr>
+                                        @foreach ($selected_bids as $bid)
+                                        <tr>
+                                          <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
+                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} ({{$bid->tender_quantity_unit}})</td>
+                                          @if('đồng/kg' == $bid->price_unit
+                                              || 'đồng/chiếc' == $bid->price_unit)
+                                          <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                          @else
+                                          <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                          @endif
+                                          <td>{{ $bid->delivery_time }}</td>
+                                        </tr>
+                                        @endforeach
+                                      </table>
+                                    </div>
+                                  </div>
+                            </div>
+
                           <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                             <div class="card">
                                 <!-- /.card-header -->
@@ -128,19 +162,6 @@
                                 </div>
 
                                 <!-- /.card-body -->
-                                @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time))
-                                    <div class="card-footer clearfix">
-                                        <a href="{{route('user.bids.index', $tender->id)}}">
-                                            <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-gavel"></i> Đấu thầu</button>
-                                        </a>
-                                    </div>
-                                @else
-                                    <div class="card-footer clearfix">
-                                        <a href="{{route('user.tenders.index')}}">
-                                            <button role="button" type="button" class="btn btn-secondary float-right"><i class="fas fa-gavel"></i> Tender hết hạn</button>
-                                        </a>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                           <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
@@ -200,6 +221,13 @@
                                     @endforeach
                                   </table>
                                 </div>
+                                @if(Carbon\Carbon::now()->greaterThan($tender->tender_end_time))
+                                  <div class="card-footer clearfix">
+                                      <a href="{{route('admin.tenders.result', $tender->id)}}">
+                                          <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-paper-plane"></i> Gửi kết quả</button>
+                                      </a>
+                                  </div>
+                                @endif
                               </div>
 
                               <form class="form-horizontal" method="post" action="{{ route('user.bids.create', $tender->id) }}" name="create_bid" id="create_bid" novalidate="novalidate">

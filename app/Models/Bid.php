@@ -21,6 +21,9 @@ class Bid extends Model
         'delivery_time',
         'delivery_place',
         'payment_condition',
+        'tender_quantity',
+        'tender_quantity_unit',
+        'is_selected',
     ];
 
     public function tender()
