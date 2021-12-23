@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-12">
                                   <label class="required-field" class="control-label">Nhà thầu</label>
                                   <!-- checkbox -->
                                   <div class="form-group">
@@ -72,6 +72,16 @@
                                             checked
                                         @endif
                                       >
+                                      @if(in_array($supplier->id, $bided_supplier_ids))
+                                        <i class="fas fa-envelope fa-sm" style="color:#007BFF;"></i>
+                                        @else
+                                        <i class="far fa-envelope fa-sm"></i>
+                                        @endif
+                                      @if(in_array($supplier->id, $selected_bided_supplier_ids))
+                                        <i class="fas fa-certificate fa-sm" style="color:#007BFF;"></i>
+                                        @else
+                                        <i class="far fa-certificate fa-sm"></i>
+                                        @endif
                                       <label class="form-check-label">{{$supplier->name}}</label>
                                     </div>
                                     @endforeach

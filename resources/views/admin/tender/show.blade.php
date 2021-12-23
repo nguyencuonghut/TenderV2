@@ -224,7 +224,7 @@
                                 @if(Carbon\Carbon::now()->greaterThan($tender->tender_end_time))
                                   <div class="card-footer clearfix">
                                       <a href="{{route('admin.tenders.result', $tender->id)}}">
-                                          <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-paper-plane"></i> Gửi kết quả</button>
+                                          <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
                                       </a>
                                   </div>
                                 @endif

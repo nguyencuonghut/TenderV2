@@ -89,6 +89,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('admin.materials.index')}}" class="nav-link {{ Request::is('admin/materials*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-box-open"></i>
+              <p>
+                Hàng hóa
+              </p>
+            </a>
+          </li>
           @endauth
         </ul>
       </nav>

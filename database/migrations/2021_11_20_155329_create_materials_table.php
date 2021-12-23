@@ -17,6 +17,7 @@ class CreateMaterialsTable extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->text('name');
+            $table->text('quality');
             $table->timestamps();
         });
     }

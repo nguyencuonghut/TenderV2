@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAdminController;
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\AdminMaterialController;
 use App\Http\Controllers\AdminSupplierController;
 use App\Http\Controllers\AdminTenderController;
 use App\Http\Controllers\AdminUserController;
@@ -41,6 +42,9 @@ Route::name('admin.')->prefix('admin')->group(function() {
 
         Route::get('suppliers/data', [AdminSupplierController::class, 'anyData'])->name('suppliers.data');
         Route::resource('suppliers', AdminSupplierController::class);
+
+        Route::get('materials/data', [AdminMaterialController::class, 'anyData'])->name('materials.data');
+        Route::resource('materials', AdminMaterialController::class);
 
         Route::patch('tenders/storeSuppliers', [AdminTenderController::class, 'storeSuppliers'])->name('tenders.storeSuppliers');
         Route::get('tenders/createSuppliers', [AdminTenderController::class, 'createSuppliers'])->name('tenders.createSuppliers');

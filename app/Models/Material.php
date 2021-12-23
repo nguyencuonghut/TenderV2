@@ -12,6 +12,7 @@ class Material extends Model
     protected $fillable = [
         'code',
         'name',
+        'quality',
     ];
 
     public function suppliers()

@@ -12,6 +12,7 @@ use App\Models\Tender;
 use App\Models\User;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
+use App\Notifications\TenderResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -240,7 +241,29 @@ class AdminTenderController extends Controller
 
         $selected_supplier_ids = [];
         $selected_supplier_ids = explode(",", $tender->supplier_ids);
-        return view('admin.tender.changestatus', ['tender' => $tender, 'suppliers' => $suppliers, 'selected_supplier_ids' => $selected_supplier_ids]);
+
+        //Get the array of Supplier Id that send the bid and selected
+        $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
+        $selected_bided_supplier_ids = [];
+        foreach($selected_bids as $bid) {
+            $user = User::findOrFail($bid->user_id);
+            array_push($selected_bided_supplier_ids, $user->supplier_id);
+        }
+
+        //Get the array of Supplier Id that send the bid
+        $bided_supplier_ids = [];
+        $bids = Bid::where('tender_id', $tender->id)->get();
+        foreach($bids as $bid) {
+            $user = User::findOrFail($bid->user_id);
+            array_push($bided_supplier_ids, $user->supplier_id);
+        }
+        return view('admin.tender.changestatus',
+                    ['tender' => $tender,
+                     'suppliers' => $suppliers,
+                     'selected_supplier_ids' => $selected_supplier_ids,
+                     'bided_supplier_ids' => $bided_supplier_ids,
+                     'selected_bided_supplier_ids' => $selected_bided_supplier_ids,
+                    ]);
     }
 
     public function updateStatus(Request $request, $id)
@@ -260,7 +283,7 @@ class AdminTenderController extends Controller
             $tender->status = $request->status;
             $tender->save();
 
-            //Send email to suppliers if status is In-progress
+            //Send notification email to suppliers
             if('In-progress' == $request->status) {
                 //Get the mail list
                 $selected_supplier_ids = [];
@@ -269,9 +292,21 @@ class AdminTenderController extends Controller
                 foreach($users as $user)  {
                     Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
                 }
+
+                Alert::toast('Tender chuyển sang trạng thái Hoạt Động. Bắt đầu đấu thầu!', 'success', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            } else if('Closed' == $request->status) {
+                //Get the mail list
+                $bided_user_ids = [];
+                $bided_user_ids = Bid::where('tender_id', $tender->id)->pluck('user_id')->toArray();
+                $users = User::whereIn('id', $bided_user_ids)->get();
+                foreach($users as $user)  {
+                    Notification::route('mail' , $user->email)->notify(new TenderResult($tender->id));
+                }
+
+                Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
+                return redirect()->route('admin.tenders.index');
             }
-            Alert::toast('Cập nhật trạng thái tender thành công!', 'success', 'top-right');
-            return redirect()->route('admin.tenders.index');
         } else {
             Alert::toast('Bạn không có quyền chuyển trạng thái tender!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
@@ -341,15 +376,8 @@ class AdminTenderController extends Controller
         $bid->is_selected = true;
         $bid->save();
 
-        //Update tender
-        $tender = Tender::findOrFail($id);
-        $tender->status = 'Closed';
-        $tender->save();
-
-        //Send mail
-
         Alert::toast('Chọn kết quả thầu thành công!', 'success', 'top-right');
-        return redirect()->route('admin.tenders.result', $tender->id);
+        return redirect()->route('admin.tenders.result', $id);
     }
 
     public function destroyResult($bid_id)
