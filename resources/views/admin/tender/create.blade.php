@@ -77,9 +77,9 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="control-group">
-                                        <label class="required-field" class="control-label">Chất lượng</label>
+                                        <label class="control-label">Đóng gói, xuất xứ</label>
                                         <div class="controls">
-                                            <textarea id="quality" name="quality">
+                                            <textarea id="packing" name="packing">
                                             </textarea>
                                         </div>
                                     </div>
@@ -110,7 +110,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="control-group">
-                                        <label class="required-field" class="control-label">Chứng từ cung cấp</label>
+                                        <label class="control-label">Chứng từ cung cấp</label>
                                         <div class="controls">
                                             <textarea id="certificate" name="certificate">
                                             </textarea>
@@ -190,7 +190,7 @@
                 ['color', ['color']],
             ]
         })
-        $('#quality').summernote({
+        $('#packing').summernote({
             height: 80,
             toolbar: [
                 ['style', ['style']],
@@ -237,11 +237,11 @@
         $(this).summernote("pasteHTML", "<br><br>");
         e.preventDefault();
     });
-    $("#quality").on("summernote.enter", function(we, e) {
+    $("#delivery_condition").on("summernote.enter", function(we, e) {
         $(this).summernote("pasteHTML", "<br><br>");
         e.preventDefault();
     });
-    $("#delivery_condition").on("summernote.enter", function(we, e) {
+    $("#packing").on("summernote.enter", function(we, e) {
         $(this).summernote("pasteHTML", "<br><br>");
         e.preventDefault();
     });

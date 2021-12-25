@@ -16,7 +16,7 @@ class Tender extends Model
         'title',
         'material_id',
         'quantity_and_delivery_time',
-        'quality',
+        'packing',
         'delivery_condition',
         'payment_condition',
         'certificate',

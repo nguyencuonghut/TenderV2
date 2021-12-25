@@ -105,7 +105,7 @@
                                     <div class="controls">
                                         <select name="bid_id" id="bid_id" class="form-control select2">
                                             @foreach ($bids as $bid)
-                                                <option value="{{$bid->id}}">{{$bid->user->email}} | {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->delivery_time}}</option>
+                                                <option value="{{$bid->id}}">{{$bid->user->supplier->name}} | {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->delivery_time}}</option>
                                             @endforeach
                                         </select>
                                     </div>

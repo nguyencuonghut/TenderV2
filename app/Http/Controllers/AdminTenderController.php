@@ -56,20 +56,16 @@ class AdminTenderController extends Controller
             'title' => 'required',
             'material_id' => 'required',
             'quantity_and_delivery_time' => 'required',
-            'quality' => 'required',
             'delivery_condition' => 'required',
             'payment_condition' => 'required',
-            'certificate' => 'required',
             'date_range' => 'required',
         ];
         $messages = [
             'title.required' => 'Bạn phải nhập tiêu đề.',
             'material_id.required' => 'Bạn phải nhập tên hàng.',
             'quantity_and_delivery_time.required' => 'Bạn phải nhập số lượng và thời gian giao hàng.',
-            'quality.required' => 'Bạn phải nhập chất lượng.',
             'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
             'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-            'certificate.required' => 'Bạn phải nhập chứng từ cung cấp.',
             'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
         ];
         $request->validate($rules,$messages);
@@ -86,7 +82,7 @@ class AdminTenderController extends Controller
         $tender->title = $request->title;
         $tender->material_id = $request->material_id;
         $tender->quantity_and_delivery_time = $request->quantity_and_delivery_time;
-        $tender->quality = $request->quality;
+        $tender->packing = $request->packing;
         $tender->delivery_condition = $request->delivery_condition;
         $tender->payment_condition = $request->payment_condition;
         $tender->certificate = $request->certificate;
@@ -320,7 +316,12 @@ class AdminTenderController extends Controller
         $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
         $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
 
-        return view('admin.tender.createsuppliers', ['suppliers' => $suppliers, 'tender' => $tender]);
+        if(!$suppliers->count()) {
+            Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        } else {
+            return view('admin.tender.createsuppliers', ['suppliers' => $suppliers, 'tender' => $tender]);
+        }
     }
 
     public function storeSuppliers(Request $request)

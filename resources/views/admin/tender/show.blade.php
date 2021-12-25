@@ -95,8 +95,8 @@
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Trạng thái</strong><br>
-                                            {!! $tender->status !!}<br>
+                                            <strong>Tên hàng</strong><br>
+                                            {{$tender->material->name}}<br>
                                           </address>
                                         </div>
                                     </div>
@@ -105,15 +105,15 @@
                                     <div class="row invoice-info">
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Tên hàng</strong><br>
-                                            {{$tender->material->name}}<br>
+                                            <strong>Số lượng và thời gian giao hàng</strong><br>
+                                            {!! $tender->quantity_and_delivery_time !!}<br>
                                           </address>
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Số lượng và thời gian giao hàng</strong><br>
-                                            {!! $tender->quantity_and_delivery_time !!}<br>
+                                            <strong>Đóng gói</strong><br>
+                                            {!! $tender->packing !!}<br>
                                           </address>
                                         </div>
                                         <!-- /.col -->
@@ -155,7 +155,7 @@
                                         <div class="col-sm-12 invoice-col">
                                           <address>
                                             <strong>Yêu cầu chất lượng</strong><br>
-                                            {!!$tender->quality!!}<br>
+                                            {!!$tender->material->quality!!}<br>
                                           </address>
                                         </div>
                                     </div>
