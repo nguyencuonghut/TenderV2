@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bid;
+use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
 use App\Models\User;
 use Datatables;
@@ -23,7 +24,12 @@ class UserTenderController extends Controller
 
             $bids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
-            return view('user.tender.show', ['tender' => $tender, 'bids' => $bids, 'selected_bids' => $selected_bids]);
+            $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+
+            return view('user.tender.show', ['tender' => $tender,
+                                             'bids' => $bids,
+                                             'selected_bids' => $selected_bids,
+                                             'quantity_and_delivery_times' => $quantity_and_delivery_times]);
         } else {
             Alert::toast('Bạn không quyền xem tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
@@ -39,7 +45,7 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::with('material')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status', 'supplier_ids'])->get();
+        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status', 'supplier_ids'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = [];
             $selected_supplier_ids = explode(",", $tender->supplier_ids);

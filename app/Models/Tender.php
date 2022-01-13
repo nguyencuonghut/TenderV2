@@ -15,8 +15,8 @@ class Tender extends Model
         'code',
         'title',
         'material_id',
-        'quantity_and_delivery_time',
         'packing',
+        'origin',
         'delivery_condition',
         'payment_condition',
         'certificate',
@@ -38,10 +38,12 @@ class Tender extends Model
         return $this->belongsTo(Material::class);
     }
 
+    /*
     public function suppliers()
     {
         return $this->belongsToMany(Tender::class, 'tender_supplier');
     }
+    */
 
     public function bids()
     {

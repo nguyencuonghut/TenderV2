@@ -94,7 +94,7 @@
                                         <div class="col-sm-4 invoice-col">
                                           <address>
                                             <strong>Tên hàng</strong><br>
-                                            {{$tender->material->name}}<br>
+                                            {{$tender->material->name}} (Xuất xứ: {{$tender->origin}})<br>
                                           </address>
                                         </div>
                                     </div>
@@ -104,8 +104,9 @@
                                         <div class="col-sm-4 invoice-col">
                                           <address>
                                             <strong>Số lượng và thời gian giao hàng</strong><br>
-                                            {!! $tender->quantity_and_delivery_time !!}<br>
-                                          </address>
+                                            @foreach ($quantity_and_delivery_times as $item)
+                                                - {{$item->quantity}} {{$item->quantity_unit}} ({{$item->delivery_time}})<br>
+                                            @endforeach                                          </address>
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">

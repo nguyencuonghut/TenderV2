@@ -68,19 +68,17 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="control-group">
-                                        <label class="required-field" class="control-label">Số lượng và thời gian giao hàng</label>
+                                        <label class="control-label">Xuất xứ</label>
                                         <div class="controls">
-                                            <textarea id="quantity_and_delivery_time" name="quantity_and_delivery_time">
-                                            </textarea>
+                                            <input type="text" class="form-control" name="origin" id="origin" required="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="control-group">
-                                        <label class="control-label">Đóng gói, xuất xứ</label>
+                                        <label class="control-label">Đóng gói</label>
                                         <div class="controls">
-                                            <textarea id="packing" name="packing">
-                                            </textarea>
+                                            <input type="text" class="form-control" name="packing" id="packing" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -108,28 +106,23 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="control-group">
                                         <label class="control-label">Chứng từ cung cấp</label>
                                         <div class="controls">
-                                            <textarea id="certificate" name="certificate">
-                                            </textarea>
+                                            <input type="text" class="form-control" name="certificate" id="certificate" required="">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="control-group">
                                         <label class="control-label">Điều khoản khác</label>
                                         <div class="controls">
-                                            <textarea id="other_term" name="other_term">
-                                            </textarea>
+                                            <input type="text" class="form-control" name="other_term" id="other_term" required="">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-12">
+                                <div class="col-4">
                                     <label class="required-field">Thời gian áp dụng</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -182,22 +175,6 @@
         })
 
         // Summernote
-        $('#quantity_and_delivery_time').summernote({
-            height: 80,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-            ]
-        })
-        $('#packing').summernote({
-            height: 80,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-            ]
-        })
         $('#delivery_condition').summernote({
             height: 80,
             toolbar: [
@@ -214,34 +191,10 @@
                 ['color', ['color']],
             ]
         })
-        $('#certificate').summernote({
-            height: 80,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-            ]
-        })
-        $('#other_term').summernote({
-            height: 80,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-            ]
-        })
     })
 
     //Remove <p> tag by <br> when enter new line
-    $("#quantity_and_delivery_time").on("summernote.enter", function(we, e) {
-        $(this).summernote("pasteHTML", "<br><br>");
-        e.preventDefault();
-    });
     $("#delivery_condition").on("summernote.enter", function(we, e) {
-        $(this).summernote("pasteHTML", "<br><br>");
-        e.preventDefault();
-    });
-    $("#packing").on("summernote.enter", function(we, e) {
         $(this).summernote("pasteHTML", "<br><br>");
         e.preventDefault();
     });
@@ -249,44 +202,7 @@
         $(this).summernote("pasteHTML", "<br><br>");
         e.preventDefault();
     });
-    $("#certificate").on("summernote.enter", function(we, e) {
-        $(this).summernote("pasteHTML", "<br><br>");
-        e.preventDefault();
-    });
-    $("#other_term").on("summernote.enter", function(we, e) {
-        $(this).summernote("pasteHTML", "<br><br>");
-        e.preventDefault();
-    });
 
-/*
-    $(document).ready(function() {
-        $('#material_id').on('change', function() {
-            var materialID = $(this).val();
-            if(materialID) {
-                $.ajax({
-                    url: '/admin/tenders/getSuppliers/'+materialID,
-                    type: "GET",
-                    data : {"_token":"{{ csrf_token() }}"},
-                    dataType: "json",
-                    success:function(data)
-                    {
-                        if(data){
-                        $('#suppliers').empty();
-                        $('#suppliers').append('<option hidden>Chọn nhà thầu</option>');
-                        $.each(data, function(key, suppliers){
-                            $('select[name="suppliers"]').append('<option value="'+ key +'">' + suppliers.name + '</option>');
-                        });
-                    }else{
-                        $('#suppliers').empty();
-                    }
-                    }
-                });
-            }else{
-                $('#suppliers').empty();
-            }
-        });
-    });
-    */
     $('body').on('change', '#material_id', function() {
         loadOptionSuppliers($(this).val());
     });

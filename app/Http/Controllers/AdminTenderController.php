@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Bid;
 use App\Models\Material;
 use App\Models\MaterialSupplier;
+use App\Models\QuantityAndDeliveryTime;
 use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
@@ -55,7 +56,6 @@ class AdminTenderController extends Controller
         $rules = [
             'title' => 'required',
             'material_id' => 'required',
-            'quantity_and_delivery_time' => 'required',
             'delivery_condition' => 'required',
             'payment_condition' => 'required',
             'date_range' => 'required',
@@ -63,7 +63,6 @@ class AdminTenderController extends Controller
         $messages = [
             'title.required' => 'Bạn phải nhập tiêu đề.',
             'material_id.required' => 'Bạn phải nhập tên hàng.',
-            'quantity_and_delivery_time.required' => 'Bạn phải nhập số lượng và thời gian giao hàng.',
             'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
             'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
             'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
@@ -81,7 +80,7 @@ class AdminTenderController extends Controller
         $tender->code = 'NL' . '/' . $tender_id . '/' . Carbon::now()->month . '/' . Carbon::now()->year;
         $tender->title = $request->title;
         $tender->material_id = $request->material_id;
-        $tender->quantity_and_delivery_time = $request->quantity_and_delivery_time;
+        $tender->origin = $request->origin;
         $tender->packing = $request->packing;
         $tender->delivery_condition = $request->delivery_condition;
         $tender->payment_condition = $request->payment_condition;
@@ -98,7 +97,7 @@ class AdminTenderController extends Controller
         $tender->save();
 
         $request->session()->put('tender', $tender);
-        return redirect()->route('admin.tenders.createSuppliers');
+        return redirect()->route('admin.tenders.createQuantityAndDeliveryTimes');
     }
 
     /**
@@ -125,17 +124,20 @@ class AdminTenderController extends Controller
             array_push($bided_supplier_ids, $user->supplier_id);
         }
 
-        if(Carbon::now()->greaterThan($tender->tender_end_time)) {
+        if(Carbon::now()->greaterThan($tender->tender_end_time)
+            || $tender->status != 'In-progress') {
             $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('user_id', 'asc')->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
 
+            $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
                          'suppliers' => $suppliers,
                          'selected_supplier_ids' => $selected_supplier_ids,
                          'bided_supplier_ids' => $bided_supplier_ids,
-                         'selected_bids' => $selected_bids
+                         'selected_bids' => $selected_bids,
+                         'quantity_and_delivery_times' => $quantity_and_delivery_times
                         ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
@@ -308,6 +310,30 @@ class AdminTenderController extends Controller
             return redirect()->route('admin.tenders.index');
         }
 
+    }
+
+    public function createQuantityAndDeliveryTimes(Request $request)
+    {
+        $tender = $request->session()->get('tender');
+        return view('admin.tender.create_quantity_and_delivery_times', ['tender' => $tender]);
+    }
+
+    public function storeQuantityAndDeliveryTimes(Request $request)
+    {
+        $request->validate([
+            'addmore.*.quantity' => 'required',
+            'addmore.*.quantity_unit' => 'required',
+            'addmore.*.delivery_time' => 'required',
+        ]);
+
+        $tender = $request->session()->get('tender');
+
+        foreach ($request->addmore as $key => $value) {
+            QuantityAndDeliveryTime::create($value);
+        }
+
+        $request->session()->put('tender', $tender);
+        return redirect()->route('admin.tenders.createSuppliers');
     }
 
     public function createSuppliers(Request $request)
