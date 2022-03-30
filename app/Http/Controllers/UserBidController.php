@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bid;
+use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,7 +21,10 @@ class UserBidController extends Controller
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if(in_array(Auth::user()->id, $users)) {
             $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
-            return view('user.bid.index', ['bids' => $bids, 'tender' => $tender]);
+            $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+            return view('user.bid.index', ['bids' => $bids,
+                                           'tender' => $tender,
+                                           'quantity_and_delivery_times' => $quantity_and_delivery_times]);
         } else {
             Alert::toast('Bạn không quyền bỏ thầu tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
@@ -55,14 +59,12 @@ class UserBidController extends Controller
             && Carbon::now()->lessThan($tender->tender_end_time)
             && in_array(Auth::user()->id, $users)) {
             $rules = [
-                'quantity' => 'required',
-                'quantity_unit' => 'required',
+                'quantity_id' => 'required',
                 'price' => 'required',
                 'price_unit' => 'required',
             ];
             $messages = [
-                'quantity.required' => 'Bạn phải nhập số lượng.',
-                'quantity_unit.required' => 'Bạn phải chọn đơn vị.',
+                'quantity_id.required' => 'Bạn phải chọn số lượng.',
                 'price.required' => 'Bạn phải nhập giá.',
                 'price_unit.required' => 'Bạn phải chọn loại tiền tệ.',
             ];
@@ -71,11 +73,11 @@ class UserBidController extends Controller
             $bid = new Bid();
             $bid->tender_id = $tender_id;
             $bid->user_id = Auth::user()->id;
-            $bid->quantity = $request->quantity;
-            $bid->quantity_unit = $request->quantity_unit;
+            $bid->quantity_id = $request->quantity_id;
             $bid->price = $request->price;
             $bid->price_unit = $request->price_unit;
             $bid->pack = $request->pack;
+            $bid->origin = $request->origin;
             $bid->delivery_time = $request->delivery_time;
             $bid->delivery_place = $request->delivery_place;
             $bid->payment_condition = $request->payment_condition;

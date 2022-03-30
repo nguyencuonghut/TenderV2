@@ -15,4 +15,9 @@ class QuantityAndDeliveryTime extends Model
         'delivery_time',
         'tender_id',
     ];
+
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
 }

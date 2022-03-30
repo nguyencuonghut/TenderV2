@@ -12,12 +12,12 @@ class Bid extends Model
     protected $fillable = [
         'tender_id',
         'user_id',
-        'quantity',
-        'quantity_unit',
+        'quantity_id',
         'price',
         'price_unit',
         'note',
         'pack',
+        'origin',
         'delivery_time',
         'delivery_place',
         'payment_condition',
@@ -35,4 +35,10 @@ class Bid extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function quantity()
+    {
+        return $this->belongsTo(QuantityAndDeliveryTime::class);
+    }
+
 }

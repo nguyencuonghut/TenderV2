@@ -41,10 +41,10 @@
                 <br>
                 <table id="bids-table" class="table table-bordered table-striped">
                   <tr>
-                    <th>Số lượng</th>
+                    <th>Số lượng và thời gian giao</th>
                     <th>Giá</th>
+                    <th>Xuất xứ</th>
                     <th>Đóng gói</th>
-                    <th>Thời gian giao</th>
                     <th>Địa điểm giao</th>
                     <th>Điều kiện thanh toán</th>
                     <th>Ghi chú</th>
@@ -52,15 +52,15 @@
                   </tr>
                   @foreach ($bids as $bid)
                   <tr>
-                    <td>{{ number_format($bid->quantity, 0, '.', ' ') }} ({{$bid->quantity_unit}})</td>
+                    <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
                     @if('đồng/kg' == $bid->price_unit
                         || 'đồng/chiếc' == $bid->price_unit)
                     <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
                     @else
                     <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                     @endif
+                    <td>{{ $bid->origin }}</td>
                     <td>{{ $bid->pack }}</td>
-                    <td>{{ $bid->delivery_time }}</td>
                     <td>{{ $bid->delivery_place }}</td>
                     <td>{{ $bid->payment_condition }}</td>
                     <td>{{ $bid->note }}</td>
@@ -93,59 +93,88 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label class="required-field" class="control-label">Số lượng</label>
-                        <div class="input-group">
-                            <input type="number" name="quantity" id="quantity" placeholder="0" class="form-control" />
-                            <select name="quantity_unit" id="quantity_unit" class="form-control" style="max-width:15%;">
-                                <option value="tấn" selected>tấn</option>
-                                <option value="kg">kg</option>
-                                <option value="chiếc">chiếc</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="required-field" class="control-label">Số lượng</label>
+                                    <div class="input-group">
+                                        <select name="quantity_id" id="quantity_id" class="form-control">
+                                            @foreach ($quantity_and_delivery_times as $item)
+                                            <option value="{{$item->id}}" selected>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="required-field" class="control-label">Giá</label>
+                                    <div class="input-group">
+                                        <input type="number" name="price" id="price" placeholder="0" step="any" class="form-control" />
+                                        <select name="price_unit" id="price_unit" class="form-control" style="max-width:40%;">
+                                            <option value="đồng/kg" selected>đồng/kg</option>
+                                            <option value="USD/tấn">USD/tấn</option>
+                                            <option value="USD/kg">USD/kg</option>
+                                            <option value="đồng/tấn">đồng/chiếc</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-                        <label class="required-field" class="control-label">Giá</label>
-                        <div class="input-group">
-                            <input type="number" name="price" id="price" placeholder="0" step="any" class="form-control" />
-                            <select name="price_unit" id="price_unit" class="form-control" style="max-width:15%;">
-                                <option value="đồng/kg" selected>đồng/kg</option>
-                                <option value="USD/tấn">USD/tấn</option>
-                                <option value="USD/kg">USD/kg</option>
-                                <option value="đồng/tấn">đồng/chiếc</option>
-                            </select>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label">Ghi chú</label>
-                            <div class="controls">
-                                <input type="text" class="form-control" name="note" id="note" required="">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Đóng gói</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="pack" id="pack" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Xuất xứ</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="origin" id="origin" required="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label">Đóng gói</label>
-                            <div class="controls">
-                                <input type="text" class="form-control" name="pack" id="pack" required="">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Thời gian giao</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="delivery_time" id="delivery_time" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Địa điểm giao</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="delivery_place" id="delivery_place" required="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label">Thời gian giao</label>
-                            <div class="controls">
-                                <input type="text" class="form-control" name="delivery_time" id="delivery_time" required="">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Điều kiện thanh toán</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="payment_condition" id="payment_condition" required="">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label">Địa điểm giao</label>
-                            <div class="controls">
-                                <input type="text" class="form-control" name="delivery_place" id="delivery_place" required="">
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label">Điều kiện thanh toán</label>
-                            <div class="controls">
-                                <input type="text" class="form-control" name="payment_condition" id="payment_condition" required="">
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Ghi chú</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="note" id="note" required="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +183,6 @@
                     <button type="submit" class="btn btn-primary">Lưu</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
         </div>
     </form>

@@ -126,7 +126,7 @@ class AdminTenderController extends Controller
 
         if(Carbon::now()->greaterThan($tender->tender_end_time)
             || $tender->status != 'In-progress') {
-            $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('user_id', 'asc')->get();
+            $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
 
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();

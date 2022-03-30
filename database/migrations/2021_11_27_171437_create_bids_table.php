@@ -20,12 +20,13 @@ class CreateBidsTable extends Migration
             $table->foreign('tender_id')->references('id')->on('tenders')->onDelete('cascade');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('quantity');
-            $table->enum('quantity_unit', ['tấn', 'kg', 'chiếc']);
+            $table->bigInteger('quantity_id')->unsigned();
+            $table->foreign('quantity_id')->references('id')->on('quantity_and_delivery_times')->onDelete('cascade');
             $table->float('price');
             $table->enum('price_unit', ['đồng/kg', 'USD/tấn', 'USD/kg', 'đồng/chiếc']);
             $table->text('note')->nullable();
             $table->string('pack')->nullable();
+            $table->string('origin')->nullable();
             $table->text('delivery_time')->nullable();
             $table->text('delivery_place')->nullable();
             $table->text('payment_condition')->nullable();

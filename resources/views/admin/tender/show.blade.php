@@ -195,33 +195,33 @@
                                         </div>
                                     </div>
 
-                                  <table id="bids-table" class="table table-bordered table-striped">
-                                    <tr>
-                                      <th>STT</th>
-                                      <th style="width: 30%;">Nhà cung cấp</th>
-                                      <th>Số lượng</th>
-                                      <th>Giá</th>
-                                      <th>Thời gian chào</th>
-                                      <th>Ghi chú</th>
-                                    </tr>
-                                    @php
-                                        $i = 0
-                                    @endphp
-                                    @foreach ($bids as $bid)
-                                    <tr>
-                                      <td>{{++$i}}</td>
-                                      <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
-                                      <td>{{ number_format($bid->quantity, 0, '.', ',') }} ({{$bid->quantity_unit}})</td>
-                                      @if('VND' == $bid->price_unit)
-                                      <td>{{ number_format($bid->price, 0, ',', ',') }} ({{$bid->price_unit}})</td>
-                                      @else
-                                      <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
-                                      @endif
-                                      <td>{{ $bid->created_at }}</td>
-                                      <td>{{ $bid->note }}</td>
-                                    </tr>
-                                    @endforeach
-                                  </table>
+                                    <table id="bids-table" class="table table-bordered table-hover">
+                                        <tr>
+                                          <th>STT</th>
+                                          <th>Số lượng</th>
+                                          <th style="width: 30%;">Nhà cung cấp</th>
+                                          <th>Giá</th>
+                                          <th style="width: 30%;">Điều kiện thanh toán</th>
+                                          <th>Xuất xứ</th>
+                                        </tr>
+                                        @php
+                                            $i = 0
+                                        @endphp
+                                        @foreach ($bids as $bid)
+                                        <tr style="color:@if($bid->quantity_id % 2 == 0) #057ba9 @endif">
+                                          <td>{{++$i}}</td>
+                                          <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}</td>
+                                          <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
+                                          @if('VND' == $bid->price_unit)
+                                          <td>{{ number_format($bid->price, 0, ',', ',') }} ({{$bid->price_unit}})</td>
+                                          @else
+                                          <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                          @endif
+                                          <td>{{ $bid->payment_condition }}</td>
+                                          <td>{{ $bid->origin }}</td>
+                                        </tr>
+                                        @endforeach
+                                      </table>
                                 </div>
                                 @if(Carbon\Carbon::now()->greaterThan($tender->tender_end_time))
                                   <div class="card-footer clearfix">

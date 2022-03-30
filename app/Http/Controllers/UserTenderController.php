@@ -24,7 +24,7 @@ class UserTenderController extends Controller
 
             $bids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
-            $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+            $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->orderBy('id', 'desc')->get();
 
             return view('user.tender.show', ['tender' => $tender,
                                              'bids' => $bids,
