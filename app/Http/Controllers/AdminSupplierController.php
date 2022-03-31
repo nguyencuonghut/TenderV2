@@ -66,7 +66,7 @@ class AdminSupplierController extends Controller
      */
     public function show($id)
     {
-        //
+        return redirect()->back();
     }
 
     /**
