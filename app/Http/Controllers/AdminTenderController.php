@@ -370,7 +370,7 @@ class AdminTenderController extends Controller
         $tender = Tender::findOrFail($id);
 
         //Get the array of Supplier Id that send the bid
-        $bids = Bid::where('tender_id', $tender->id)->get();
+        $bids = Bid::where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
         $bided_supplier_ids = [];
         foreach($bids as $bid) {
             $user = User::findOrFail($bid->user_id);

@@ -197,19 +197,24 @@
 
                                     <table id="bids-table" class="table table-bordered table-hover">
                                         <tr>
-                                          <th>STT</th>
-                                          <th>Số lượng</th>
+                                          <th>Trúng thầu</th>
+                                          <th style="width: 11%;">Số lượng</th>
                                           <th style="width: 30%;">Nhà cung cấp</th>
                                           <th>Giá</th>
                                           <th style="width: 30%;">Điều kiện thanh toán</th>
                                           <th>Xuất xứ</th>
                                         </tr>
-                                        @php
-                                            $i = 0
-                                        @endphp
                                         @foreach ($bids as $bid)
                                         <tr style="color:@if($bid->quantity_id % 2 == 0) #057ba9 @endif">
-                                          <td>{{++$i}}</td>
+                                          <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" onclick="return false;"
+                                                  @if($bid->is_selected)
+                                                      checked
+                                                  @endif
+                                                >
+                                              </div>
+                                          </td>
                                           <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}</td>
                                           <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
                                           @if('VND' == $bid->price_unit)

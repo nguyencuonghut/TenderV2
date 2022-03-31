@@ -89,7 +89,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-4">
-                                <label class="required-field" class="control-label">Số lượng trúng thầu</label>
+                                <label class="required-field" class="control-label">Lượng trúng thầu</label>
                                 <div class="input-group">
                                     <input type="number" name="tender_quantity" id="tender_quantity" placeholder="0" class="form-control" />
                                     <select name="tender_quantity_unit" id="tender_quantity_unit" class="form-control" style="max-width:15%;">
@@ -105,7 +105,7 @@
                                     <div class="controls">
                                         <select name="bid_id" id="bid_id" class="form-control select2">
                                             @foreach ($bids as $bid)
-                                                <option value="{{$bid->id}}">{{$bid->user->supplier->name}} | {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->delivery_time}}</option>
+                                                <option value="{{$bid->id}}">{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} | {{$bid->quantity->delivery_time}} - {{$bid->user->supplier->name}} | {{$bid->price}} ({{$bid->price_unit}})</option>
                                             @endforeach
                                         </select>
                                     </div>
