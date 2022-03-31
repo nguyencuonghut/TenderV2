@@ -192,10 +192,20 @@ class AdminTenderController extends Controller
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($tenders) {
-                return '<a href="tenders/' . $tenders->id . '" ">' . $tenders->title . '</a>';
+                return '<a href="'.route('admin.tenders.show', $tenders->id).'">'.$tenders->title.'</a>';
             })
             ->editColumn('material_id', function ($tenders) {
                 return $tenders->material->name;
+            })
+            ->editColumn('status', function ($tenders) {
+                if($tenders->status == 'Open') {
+                    return '<span class="badge badge-primary">Open</span>';
+
+                } else if($tenders->status == 'Closed'){
+                    return '<span class="badge badge-success">Closed</span>';
+                } else {
+                    return '<span class="badge badge-warning">In-progress</span>';
+                }
             })
             ->editColumn('tender_start_time', function ($tenders) {
                 return $tenders->tender_start_time;
@@ -218,7 +228,7 @@ class AdminTenderController extends Controller
 
                     {{csrf_field()}}
                 </form>')
-            ->rawColumns(['titlelink', 'edit', 'delete', 'change_status'])
+            ->rawColumns(['titlelink', 'status', 'edit', 'delete', 'change_status'])
             ->make(true);
     }
 
