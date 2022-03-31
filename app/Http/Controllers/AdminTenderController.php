@@ -69,6 +69,14 @@ class AdminTenderController extends Controller
         ];
         $request->validate($rules,$messages);
 
+        //Check the Supplier is existed or not
+        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$request->material_id)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        if(!$suppliers->count()) {
+            Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
+
         $last_tender = Tender::latest()->first();
         if($last_tender == null) {
             $tender_id = 1;
