@@ -278,6 +278,12 @@ class AdminTenderController extends Controller
             $request->validate($rules,$messages);
 
             $tender = Tender::findOrFail($id);
+            //Check status is updated or not
+            if($request->status == $tender->status) {
+                Alert::toast('Trạng thái không có gì thay đổi. Bạn vui lòng kiểm tra lại!', 'warning', 'top-right');
+                return redirect()->back();
+            }
+
             $tender->status = $request->status;
             $tender->save();
 
