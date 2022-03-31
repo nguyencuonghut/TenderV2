@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Datatables;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminSupplierController extends Controller
 {
@@ -25,7 +26,7 @@ class AdminSupplierController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.supplier.create');
     }
 
     /**
@@ -36,7 +37,25 @@ class AdminSupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'code' => 'required|unique:suppliers',
+            'name' => 'required|max:255',
+        ];
+        $messages = [
+            'code.required' => 'Bạn phải nhập mã.',
+            'code.unique' => 'Mã đã tồn tại.',
+            'name.required' => 'Bạn phải nhập tên.',
+            'name.max' => 'Tên dài quá 255 ký tự.',
+        ];
+        $request->validate($rules,$messages);
+
+        $supplier = new Supplier();
+        $supplier->name = $request->name;
+        $supplier->code = $request->code;
+        $supplier->save();
+
+        Alert::toast('Tạo nhà cung cấp mới thành công!', 'success', 'top-right');
+        return redirect()->route('admin.suppliers.index');
     }
 
     /**
@@ -58,7 +77,8 @@ class AdminSupplierController extends Controller
      */
     public function edit($id)
     {
-        //
+        $supplier = Supplier::findOrFail($id);
+        return view('admin.supplier.edit', ['supplier' => $supplier]);
     }
 
     /**
@@ -70,7 +90,25 @@ class AdminSupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'code' => 'required|unique:suppliers',
+            'name' => 'required|max:255',
+        ];
+        $messages = [
+            'code.required' => 'Bạn phải nhập mã.',
+            'code.unique' => 'Mã đã tồn tại.',
+            'name.required' => 'Bạn phải nhập tên.',
+            'name.max' => 'Tên dài quá 255 ký tự.',
+        ];
+        $request->validate($rules,$messages);
+
+        $supplier = Supplier::findOrFail($id);
+        $supplier->name = $request->name;
+        $supplier->code = $request->code;
+        $supplier->save();
+
+        Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
+        return redirect()->route('admin.suppliers.index');
     }
 
     /**
@@ -81,7 +119,16 @@ class AdminSupplierController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $supplier = Supplier::findOrFail($id);
+        //Check condition before destroying
+        if($supplier->users->count() == 0) {
+            $supplier->destroy($id);
+            Alert::toast('Xóa nhà cung cấp thành công!', 'success', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        } else {
+            Alert::toast('Nhà cung cấp đang chứa user. Không thể xóa!', 'error', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        }
     }
 
     public function anyData()
