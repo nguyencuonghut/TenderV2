@@ -198,7 +198,10 @@
                                       <th>Địa điểm giao</th>
                                       <th>Điều kiện thanh toán</th>
                                       <th>Ghi chú</th>
+                                      @if('Closed' != $tender->status
+                                            && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                                       <th style="Width: 8%;">Xóa</th>
+                                      @endif
                                     </tr>
                                     @foreach ($bids as $bid)
                                     <tr>
@@ -214,6 +217,8 @@
                                       <td>{{ $bid->delivery_place }}</td>
                                       <td>{{ $bid->payment_condition }}</td>
                                       <td>{{ $bid->note }}</td>
+                                      @if('Closed' != $tender->status
+                                            && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                                       <td>
                                           <form action="{{ route('user.bids.destroy', $bid->id) }}" method="POST">
                                               <input type="hidden" name="_method" value="DELETE">
@@ -223,6 +228,7 @@
                                               @method('delete')
                                          </form>
                                       </td>
+                                      @endif
                                     </tr>
                                     @endforeach
                                   </table>
