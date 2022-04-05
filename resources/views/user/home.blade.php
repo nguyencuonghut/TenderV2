@@ -2,6 +2,13 @@
 {{ 'Trang chủ' }}
 @endsection
 
+@push('styles')
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@endpush
+
 @extends('layouts.base')
 @section('content')
 <!-- Content Wrapper. Contains page content -->
@@ -25,73 +32,199 @@
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
+        <div class="container-fluid">
+            <!-- Info boxes -->
+            <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th-list"></i></span>
 
-                <p>Tổng số tender</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-ios-copy"></i>
-              </div>
-              <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                <div class="info-box-content">
+                    <span class="info-box-text">Tổng số tender</span>
+                    <span class="info-box-number">
+                    {{$my_all_tenders->count()}}
+                    </span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
             </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53</h3>
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check"></i></span>
 
-                <p>Tender hoàn thành</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-checkmark-circled"></i>
-              </div>
-              <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                <div class="info-box-content">
+                    <span class="info-box-text">Tender hoàn thành</span>
+                    <span class="info-box-number">{{$my_completed_tenders->count()}}</span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
             </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
+            <!-- /.col -->
 
-                <p>Tender đang diễn ra</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-load-a"></i>
-              </div>
-              <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
+            <!-- fix for small devices only -->
+            <div class="clearfix hidden-md-up"></div>
 
-                <p>Số nhà cung cấp</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-spinner"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Tender đang diễn ra</span>
+                    <span class="info-box-number">{{$my_in_progress_tenders->count()}}</span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
             </div>
-          </div>
-          <!-- ./col -->
-        </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-truck"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Chào giá của tôi</span>
+                    <span class="info-box-number">{{$my_bids->count()}}</span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Tất cả tender</h5>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table id="bids-table" class="table">
+                                <thead>
+                                <tr>
+                                 <th>#</th>
+                                  <th style="width:35%;">Tender</th>
+                                  <th>Tên hàng</th>
+                                  <th>Gói thầu</th>
+                                  <th>Giá</th>
+                                  <th>Xuất xứ</th>
+                                  <th>Kết quả</th>
+                                </tr>
+                                </thead>
+                              </table>
+                        </div>
+                    <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- ./card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!--/. container-fluid -->
     </section>
     <!-- /.content -->
   </div>
 @endsection
+
+
+
+@push('scripts')
+<!-- DataTables  & Plugins -->
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+
+
+<style type="text/css">
+    .dataTables_wrapper .dt-buttons {
+    margin-bottom: -3em
+  }
+</style>
+
+
+<script>
+    $(function () {
+      $("#bids-table").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        buttons: [
+            {
+                extend: 'copy',
+                footer: true,
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6]
+                }
+            },
+            {
+                extend: 'csv',
+                footer: true,
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6]
+                }
+
+            },
+            {
+                extend: 'excel',
+                footer: true,
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6]
+                }
+            },
+            {
+                extend: 'pdf',
+                footer: true,
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6]
+                }
+            },
+            {
+                extend: 'print',
+                footer: true,
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6]
+                }
+            },
+            {
+                extend: 'colvis',
+                footer: true,
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6]
+                }
+            }
+        ],
+        dom: 'Blfrtip',
+        ajax: ' {!! route('user.bids.data') !!}',
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'titlelink', name: 'title'},
+            {data: 'material_id', name: 'material_id'},
+            {data: 'quantity_and_delivery_id', name: 'quantity_and_delivery_id'},
+            {data: 'price', name: 'price'},
+            {data: 'origin', name: 'origin'},
+            {data: 'is_selected', name: 'is_selected'},
+       ]
+      }).buttons().container().appendTo('#bids-table_wrapper .col-md-6:eq(0)');
+    });
+  </script>
+@endpush
+

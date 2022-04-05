@@ -79,5 +79,6 @@ Route::group(['middleware'=>'auth:web'], function() {
     Route::get('bids/{id}/index', [UserBidController::class, 'index'])->name('user.bids.index');
     Route::post('bids/{id}/create', [UserBidController::class, 'create'])->name('user.bids.create');
     Route::delete('bids/{id}/destroy', [UserBidController::class, 'destroy'])->name('user.bids.destroy');
+    Route::get('bids/data', [UserBidController::class, 'anyData'])->name('user.bids.data');
 });
 

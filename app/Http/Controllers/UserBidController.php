@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Datatables;
 
 class UserBidController extends Controller
 {
@@ -90,5 +91,42 @@ class UserBidController extends Controller
             Alert::toast('Tender đã hết hạn!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
         }
+    }
+
+    public function anyData()
+    {
+        $user_id = Auth::user()->id;
+        $bids = Bid::orderBy('id', 'desc')->where('user_id', $user_id)->with(['tender', 'quantity'])->get();
+        return Datatables::of($bids)
+            ->addIndexColumn()
+            ->editColumn('titlelink', function ($bids) {
+                return '<a href="'.route('user.tenders.show', $bids->tender_id).'">' . '('. $bids->tender->code . ') ' .$bids->tender->title.'</a>';
+            })
+            ->editColumn('material_id', function ($bids) {
+                return $bids->tender->material->name;
+            })
+            ->editColumn('quantity_and_delivery_id', function ($bids) {
+                return $bids->quantity->quantity . '(' . $bids->quantity->quantity_unit . ')' . ' | ' . $bids->quantity->delivery_time;
+            })
+            ->editColumn('price', function ($bids) {
+                return $bids->price . '(' . $bids->price_unit . ')';
+            })
+            ->editColumn('origin', function ($bids) {
+                return $bids->origin;
+            })
+            ->editColumn('is_selected', function ($bids) {
+                if($bids->tender->status == 'Closed') {
+                    if($bids->is_selected == 1) {
+                        return '<span class="badge badge-success">Trúng</span>';
+
+                    } else {
+                        return '<span class="badge badge-danger">Trượt</span>';
+                    }
+                } else {
+                    return '<span class="badge badge-warning">Đang xét</span>';
+                }
+            })
+            ->rawColumns(['titlelink', 'is_selected'])
+            ->make(true);
     }
 }

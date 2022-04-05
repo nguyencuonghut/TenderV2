@@ -56,7 +56,7 @@ class UserTenderController extends Controller
         return Datatables::of($user_tenders)
             ->addIndexColumn()
             ->editColumn('title', function ($user_tenders) {
-                return $user_tenders->title;
+                return '<a href="'.route('user.tenders.show', $user_tenders->id).'">'.$user_tenders->title.'</a>';
             })
             ->editColumn('material_id', function ($user_tenders) {
                 return $user_tenders->material->name;
@@ -70,7 +70,7 @@ class UserTenderController extends Controller
             ->addColumn('show', function ($user_tenders) {
                 return '<a href="' . route("user.tenders.show", $user_tenders->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';
             })
-            ->rawColumns(['show'])
+            ->rawColumns(['title', 'show'])
             ->make(true);
     }
 }

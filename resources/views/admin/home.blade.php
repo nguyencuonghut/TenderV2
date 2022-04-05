@@ -32,99 +32,105 @@
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{$all_tenders->count()}}</h3>
+        <div class="container-fluid">
+            <!-- Info boxes -->
+            <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th-list"></i></span>
 
-                <p>Tổng số tender</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-ios-copy"></i>
-              </div>
-              <a href="{{route('admin.tenders.index')}}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{$completed_tenders->count()}}</h3>
-
-                <p>Tender hoàn thành</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-checkmark-circled"></i>
-              </div>
-              <a href="{{route('admin.tenders.index')}}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{$in_progress_tenders->count()}}</h3>
-
-                <p>Tender đang diễn ra</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-load-a"></i>
-              </div>
-              <a href="{{route('admin.tenders.index')}}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>{{$suppliers->count()}}</h3>
-
-                <p>Số nhà cung cấp</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="{{route('admin.suppliers.index')}}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-        </div>
-
-        <!-- TABLE: LATEST ORDERS -->
-        <div class="card">
-            <div class="card-header border-transparent">
-                <h3 class="card-title">Tất cả tender</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table id="tenders-table" class="table">
-                        <thead>
-                        <tr>
-                          <th>Tiêu đề</th>
-                          <th>Tên hàng</th>
-                          <th>Trạng thái</th>
-                          <th>Bắt đầu</th>
-                          <th>Kết thúc</th>
-                        </tr>
-                        </thead>
-                      </table>
+                <div class="info-box-content">
+                    <span class="info-box-text">Tổng số tender</span>
+                    <span class="info-box-number">
+                    {{$all_tenders->count()}}
+                    </span>
                 </div>
-                <!-- /.table-responsive -->
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
             </div>
-            <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check"></i></span>
 
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
+                <div class="info-box-content">
+                    <span class="info-box-text">Tender hoàn thành</span>
+                    <span class="info-box-number">{{$completed_tenders->count()}}</span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix hidden-md-up"></div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-spinner"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Tender đang diễn ra</span>
+                    <span class="info-box-number">{{$in_progress_tenders->count()}}</span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3">
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-truck"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Số nhà cung cấp</span>
+                    <span class="info-box-number">{{$suppliers->count()}}</span>
+                </div>
+                <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Tất cả tender</h5>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                    <div class="table-responsive">
+                        <table id="tenders-table" class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tiêu đề</th>
+                                <th>Tên hàng</th>
+                                <th>Trạng thái</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                            </tr>
+                            </thead>
+                            </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- ./card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!--/. container-fluid -->
     </section>
     <!-- /.content -->
   </div>
@@ -164,14 +170,14 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
 
             },
@@ -179,34 +185,35 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             }
         ],
         dom: 'Blfrtip',
         ajax: ' {!! route('admin.tenders.data') !!}',
         columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
             {data: 'material_id', name: 'material_id'},
             {data: 'status', name: 'status'},
