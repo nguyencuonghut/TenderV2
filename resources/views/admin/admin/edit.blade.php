@@ -71,6 +71,21 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="control-group">
+                                        <label class="required-field" class="control-label"></label>
+                                        <div class="controls">
+                                            <select name="role_id" id="role_id" class="form-control select2">
+                                                @foreach($roles as $role)
+                                                    <option value="{{$role->id}}" {{ $role->id == $admin->role_id ? 'selected' : '' }}>{{$role->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <br>
                             <div class="control-group">
                                 <div class="controls">

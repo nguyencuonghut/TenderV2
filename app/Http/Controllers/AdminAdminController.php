@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Role;
 use Datatables;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -26,7 +27,8 @@ class AdminAdminController extends Controller
      */
     public function create()
     {
-        return view('admin.admin.create');
+        $roles = Role::all();
+        return view('admin.admin.create', ['roles' => $roles]);
     }
 
     /**
@@ -41,6 +43,7 @@ class AdminAdminController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'password' => 'required|confirmed|min:6',
+            'role_id' => 'required',
         ];
         $messages = [
             'name.required' => 'Bạn phải nhập tên.',
@@ -52,6 +55,7 @@ class AdminAdminController extends Controller
             'password.required' => 'Bạn phải nhập mật khẩu.',
             'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
             'password.confirmed' => 'Mật khẩu không khớp.',
+            'role_id.required' => 'Bạn phải chọn vai trò.',
         ];
         $request->validate($rules,$messages);
 
@@ -59,6 +63,7 @@ class AdminAdminController extends Controller
         $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->password = bcrypt($request->password);
+        $admin->role_id = $request->role_id;
         $admin->save();
 
         Alert::toast('Tạo tài khoản mới thành công!', 'success', 'top-right');
@@ -85,7 +90,8 @@ class AdminAdminController extends Controller
     public function edit($id)
     {
         $admin = Admin::findOrFail($id);
-        return view('admin.admin.edit', ['admin' => $admin]);
+        $roles = Role::all();
+        return view('admin.admin.edit', ['admin' => $admin, 'roles' => $roles]);
     }
 
     /**
@@ -101,6 +107,7 @@ class AdminAdminController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'password' => 'confirmed|',
+            'role_id' => 'required',
         ];
         $messages = [
             'name.required' => 'Bạn phải nhập tên.',
@@ -110,6 +117,7 @@ class AdminAdminController extends Controller
             'email.email' => 'Email sai định dạng.',
             'email.max' => 'Email dài quá 255 ký tự.',
             'password.confirmed' => 'Mật khẩu không khớp.',
+            'role_id.required' => 'Bạn phải chọn vai trò.',
         ];
         $request->validate($rules,$messages);
 
@@ -119,6 +127,7 @@ class AdminAdminController extends Controller
         if(null != $request->password) {
             $admin->password = bcrypt($request->password);
         }
+        $admin->role_id = $request->role_id;
         $admin->save();
         Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
         return redirect()->route('admin.admins.index');
