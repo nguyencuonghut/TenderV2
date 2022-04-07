@@ -18,7 +18,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="{{route('user.login')}}" class="h1"><b>Honghafeed</b>JSC</a>
+    <a href="{{route('user.home')}}" class="h1"><b>Honghafeed</b>JSC</a>
 </div>
   <!-- /.login-logo -->
   <div class="card">
