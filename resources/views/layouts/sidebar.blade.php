@@ -4,7 +4,7 @@
     @auth('admin')
     <a href="{{route('admin.home')}}" class="brand-link">
       <img src="{{ asset('images/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text">Honghafeed</span>
+      <span class="brand-text">{{Auth::user()->name}}</span>
     </a>
     @else
     <a href="{{route('user.home')}}" class="brand-link">
