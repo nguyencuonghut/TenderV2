@@ -20,7 +20,7 @@
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="{{route('admin.login')}}" class="h1"><b>Honghafeed</b>JSC</a>
+      <a href="{{ url('/') }}" class="h1"><b>Honghafeed</b>JSC</a>
     </div>
     <div class="card-body">
         <form action="{{route('admin.login')}}" method="post">
