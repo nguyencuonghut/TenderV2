@@ -54,6 +54,10 @@
         <span class="text-danger"> {{ $message }}</span>
         @enderror
       </form>
+
+      <p class="mb-1">
+        <a href="{{route('user.forgot.password.get')}}">Tôi quên mật khẩu</a>
+      </p>
     </div>
     <!-- /.login-card-body -->
   </div>

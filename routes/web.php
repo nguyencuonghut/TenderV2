@@ -72,6 +72,10 @@ Route::name('admin.')->prefix('admin')->group(function() {
 Route::get('/login', [UserLoginController::class, 'showLoginForm'])->name('user.login');
 Route::post('/login', [UserLoginController::class, 'handleLogin'])->name('user.handleLogin');
 Route::get('/logout', [UserLoginController::class, 'logout'])->name('user.logout');
+Route::get('/forgot-password', [UserLoginController::class, 'showForgotPasswordForm'])->name('user.forgot.password.get');
+Route::post('/forgot-password', [UserLoginController::class, 'submitForgotPasswordForm'])->name('user.forgot.password.post');
+Route::get('/reset-password/{token}', [UserLoginController::class, 'showResetPasswordForm'])->name('user.reset.password.get');
+Route::post('/reset-password', [UserLoginController::class, 'submitResetPasswordForm'])->name('user.reset.password.post');
 
 Route::group(['middleware'=>'auth:web'], function() {
     Route::get('/', [UserHomeController::class, 'index'])->name('user.home');
