@@ -2,11 +2,21 @@
 
 namespace App\Providers;
 
+use App\Models\Admin;
+use App\Models\Supplier;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
+    public static $permissions = [
+        'create-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
+        'store-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
+        'edit-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
+        'update-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
+        'destroy-supplier' => ['Admin'],
+    ];
+
     /**
      * The policy mappings for the application.
      *
@@ -25,6 +35,23 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::before(
+            function (Admin $admin, $ability) {
+                if ($admin->role->name === 'Admin') {
+                    return true;
+                }
+            }
+        );
+
+        foreach (self::$permissions as $action => $roles) {
+            Gate::define(
+                $action,
+                function (Admin $admin) use ($roles) {
+                    if (in_array($admin->role->name, $roles)) {
+                        return true;
+                    }
+                }
+            );
+        }
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use Datatables;
 use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminSupplierController extends Controller
@@ -26,7 +29,12 @@ class AdminSupplierController extends Controller
      */
     public function create()
     {
-        return view('admin.supplier.create');
+        if(Auth::user()->can('create-supplier')) {
+            return view('admin.supplier.create');
+        } else {
+            Alert::toast('Bạn không có quyền tạo nhà cung cấp mới!', 'error', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        }
     }
 
     /**
@@ -37,25 +45,30 @@ class AdminSupplierController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'code' => 'required|unique:suppliers',
-            'name' => 'required|max:255',
-        ];
-        $messages = [
-            'code.required' => 'Bạn phải nhập mã.',
-            'code.unique' => 'Mã đã tồn tại.',
-            'name.required' => 'Bạn phải nhập tên.',
-            'name.max' => 'Tên dài quá 255 ký tự.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('store-supplier')) {
+            $rules = [
+                'code' => 'required|unique:suppliers',
+                'name' => 'required|max:255',
+            ];
+            $messages = [
+                'code.required' => 'Bạn phải nhập mã.',
+                'code.unique' => 'Mã đã tồn tại.',
+                'name.required' => 'Bạn phải nhập tên.',
+                'name.max' => 'Tên dài quá 255 ký tự.',
+            ];
+            $request->validate($rules,$messages);
 
-        $supplier = new Supplier();
-        $supplier->name = $request->name;
-        $supplier->code = $request->code;
-        $supplier->save();
+            $supplier = new Supplier();
+            $supplier->name = $request->name;
+            $supplier->code = $request->code;
+            $supplier->save();
 
-        Alert::toast('Tạo nhà cung cấp mới thành công!', 'success', 'top-right');
-        return redirect()->route('admin.suppliers.index');
+            Alert::toast('Tạo nhà cung cấp mới thành công!', 'success', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        } else {
+            Alert::toast('Bạn không có quyền lưu nhà cung cấp!', 'error', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        }
     }
 
     /**
@@ -66,7 +79,8 @@ class AdminSupplierController extends Controller
      */
     public function show($id)
     {
-        return redirect()->back();
+        $supplier = Supplier::findOrFail($id);
+        return view('admin.supplier.show', ['supplier' => $supplier]);
     }
 
     /**
@@ -77,8 +91,13 @@ class AdminSupplierController extends Controller
      */
     public function edit($id)
     {
-        $supplier = Supplier::findOrFail($id);
-        return view('admin.supplier.edit', ['supplier' => $supplier]);
+        if(Auth::user()->can('edit-supplier')) {
+            $supplier = Supplier::findOrFail($id);
+            return view('admin.supplier.edit', ['supplier' => $supplier]);
+        } else {
+            Alert::toast('Bạn không có quyền sửa nhà cung cấp!', 'error', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        }
     }
 
     /**
@@ -90,25 +109,30 @@ class AdminSupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'code' => 'required|unique:suppliers',
-            'name' => 'required|max:255',
-        ];
-        $messages = [
-            'code.required' => 'Bạn phải nhập mã.',
-            'code.unique' => 'Mã đã tồn tại.',
-            'name.required' => 'Bạn phải nhập tên.',
-            'name.max' => 'Tên dài quá 255 ký tự.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('update-supplier')) {
+            $rules = [
+                'code' => 'required|unique:suppliers',
+                'name' => 'required|max:255',
+            ];
+            $messages = [
+                'code.required' => 'Bạn phải nhập mã.',
+                'code.unique' => 'Mã đã tồn tại.',
+                'name.required' => 'Bạn phải nhập tên.',
+                'name.max' => 'Tên dài quá 255 ký tự.',
+            ];
+            $request->validate($rules,$messages);
 
-        $supplier = Supplier::findOrFail($id);
-        $supplier->name = $request->name;
-        $supplier->code = $request->code;
-        $supplier->save();
+            $supplier = Supplier::findOrFail($id);
+            $supplier->name = $request->name;
+            $supplier->code = $request->code;
+            $supplier->save();
 
-        Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
-        return redirect()->route('admin.suppliers.index');
+            Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        } else {
+            Alert::toast('Bạn không có quyền sửa nhà cung cấp!', 'error', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        }
     }
 
     /**
@@ -119,14 +143,19 @@ class AdminSupplierController extends Controller
      */
     public function destroy($id)
     {
-        $supplier = Supplier::findOrFail($id);
-        //Check condition before destroying
-        if($supplier->users->count() == 0) {
-            $supplier->destroy($id);
-            Alert::toast('Xóa nhà cung cấp thành công!', 'success', 'top-right');
-            return redirect()->route('admin.suppliers.index');
+        if(Auth::user()->can('destroy-supplier')) {
+            $supplier = Supplier::findOrFail($id);
+            //Check condition before destroying
+            if($supplier->users->count() == 0) {
+                $supplier->destroy($id);
+                Alert::toast('Xóa nhà cung cấp thành công!', 'success', 'top-right');
+                return redirect()->route('admin.suppliers.index');
+            } else {
+                Alert::toast('Nhà cung cấp đang chứa user. Không thể xóa!', 'error', 'top-right');
+                return redirect()->route('admin.suppliers.index');
+            }
         } else {
-            Alert::toast('Nhà cung cấp đang chứa user. Không thể xóa!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền xóa nhà cung cấp!', 'error', 'top-right');
             return redirect()->route('admin.suppliers.index');
         }
     }
@@ -155,17 +184,67 @@ class AdminSupplierController extends Controller
                 }
                 return $mail_list;
             })
-            ->addColumn('edit', function ($suppliers) {
-                return '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning"> Sửa</a>';
+            ->addColumn('actions', function($suppliers) {
+                $btn = '<a href="' . route("admin.suppliers.show", $suppliers->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';
+                if (Auth::user()->can('edit-supplier')) {
+                    $btn = $btn . '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>';
+                }
+                if (Auth::user()->can('destroy-supplier')) {
+                    $btn = $btn . '<form action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                }
+                return $btn;
             })
-            ->addColumn('delete', '
-                <form action="{{ route(\'admin.suppliers.destroy\', $id) }}" method="POST">
-                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" name="submit" value="Xóa" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
 
-                    {{csrf_field()}}
-                </form>')
-            ->rawColumns(['edit', 'delete'])
+    public function bidData($supplier_id)
+    {
+        //Find all users for this supplier
+        $users = User::where('supplier_id', $supplier_id)->get();
+
+        $bids = Bid::orderBy('id', 'desc')->with(['tender', 'quantity'])->get();
+        $supplier_bids = collect();
+        foreach($bids as $bid) {
+            foreach($users as $user) {
+                if($bid->user_id == $user->id) {
+                    $supplier_bids->push($bid);
+                }
+            }
+        }
+        return Datatables::of($supplier_bids)
+            ->addIndexColumn()
+            ->editColumn('titlelink', function ($bids) {
+                return '<a href="'.route('admin.tenders.show', $bids->tender_id).'">' . '('. $bids->tender->code . ') ' .$bids->tender->title.'</a>';
+            })
+            ->editColumn('material_id', function ($bids) {
+                return $bids->tender->material->name;
+            })
+            ->editColumn('quantity_and_delivery_id', function ($bids) {
+                return $bids->quantity->quantity . '(' . $bids->quantity->quantity_unit . ')' . ' | ' . $bids->quantity->delivery_time;
+            })
+            ->editColumn('price', function ($bids) {
+                return $bids->price . '(' . $bids->price_unit . ')';
+            })
+            ->editColumn('origin', function ($bids) {
+                return $bids->origin;
+            })
+            ->editColumn('is_selected', function ($bids) {
+                if($bids->tender->status == 'Closed') {
+                    if($bids->is_selected == 1) {
+                        return '<span class="badge badge-success">Trúng</span>';
+
+                    } else {
+                        return '<span class="badge badge-danger">Trượt</span>';
+                    }
+                } else {
+                    return '<span class="badge badge-warning">Đang xét</span>';
+                }
+            })
+            ->rawColumns(['titlelink', 'is_selected'])
             ->make(true);
     }
 }

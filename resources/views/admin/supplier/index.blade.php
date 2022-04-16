@@ -39,7 +39,9 @@
             <div class="card">
               <!-- /.card-header -->
               <div class="card-body">
+                @can('create-supplier')
                 <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success">Tạo mới nhà cung cấp</a>
+                @endcan
                 <table id="suppliers-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
@@ -47,8 +49,7 @@
                     <th>Mã</th>
                     <th>Tên nhà cung cấp</th>
                     <th>Liên hệ</th>
-                    <th>Sửa</th>
-                    <th>Xóa</th>
+                    <th>Thao tác</th>
                   </tr>
                   </thead>
                 </table>
@@ -143,8 +144,7 @@
             {data: 'code', name: 'code'},
             {data: 'name', name: 'name'},
             {data: 'users', name: 'users'},
-            {data: 'edit', name: 'edit', orderable: false, searchable: false},
-            {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#suppliers-table_wrapper .col-md-6:eq(0)');
     });
