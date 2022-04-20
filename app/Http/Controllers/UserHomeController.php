@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bid;
 use App\Models\Tender;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,5 +50,31 @@ class UserHomeController extends Controller
                                     'my_in_progress_tenders' =>$my_in_progress_tenders,
                                     'my_bids' => $my_bids
                                 ]);
+    }
+
+    public function profile()
+    {
+        $my_tenders = collect();
+        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status', 'supplier_ids'])->get();
+        foreach($tenders as $tender) {
+            $selected_supplier_ids = [];
+            $selected_supplier_ids = explode(",", $tender->supplier_ids);
+            if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
+                $my_tenders->push($tender);
+            }
+        }
+        $tenders_cnt = $my_tenders->count();
+        $my_bids = Bid::where('user_id', Auth::user()->id)->get();
+        $bids_cnt = $my_bids->count();
+
+        $my_selected_bids = Bid::where('user_id', Auth::user()->id)->where('is_selected', 1)->get();
+        $selected_bids_cnt = $my_selected_bids->count();
+
+        $recent_bids = Bid::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(3)->get();
+        return view('user.profile', ['tenders_cnt' => $tenders_cnt,
+                                     'bids_cnt' => $bids_cnt,
+                                     'selected_bids_cnt' => $selected_bids_cnt,
+                                     'recent_bids' => $recent_bids
+                                    ]);
     }
 }

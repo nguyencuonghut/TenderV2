@@ -80,6 +80,7 @@ Route::post('/reset-password', [UserLoginController::class, 'submitResetPassword
 
 Route::group(['middleware'=>'auth:web'], function() {
     Route::get('/', [UserHomeController::class, 'index'])->name('user.home');
+    Route::get('/profile', [UserHomeController::class, 'profile'])->name('user.profile');
 
     Route::get('tenders/data', [UserTenderController::class, 'anyData'])->name('user.tenders.data');
     Route::get('tenders/{id}', [UserTenderController::class, 'show'])->name('user.tenders.show');

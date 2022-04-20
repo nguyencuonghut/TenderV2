@@ -60,9 +60,8 @@
           </li>
           @endauth
 
-
-          @auth('admin')
           <li class="nav-header">HỆ THỐNG</li>
+          @auth('admin')
           <li class="nav-item">
             <a href="{{route('admin.users.index')}}" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-users"></i>
@@ -92,6 +91,15 @@
               <i class="nav-icon fas fa-box-open"></i>
               <p>
                 Hàng hóa
+              </p>
+            </a>
+          </li>
+          @else
+          <li class="nav-item">
+            <a href="{{route('user.profile')}}" class="nav-link {{ Request::is('profile*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Hồ sơ
               </p>
             </a>
           </li>
