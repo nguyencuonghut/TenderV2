@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Role;
 use Datatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminAdminController extends Controller
@@ -27,8 +28,13 @@ class AdminAdminController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        return view('admin.admin.create', ['roles' => $roles]);
+        if(Auth::user()->can('create-admin')) {
+            $roles = Role::all();
+            return view('admin.admin.create', ['roles' => $roles]);
+        } else {
+            Alert::toast('Bạn không có quyền tạo tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.admins.index');
+        }
     }
 
     /**
@@ -39,35 +45,40 @@ class AdminAdminController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'password' => 'required|confirmed|min:6',
-            'role_id' => 'required',
-        ];
-        $messages = [
-            'name.required' => 'Bạn phải nhập tên.',
-            'name.max' => 'Tên dài quá 255 ký tự.',
-            'type.required' => 'Bạn phải nhập kiểu người dùng.',
-            'email.required' => 'Bạn phải nhập địa chỉ email.',
-            'email.email' => 'Email sai định dạng.',
-            'email.max' => 'Email dài quá 255 ký tự.',
-            'password.required' => 'Bạn phải nhập mật khẩu.',
-            'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
-            'password.confirmed' => 'Mật khẩu không khớp.',
-            'role_id.required' => 'Bạn phải chọn vai trò.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('store-admin')) {
+            $rules = [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'password' => 'required|confirmed|min:6',
+                'role_id' => 'required',
+            ];
+            $messages = [
+                'name.required' => 'Bạn phải nhập tên.',
+                'name.max' => 'Tên dài quá 255 ký tự.',
+                'type.required' => 'Bạn phải nhập kiểu người dùng.',
+                'email.required' => 'Bạn phải nhập địa chỉ email.',
+                'email.email' => 'Email sai định dạng.',
+                'email.max' => 'Email dài quá 255 ký tự.',
+                'password.required' => 'Bạn phải nhập mật khẩu.',
+                'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
+                'password.confirmed' => 'Mật khẩu không khớp.',
+                'role_id.required' => 'Bạn phải chọn vai trò.',
+            ];
+            $request->validate($rules,$messages);
 
-        $admin = new Admin();
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        $admin->password = bcrypt($request->password);
-        $admin->role_id = $request->role_id;
-        $admin->save();
+            $admin = new Admin();
+            $admin->name = $request->name;
+            $admin->email = $request->email;
+            $admin->password = bcrypt($request->password);
+            $admin->role_id = $request->role_id;
+            $admin->save();
 
-        Alert::toast('Tạo tài khoản mới thành công!', 'success', 'top-right');
-        return redirect()->route('admin.admins.index');
+            Alert::toast('Tạo tài khoản mới thành công!', 'success', 'top-right');
+            return redirect()->route('admin.admins.index');
+        } else {
+            Alert::toast('Bạn không có quyền tạo tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.admins.index');
+        }
     }
 
     /**
@@ -78,7 +89,7 @@ class AdminAdminController extends Controller
      */
     public function show($id)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -89,9 +100,14 @@ class AdminAdminController extends Controller
      */
     public function edit($id)
     {
-        $admin = Admin::findOrFail($id);
-        $roles = Role::all();
-        return view('admin.admin.edit', ['admin' => $admin, 'roles' => $roles]);
+        if(Auth::user()->can('edit-admin')) {
+            $admin = Admin::findOrFail($id);
+            $roles = Role::all();
+            return view('admin.admin.edit', ['admin' => $admin, 'roles' => $roles]);
+        } else {
+            Alert::toast('Bạn không có quyền sửa tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.admins.index');
+        }
     }
 
     /**
@@ -103,34 +119,39 @@ class AdminAdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'password' => 'confirmed|',
-            'role_id' => 'required',
-        ];
-        $messages = [
-            'name.required' => 'Bạn phải nhập tên.',
-            'name.max' => 'Tên dài quá 255 ký tự.',
-            'type.required' => 'Bạn phải nhập kiểu người dùng.',
-            'email.required' => 'Bạn phải nhập địa chỉ email.',
-            'email.email' => 'Email sai định dạng.',
-            'email.max' => 'Email dài quá 255 ký tự.',
-            'password.confirmed' => 'Mật khẩu không khớp.',
-            'role_id.required' => 'Bạn phải chọn vai trò.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('update-admin')) {
+            $rules = [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'password' => 'confirmed|',
+                'role_id' => 'required',
+            ];
+            $messages = [
+                'name.required' => 'Bạn phải nhập tên.',
+                'name.max' => 'Tên dài quá 255 ký tự.',
+                'type.required' => 'Bạn phải nhập kiểu người dùng.',
+                'email.required' => 'Bạn phải nhập địa chỉ email.',
+                'email.email' => 'Email sai định dạng.',
+                'email.max' => 'Email dài quá 255 ký tự.',
+                'password.confirmed' => 'Mật khẩu không khớp.',
+                'role_id.required' => 'Bạn phải chọn vai trò.',
+            ];
+            $request->validate($rules,$messages);
 
-        $admin = Admin::findOrFail($id);
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        if(null != $request->password) {
-            $admin->password = bcrypt($request->password);
+            $admin = Admin::findOrFail($id);
+            $admin->name = $request->name;
+            $admin->email = $request->email;
+            if(null != $request->password) {
+                $admin->password = bcrypt($request->password);
+            }
+            $admin->role_id = $request->role_id;
+            $admin->save();
+            Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
+            return redirect()->route('admin.admins.index');
+        } else {
+            Alert::toast('Bạn không có quyền sửa tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.admins.index');
         }
-        $admin->role_id = $request->role_id;
-        $admin->save();
-        Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
-        return redirect()->route('admin.admins.index');
     }
 
     /**
@@ -141,10 +162,16 @@ class AdminAdminController extends Controller
      */
     public function destroy($id)
     {
-        $admin = Admin::findOrFail($id);
-        $admin->destroy($id);
-        Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
-        return redirect()->route('admin.admins.index');
+        if(Auth::user()->can('destroy-admin')) {
+            $admin = Admin::findOrFail($id);
+            $admin->destroy($id);
+            Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
+            return redirect()->route('admin.admins.index');
+
+        } else {
+            Alert::toast('Bạn không có quyền xóa tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.admins.index');
+        }
     }
 
     public function anyData()
