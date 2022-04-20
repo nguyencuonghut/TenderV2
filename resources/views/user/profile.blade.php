@@ -57,7 +57,7 @@
                     </li>
                     </ul>
 
-                    <a href="#" class="btn btn-warning btn-block"><b>Đổi mật khẩu</b></a>
+                    <a href="{{route('user.change.password.get')}}" class="btn btn-warning btn-block"><b>Đổi mật khẩu</b></a>
                 </div>
                 <!-- /.card-body -->
                 </div>

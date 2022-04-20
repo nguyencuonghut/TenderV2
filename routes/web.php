@@ -81,6 +81,8 @@ Route::post('/reset-password', [UserLoginController::class, 'submitResetPassword
 Route::group(['middleware'=>'auth:web'], function() {
     Route::get('/', [UserHomeController::class, 'index'])->name('user.home');
     Route::get('/profile', [UserHomeController::class, 'profile'])->name('user.profile');
+    Route::get('/change-password', [UserHomeController::class, 'showChangePasswordForm'])->name('user.change.password.get');
+    Route::post('/change-password', [UserHomeController::class, 'submitChangePasswordForm'])->name('user.change.password.post');
 
     Route::get('tenders/data', [UserTenderController::class, 'anyData'])->name('user.tenders.data');
     Route::get('tenders/{id}', [UserTenderController::class, 'show'])->name('user.tenders.show');
