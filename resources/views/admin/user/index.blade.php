@@ -99,6 +99,7 @@
                     columns: [0,1,2,3]
                 }
             },
+            /*
             {
                 extend: 'csv',
                 footer: true,
@@ -114,6 +115,7 @@
                     columns: [0,1,2,3]
                 }
             },
+            */
             {
                 extend: 'pdf',
                 footer: true,

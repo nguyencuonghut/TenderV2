@@ -129,7 +129,7 @@ class AdminMaterialController extends Controller
             Alert::toast('Sửa thành công!', 'success', 'top-right');
             return redirect()->route('admin.materials.index');
         }else{
-            Alert::toast('Bạn không có quyền lưu hàng hóa!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền cập nhật hàng hóa!', 'error', 'top-right');
             return redirect()->route('admin.materials.index');
         }
     }

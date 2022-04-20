@@ -106,6 +106,7 @@
                     columns: [0,1,2,3,4,5,6]
                 }
             },
+            /*
             {
                 extend: 'csv',
                 footer: true,
@@ -121,6 +122,7 @@
                     columns: [0,1,2,3,4,5,6]
                 }
             },
+            */
             {
                 extend: 'pdf',
                 footer: true,
