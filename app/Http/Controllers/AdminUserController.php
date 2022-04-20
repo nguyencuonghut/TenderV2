@@ -6,6 +6,7 @@ use App\Models\Supplier;
 use App\Models\User;
 use Datatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminUserController extends Controller
@@ -27,8 +28,13 @@ class AdminUserController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all()->pluck('name', 'id');
-        return view('admin.user.create', ['suppliers' => $suppliers]);
+        if(Auth::user()->can('create-user')){
+            $suppliers = Supplier::all()->pluck('name', 'id');
+            return view('admin.user.create', ['suppliers' => $suppliers]);
+        }else {
+            Alert::toast('Bạn không có quyền tạo tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.users.index');
+        }
     }
 
     /**
@@ -39,35 +45,40 @@ class AdminUserController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'password' => 'required|confirmed|min:6',
-            'supplier_id' => 'required',
-        ];
-        $messages = [
-            'name.required' => 'Bạn phải nhập tên.',
-            'name.max' => 'Tên dài quá 255 ký tự.',
-            'type.required' => 'Bạn phải nhập kiểu người dùng.',
-            'email.required' => 'Bạn phải nhập địa chỉ email.',
-            'email.email' => 'Email sai định dạng.',
-            'email.max' => 'Email dài quá 255 ký tự.',
-            'password.required' => 'Bạn phải nhập mật khẩu.',
-            'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
-            'password.confirmed' => 'Mật khẩu không khớp.',
-            'supplier_id.required' => 'Bạn phải nhập tên công ty.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('store-user')){
+            $rules = [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'password' => 'required|confirmed|min:6',
+                'supplier_id' => 'required',
+            ];
+            $messages = [
+                'name.required' => 'Bạn phải nhập tên.',
+                'name.max' => 'Tên dài quá 255 ký tự.',
+                'type.required' => 'Bạn phải nhập kiểu người dùng.',
+                'email.required' => 'Bạn phải nhập địa chỉ email.',
+                'email.email' => 'Email sai định dạng.',
+                'email.max' => 'Email dài quá 255 ký tự.',
+                'password.required' => 'Bạn phải nhập mật khẩu.',
+                'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
+                'password.confirmed' => 'Mật khẩu không khớp.',
+                'supplier_id.required' => 'Bạn phải nhập tên công ty.',
+            ];
+            $request->validate($rules,$messages);
 
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->supplier_id = $request->supplier_id;
-        $user->save();
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->supplier_id = $request->supplier_id;
+            $user->save();
 
-        Alert::toast('Tạo người dùng mới thành công!', 'success', 'top-right');
-        return redirect()->route('admin.users.index');
+            Alert::toast('Tạo người dùng mới thành công!', 'success', 'top-right');
+            return redirect()->route('admin.users.index');
+        }else {
+            Alert::toast('Bạn không có quyền tạo tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.users.index');
+        }
     }
 
     /**
@@ -78,7 +89,7 @@ class AdminUserController extends Controller
      */
     public function show($id)
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -89,9 +100,14 @@ class AdminUserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        $suppliers = Supplier::all()->pluck('name', 'id');
-        return view('admin.user.edit', ['user' => $user, 'suppliers' => $suppliers]);
+        if(Auth::user()->can('edit-user')){
+            $user = User::findOrFail($id);
+            $suppliers = Supplier::all()->pluck('name', 'id');
+            return view('admin.user.edit', ['user' => $user, 'suppliers' => $suppliers]);
+        }else {
+            Alert::toast('Bạn không có quyền sửa tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.users.index');
+        }
     }
 
     /**
@@ -103,34 +119,39 @@ class AdminUserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'password' => 'confirmed',
-            'supplier_id' => 'required',
-        ];
-        $messages = [
-            'name.required' => 'Bạn phải nhập tên.',
-            'name.max' => 'Tên dài quá 255 ký tự.',
-            'type.required' => 'Bạn phải nhập kiểu người dùng.',
-            'email.required' => 'Bạn phải nhập địa chỉ email.',
-            'email.email' => 'Email sai định dạng.',
-            'email.max' => 'Email dài quá 255 ký tự.',
-            'password.confirmed' => 'Mật khẩu không khớp.',
-            'supplier_id.required' => 'Bạn phải nhập tên công ty.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('update-user')){
+            $rules = [
+                'name' => 'required|max:255',
+                'email' => 'required|email|max:255',
+                'password' => 'confirmed',
+                'supplier_id' => 'required',
+            ];
+            $messages = [
+                'name.required' => 'Bạn phải nhập tên.',
+                'name.max' => 'Tên dài quá 255 ký tự.',
+                'type.required' => 'Bạn phải nhập kiểu người dùng.',
+                'email.required' => 'Bạn phải nhập địa chỉ email.',
+                'email.email' => 'Email sai định dạng.',
+                'email.max' => 'Email dài quá 255 ký tự.',
+                'password.confirmed' => 'Mật khẩu không khớp.',
+                'supplier_id.required' => 'Bạn phải nhập tên công ty.',
+            ];
+            $request->validate($rules,$messages);
 
-        $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if(null != $request->password) {
-            $user->password = bcrypt($request->password);
+            $user = User::findOrFail($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if(null != $request->password) {
+                $user->password = bcrypt($request->password);
+            }
+            $user->supplier_id = $request->supplier_id;
+            $user->save();
+            Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
+            return redirect()->route('admin.users.index');
+        }else {
+            Alert::toast('Bạn không có quyền sửa tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.users.index');
         }
-        $user->supplier_id = $request->supplier_id;
-        $user->save();
-        Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
-        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -141,10 +162,15 @@ class AdminUserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->destroy($id);
-        Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
-        return redirect()->route('admin.users.index');
+        if(Auth::user()->can('destroy-user')){
+            $user = User::findOrFail($id);
+            $user->destroy($id);
+            Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
+            return redirect()->route('admin.users.index');
+        }else {
+            Alert::toast('Bạn không có quyền xóa tài khoản!', 'error', 'top-right');
+            return redirect()->route('admin.users.index');
+        }
     }
 
     public function anyData()

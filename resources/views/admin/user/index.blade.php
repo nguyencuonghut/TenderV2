@@ -39,7 +39,9 @@
             <div class="card">
               <!-- /.card-header -->
               <div class="card-body">
+                @can('create-user')
                 <a href="{{ route('admin.users.create') }}" class="btn btn-success">Tạo mới người dùng</a>
+                @endcan
                 <table id="users-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
