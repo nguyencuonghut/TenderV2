@@ -20,6 +20,11 @@ class AuthServiceProvider extends ServiceProvider
         'edit-admin' => ['Admin'],
         'update-admin' => ['Admin'],
         'destroy-admin' => ['Admin'],
+        'create-material' => ['Admin'],
+        'store-material' => ['Admin'],
+        'edit-material' => ['Admin'],
+        'update-material' => ['Admin'],
+        'destroy-material' => ['Admin'],
     ];
 
     /**

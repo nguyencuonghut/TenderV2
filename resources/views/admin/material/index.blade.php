@@ -39,7 +39,9 @@
             <div class="card">
               <!-- /.card-header -->
               <div class="card-body">
+                @can('create-material')
                 <a href="{{ route('admin.materials.create') }}" class="btn btn-success">Tạo mới hàng hóa</a>
+                @endcan
                 <table id="materials-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>

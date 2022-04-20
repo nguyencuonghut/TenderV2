@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use Datatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminMaterialController extends Controller
@@ -26,7 +27,12 @@ class AdminMaterialController extends Controller
      */
     public function create()
     {
-        return view('admin.material.create');
+        if(Auth::user()->can('create-material')){
+            return view('admin.material.create');
+        }else{
+            Alert::toast('Bạn không có quyền tạo hàng hóa!', 'error', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }
     }
 
     /**
@@ -37,26 +43,31 @@ class AdminMaterialController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'code' => 'required',
-            'name' => 'required',
-            'quality' => 'required',
-        ];
-        $messages = [
-            'code.required' => 'Bạn phải nhập mã.',
-            'name.required' => 'Bạn phải nhập tên hàng.',
-            'quality.required' => 'Bạn phải nhập tiêu chuẩn chất lượng.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('store-material')){
+            $rules = [
+                'code' => 'required',
+                'name' => 'required',
+                'quality' => 'required',
+            ];
+            $messages = [
+                'code.required' => 'Bạn phải nhập mã.',
+                'name.required' => 'Bạn phải nhập tên hàng.',
+                'quality.required' => 'Bạn phải nhập tiêu chuẩn chất lượng.',
+            ];
+            $request->validate($rules,$messages);
 
-        $material = new Material();
-        $material->code = $request->code;
-        $material->name = $request->name;
-        $material->quality = $request->quality;
-        $material->save();
+            $material = new Material();
+            $material->code = $request->code;
+            $material->name = $request->name;
+            $material->quality = $request->quality;
+            $material->save();
 
-        Alert::toast('Tạo mới thành công!', 'success', 'top-right');
-        return redirect()->route('admin.materials.index');
+            Alert::toast('Tạo mới thành công!', 'success', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }else{
+            Alert::toast('Bạn không có quyền tạo hàng hóa!', 'error', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }
     }
 
     /**
@@ -78,8 +89,13 @@ class AdminMaterialController extends Controller
      */
     public function edit($id)
     {
-        $material = Material::findOrFail($id);
-        return view('admin.material.edit', ['material' => $material]);
+        if(Auth::user()->can('edit-material')){
+            $material = Material::findOrFail($id);
+            return view('admin.material.edit', ['material' => $material]);
+        }else{
+            Alert::toast('Bạn không có quyền sửa hàng hóa!', 'error', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }
     }
 
     /**
@@ -91,26 +107,31 @@ class AdminMaterialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'code' => 'required',
-            'name' => 'required',
-            'quality' => 'required',
-        ];
-        $messages = [
-            'code.required' => 'Bạn phải nhập mã.',
-            'name.required' => 'Bạn phải nhập tên hàng.',
-            'quality.required' => 'Bạn phải nhập tiêu chuẩn chất lượng.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('update-material')){
+            $rules = [
+                'code' => 'required',
+                'name' => 'required',
+                'quality' => 'required',
+            ];
+            $messages = [
+                'code.required' => 'Bạn phải nhập mã.',
+                'name.required' => 'Bạn phải nhập tên hàng.',
+                'quality.required' => 'Bạn phải nhập tiêu chuẩn chất lượng.',
+            ];
+            $request->validate($rules,$messages);
 
-        $material = Material::findOrFail($id);
-        $material->code = $request->code;
-        $material->name = $request->name;
-        $material->quality = $request->quality;
-        $material->save();
+            $material = Material::findOrFail($id);
+            $material->code = $request->code;
+            $material->name = $request->name;
+            $material->quality = $request->quality;
+            $material->save();
 
-        Alert::toast('Sửa thành công!', 'success', 'top-right');
-        return redirect()->route('admin.materials.index');
+            Alert::toast('Sửa thành công!', 'success', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }else{
+            Alert::toast('Bạn không có quyền lưu hàng hóa!', 'error', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }
     }
 
     /**
@@ -121,10 +142,15 @@ class AdminMaterialController extends Controller
      */
     public function destroy($id)
     {
-        $material = Material::findOrFail($id);
-        $material->destroy($id);
-        Alert::toast('Xóa hàng hóa thành công!', 'success', 'top-right');
-        return redirect()->route('admin.materials.index');
+        if(Auth::user()->can('destroy-material')){
+            $material = Material::findOrFail($id);
+            $material->destroy($id);
+            Alert::toast('Xóa hàng hóa thành công!', 'success', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }else{
+            Alert::toast('Bạn không có quyền xóa hàng hóa!', 'error', 'top-right');
+            return redirect()->route('admin.materials.index');
+        }
     }
 
     public function anyData()
