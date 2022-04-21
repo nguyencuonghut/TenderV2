@@ -26,6 +26,9 @@ class Tender extends Model
         'creator_id',
         'status',
         'supplier_ids',
+        'approver_id',
+        'tender_in_progress_time',
+        'tender_closed_time',
     ];
 
     public function creator()

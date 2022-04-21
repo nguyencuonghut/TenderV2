@@ -321,9 +321,8 @@ class AdminTenderController extends Controller
                 Alert::toast('Trạng thái không có gì thay đổi. Bạn vui lòng kiểm tra lại!', 'warning', 'top-right');
                 return redirect()->back();
             }
-
             $tender->status = $request->status;
-            $tender->save();
+            $tender->approver_id = Auth::user()->id;
 
             //Send notification email to suppliers
             if('In-progress' == $request->status) {
@@ -335,6 +334,11 @@ class AdminTenderController extends Controller
                     Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
                 }
 
+                //Update the in-progress time
+                $tender->tender_in_progress_time = Carbon::now();
+                //Save the tender
+                $tender->save();
+
                 Alert::toast('Tender chuyển sang trạng thái Hoạt Động. Bắt đầu đấu thầu!', 'success', 'top-right');
                 return redirect()->route('admin.tenders.index');
             } else if('Closed' == $request->status) {
@@ -345,6 +349,11 @@ class AdminTenderController extends Controller
                 foreach($users as $user)  {
                     Notification::route('mail' , $user->email)->notify(new TenderResult($tender->id));
                 }
+
+                //Update the closed time
+                $tender->tender_closed_time = Carbon::now();
+                //Save the tender
+                $tender->save();
 
                 Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
                 return redirect()->route('admin.tenders.index');

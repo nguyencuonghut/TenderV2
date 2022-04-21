@@ -53,7 +53,7 @@
                         @endif
                         @if(Auth::user()->role->name == 'Nhân viên Kiểm Soát')
                         <li class="list-group-item">
-                            <b>Số tender tôi kiểm tra</b> <a class="float-right">8</a>
+                            <b>Số tender tôi kiểm tra</b> <a class="float-right">{{$my_approved_tenders_cnt}}</a>
                         </li>
                         @endif
                     </ul>
