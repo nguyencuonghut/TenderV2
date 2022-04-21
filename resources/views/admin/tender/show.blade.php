@@ -229,7 +229,8 @@
                                       </table>
                                 </div>
                                 @if(Auth::user()->can('send-result')
-                                && Carbon\Carbon::now()->greaterThan($tender->tender_end_time))
+                                && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                && $tender->status == 'In-progress')
                                   <div class="card-footer clearfix">
                                       <a href="{{route('admin.tenders.result', $tender->id)}}">
                                           <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>

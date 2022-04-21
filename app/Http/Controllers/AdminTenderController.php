@@ -342,21 +342,28 @@ class AdminTenderController extends Controller
                 Alert::toast('Tender chuyển sang trạng thái Hoạt Động. Bắt đầu đấu thầu!', 'success', 'top-right');
                 return redirect()->route('admin.tenders.index');
             } else if('Closed' == $request->status) {
-                //Get the mail list
-                $bided_user_ids = [];
-                $bided_user_ids = Bid::where('tender_id', $tender->id)->pluck('user_id')->toArray();
-                $users = User::whereIn('id', $bided_user_ids)->get();
-                foreach($users as $user)  {
-                    Notification::route('mail' , $user->email)->notify(new TenderResult($tender->id));
+                //Check if bids are selected or not
+                $bids = Bid::where('tender_id', $tender->id)->where('is_selected', 1)->get();
+                if($bids->count() == 0){
+                    Alert::toast('Chưa có nhà cung cấp nào được chọn. Không cho phép chuyển sang trạng thái Đóng!', 'error', 'top-right');
+                    return redirect()->route('admin.tenders.index');
+                }else{
+                    //Get the mail list
+                    $bided_user_ids = [];
+                    $bided_user_ids = Bid::where('tender_id', $tender->id)->pluck('user_id')->toArray();
+                    $users = User::whereIn('id', $bided_user_ids)->get();
+                    foreach($users as $user)  {
+                        Notification::route('mail' , $user->email)->notify(new TenderResult($tender->id));
+                    }
+
+                    //Update the closed time
+                    $tender->tender_closed_time = Carbon::now();
+                    //Save the tender
+                    $tender->save();
+
+                    Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
+                    return redirect()->route('admin.tenders.index');
                 }
-
-                //Update the closed time
-                $tender->tender_closed_time = Carbon::now();
-                //Save the tender
-                $tender->save();
-
-                Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
-                return redirect()->route('admin.tenders.index');
             }
         } else {
             Alert::toast('Bạn không có quyền chuyển trạng thái tender!', 'error', 'top-right');
@@ -422,18 +429,22 @@ class AdminTenderController extends Controller
     {
         if(Auth::user()->can('send-result')){
             $tender = Tender::findOrFail($id);
+            if(Carbon::now()->lessThan($tender->tender_end_time)){
+                Alert::toast('Thời gian bỏ thầu chưa kết thúc. Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }else{
+                //Get the array of Supplier Id that send the bid
+                $bids = Bid::where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
+                $bided_supplier_ids = [];
+                foreach($bids as $bid) {
+                    $user = User::findOrFail($bid->user_id);
+                    array_push($bided_supplier_ids, $user->supplier_id);
+                }
+                $suppliers = Supplier::whereIn('id', $bided_supplier_ids)->orderBy('id', 'asc')->get();
 
-            //Get the array of Supplier Id that send the bid
-            $bids = Bid::where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
-            $bided_supplier_ids = [];
-            foreach($bids as $bid) {
-                $user = User::findOrFail($bid->user_id);
-                array_push($bided_supplier_ids, $user->supplier_id);
+                $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
+                return view('admin.tender.result', ['tender' => $tender, 'suppliers' => $suppliers, 'bids' => $bids, 'selected_bids' => $selected_bids]);
             }
-            $suppliers = Supplier::whereIn('id', $bided_supplier_ids)->orderBy('id', 'asc')->get();
-
-            $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
-            return view('admin.tender.result', ['tender' => $tender, 'suppliers' => $suppliers, 'bids' => $bids, 'selected_bids' => $selected_bids]);
         }else{
             Alert::toast('Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
             return redirect()->back();
