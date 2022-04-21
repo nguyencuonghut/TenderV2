@@ -35,7 +35,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
@@ -46,18 +46,19 @@
                     <p class="text-muted text-center">{{Auth::user()->email}}</p>
 
                     <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
-                        <b>Số tenders</b> <a class="float-right">{{$tenders_cnt}}</a>
-                    </li>
-                    <li class="list-group-item">
-                        <b>Số lần bỏ thầu</b> <a class="float-right">{{$bids_cnt}}</a>
-                    </li>
-                    <li class="list-group-item">
-                        <b>Số lần trúng thầu</b> <a class="float-right">{{$selected_bids_cnt}}</a>
-                    </li>
+                        @if(Auth::user()->role->name == 'Nhân viên Mua Hàng')
+                        <li class="list-group-item">
+                            <b>Số tender tôi tạo</b> <a class="float-right">{{$my_tenders_cnt}}</a>
+                        </li>
+                        @endif
+                        @if(Auth::user()->role->name == 'Nhân viên Kiểm Soát')
+                        <li class="list-group-item">
+                            <b>Số tender tôi kiểm tra</b> <a class="float-right">8</a>
+                        </li>
+                        @endif
                     </ul>
 
-                    <a href="{{route('user.change.password.get')}}" class="btn btn-warning btn-block"><b>Đổi mật khẩu</b></a>
+                    <a href="#" class="btn btn-warning btn-block"><b>Đổi mật khẩu</b></a>
                 </div>
                 <!-- /.card-body -->
                 </div>
@@ -66,21 +67,21 @@
 
 
             <!-- About Me Box -->
-            @if($recent_bids->count())
+            @if($recent_tenders->count())
             <div class="card card-primary">
                 <div class="card-header">
                   <h3 class="card-title">Hoạt động gần đây</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                  @foreach($recent_bids as $bid)
-                  <strong><i class="fas fa-clock mr-1"></i> {{$bid->created_at}}</strong>
+                  @foreach($recent_tenders as $tender)
+                  <strong><i class="fas fa-clock mr-1"></i> {{$tender->created_at}}</strong>
 
                   <p class="text-muted">
-                    Đấu thầu {{$bid->tender->material->name}} : {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}
+                    Đấu thầu {{$tender->title}}
                   </p>
                   <p class="text-muted">
-                    Chào thầu: {{number_format($bid->price, 2, ',', ' ')}} ({{$bid->price_unit}})
+                    Thời gian: {{date('y-m-d h:i'),strtotime($tender->tender_start_time)}} - {{date('y-m-d h:i'),strtotime($tender->tender_end_time)}}
                   </p>
 
                   <hr>
@@ -91,7 +92,7 @@
               <!-- /.card -->
             @endif
             </div>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Tất cả tender</h5>
@@ -103,13 +104,12 @@
                             <table id="bids-table" class="table">
                                 <thead>
                                 <tr>
-                                 <th>#</th>
-                                  <th style="width:35%;">Tender</th>
-                                  <th>Tên hàng</th>
-                                  <th>Gói thầu</th>
-                                  <th>Giá</th>
-                                  <th>Xuất xứ</th>
-                                  <th>Kết quả</th>
+                                    <th>#</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Tên hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Bắt đầu</th>
+                                    <th>Kết thúc</th>
                                 </tr>
                                 </thead>
                               </table>
@@ -166,7 +166,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             /*
@@ -174,7 +174,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6]
+                    columns: [0,1,2,3,4,5]
                 }
 
             },
@@ -182,7 +182,7 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             */
@@ -190,34 +190,33 @@
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5,6]
+                    columns: [0,1,2,3,4,5]
                 }
             }
         ],
         dom: 'Blfrtip',
-        ajax: ' {!! route('user.bids.data') !!}',
+        ajax: ' {!! route('admin.tenders.data') !!}',
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
             {data: 'material_id', name: 'material_id'},
-            {data: 'quantity_and_delivery_id', name: 'quantity_and_delivery_id'},
-            {data: 'price', name: 'price'},
-            {data: 'origin', name: 'origin'},
-            {data: 'is_selected', name: 'is_selected'},
+            {data: 'status', name: 'status'},
+            {data: 'tender_start_time', name: 'tender_start_time'},
+            {data: 'tender_end_time', name: 'tender_end_time'},
        ]
       }).buttons().container().appendTo('#bids-table_wrapper .col-md-6:eq(0)');
     });

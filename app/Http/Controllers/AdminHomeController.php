@@ -22,4 +22,14 @@ class AdminHomeController extends Controller
                                     'in_progress_tenders' =>$in_progress_tenders,
                                     'suppliers' => $suppliers]);
     }
+
+    public function profile()
+    {
+        $recent_tenders = Tender::where('creator_id', Auth::user()->id)->orderBy('id', 'desc')->take(3)->get();
+        $my_tenders = Tender::where('creator_id', Auth::user()->id)->orderBy('id', 'desc')->get();
+        $my_tenders_cnt = $my_tenders->count();
+        return view('admin.profile', ['recent_tenders' => $recent_tenders,
+                                      'my_tenders_cnt' => $my_tenders_cnt
+                                    ]);
+    }
 }

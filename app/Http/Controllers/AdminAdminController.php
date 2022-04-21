@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Role;
+use App\Notifications\AdminCreated;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Str;
 
 class AdminAdminController extends Controller
 {
@@ -49,7 +53,6 @@ class AdminAdminController extends Controller
             $rules = [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255',
-                'password' => 'required|confirmed|min:6',
                 'role_id' => 'required',
             ];
             $messages = [
@@ -59,21 +62,22 @@ class AdminAdminController extends Controller
                 'email.required' => 'Bạn phải nhập địa chỉ email.',
                 'email.email' => 'Email sai định dạng.',
                 'email.max' => 'Email dài quá 255 ký tự.',
-                'password.required' => 'Bạn phải nhập mật khẩu.',
-                'password.min' => 'Mật khẩu phải dài ít nhất 6 ký tự.',
-                'password.confirmed' => 'Mật khẩu không khớp.',
                 'role_id.required' => 'Bạn phải chọn vai trò.',
             ];
             $request->validate($rules,$messages);
 
+            $password = Str::random(8);
             $admin = new Admin();
             $admin->name = $request->name;
             $admin->email = $request->email;
-            $admin->password = bcrypt($request->password);
+            $admin->password = Hash::make($password);
             $admin->role_id = $request->role_id;
             $admin->save();
 
-            Alert::toast('Tạo tài khoản mới thành công!', 'success', 'top-right');
+            //Send password to user's email
+            Notification::route('mail' , $admin->email)->notify(new AdminCreated($admin->id, $password));
+
+            Alert::toast('Tạo tài khoản mới thành công và gửi mật khẩu tới email người dùng!', 'success', 'top-right');
             return redirect()->route('admin.admins.index');
         } else {
             Alert::toast('Bạn không có quyền tạo tài khoản!', 'error', 'top-right');
@@ -123,7 +127,6 @@ class AdminAdminController extends Controller
             $rules = [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255',
-                'password' => 'confirmed|',
                 'role_id' => 'required',
             ];
             $messages = [
@@ -133,7 +136,6 @@ class AdminAdminController extends Controller
                 'email.required' => 'Bạn phải nhập địa chỉ email.',
                 'email.email' => 'Email sai định dạng.',
                 'email.max' => 'Email dài quá 255 ký tự.',
-                'password.confirmed' => 'Mật khẩu không khớp.',
                 'role_id.required' => 'Bạn phải chọn vai trò.',
             ];
             $request->validate($rules,$messages);
@@ -141,9 +143,6 @@ class AdminAdminController extends Controller
             $admin = Admin::findOrFail($id);
             $admin->name = $request->name;
             $admin->email = $request->email;
-            if(null != $request->password) {
-                $admin->password = bcrypt($request->password);
-            }
             $admin->role_id = $request->role_id;
             $admin->save();
             Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');

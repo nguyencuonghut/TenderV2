@@ -94,12 +94,20 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('admin.profile')}}" class="nav-link {{ Request::is('admin/profile*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-id-card"></i>
+              <p>
+                Hồ sơ của tôi
+              </p>
+            </a>
+          </li>
           @else
           <li class="nav-item">
             <a href="{{route('user.profile')}}" class="nav-link {{ Request::is('profile*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-user"></i>
+              <i class="nav-icon fas fa-id-card"></i>
               <p>
-                Hồ sơ
+                Hồ sơ của tôi
               </p>
             </a>
           </li>

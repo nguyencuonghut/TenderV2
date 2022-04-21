@@ -51,25 +51,6 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-6">
-                                    <div class="control-group">
-                                        <label class="required-field" class="control-label">Mật khẩu</label>
-                                        <div class="controls">
-                                            <input type="password" class="form-control" name="password" id="password" required="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="control-group">
-                                        <label class="required-field" class="control-label">Xác nhận mật khẩu</label>
-                                        <div class="controls">
-                                            <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-12">
                                     <div class="control-group">
                                         <label class="required-field" class="control-label">Vai trò</label>
