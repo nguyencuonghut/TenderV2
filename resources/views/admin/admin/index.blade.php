@@ -116,7 +116,6 @@
                     columns: [0,1,2]
                 }
             },
-            */
             {
                 extend: 'pdf',
                 footer: true,
@@ -124,6 +123,7 @@
                         columns: [0,1,2]
                 }
             },
+            */
             {
                 extend: 'print',
                 footer: true,
