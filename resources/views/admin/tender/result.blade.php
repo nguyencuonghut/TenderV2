@@ -1,5 +1,5 @@
 @section('title')
-{{ 'Gửi kết quả thầu' }}
+{{ 'Chọn kết quả thầu' }}
 @endsection
 
 @extends('layouts.base')
@@ -92,7 +92,7 @@
                                 <label class="required-field" class="control-label">Lượng trúng thầu</label>
                                 <div class="input-group">
                                     <input type="number" name="tender_quantity" id="tender_quantity" placeholder="0" class="form-control" />
-                                    <select name="tender_quantity_unit" id="tender_quantity_unit" class="form-control" style="max-width:15%;">
+                                    <select name="tender_quantity_unit" id="tender_quantity_unit" class="form-control" style="max-width:30%;">
                                         <option value="tấn" selected>tấn</option>
                                         <option value="kg">kg</option>
                                         <option value="chiếc">chiếc</option>

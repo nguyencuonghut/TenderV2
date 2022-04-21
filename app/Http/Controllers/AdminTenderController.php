@@ -39,10 +39,15 @@ class AdminTenderController extends Controller
      */
     public function create()
     {
-        $materials = Material::all()->pluck('name', 'id');
-        $creators = Admin::all()->pluck('name', 'id');
-        $suppliers = Supplier::all()->pluck('name', 'id');
-        return view('admin.tender.create', ['materials' => $materials, 'creators' => $creators, 'suppliers' => $suppliers]);
+        if(Auth::user()->can('create-tender')){
+            $materials = Material::all()->pluck('name', 'id');
+            $creators = Admin::all()->pluck('name', 'id');
+            $suppliers = Supplier::all()->pluck('name', 'id');
+            return view('admin.tender.create', ['materials' => $materials, 'creators' => $creators, 'suppliers' => $suppliers]);
+        }else {
+            Alert::toast('Bạn không có quyền tạo tender!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
     }
 
     /**
@@ -53,59 +58,64 @@ class AdminTenderController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'title' => 'required',
-            'material_id' => 'required',
-            'delivery_condition' => 'required',
-            'payment_condition' => 'required',
-            'date_range' => 'required',
-        ];
-        $messages = [
-            'title.required' => 'Bạn phải nhập tiêu đề.',
-            'material_id.required' => 'Bạn phải nhập tên hàng.',
-            'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
-            'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-            'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('store-tender')){
+            $rules = [
+                'title' => 'required',
+                'material_id' => 'required',
+                'delivery_condition' => 'required',
+                'payment_condition' => 'required',
+                'date_range' => 'required',
+            ];
+            $messages = [
+                'title.required' => 'Bạn phải nhập tiêu đề.',
+                'material_id.required' => 'Bạn phải nhập tên hàng.',
+                'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
+                'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
+                'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
+            ];
+            $request->validate($rules,$messages);
 
-        //Check the Supplier is existed or not
-        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$request->material_id)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
-        if(!$suppliers->count()) {
-            Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+            //Check the Supplier is existed or not
+            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$request->material_id)->pluck('supplier_id')->toArray();
+            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+            if(!$suppliers->count()) {
+                Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+
+            $last_tender = Tender::latest()->first();
+            if($last_tender == null) {
+                $tender_id = 1;
+            } else {
+                $tender_id = $last_tender->id + 1;
+            }
+
+            $tender = new Tender();
+            $tender->code = 'NL' . '/' . $tender_id . '/' . Carbon::now()->month . '/' . Carbon::now()->year;
+            $tender->title = $request->title;
+            $tender->material_id = $request->material_id;
+            $tender->origin = $request->origin;
+            $tender->packing = $request->packing;
+            $tender->delivery_condition = $request->delivery_condition;
+            $tender->payment_condition = $request->payment_condition;
+            $tender->certificate = $request->certificate;
+            $tender->other_term = $request->other_term;
+            $tender->creator_id = Auth::user()->id;
+            $tender->status = 'Open';
+            $tender->supplier_ids = '';
+
+            //Parse date range
+            $dates = explode(' - ', $request->date_range);
+            $tender->tender_start_time = Carbon::parse($dates[0]);
+            $tender->tender_end_time = Carbon::parse($dates[1]);
+            $tender->save();
+
+            $request->session()->put('tender', $tender);
+            return redirect()->route('admin.tenders.createQuantityAndDeliveryTimes');
+        }else {
+            Alert::toast('Bạn không có quyền tạo tender!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
         }
-
-        $last_tender = Tender::latest()->first();
-        if($last_tender == null) {
-            $tender_id = 1;
-        } else {
-            $tender_id = $last_tender->id + 1;
-        }
-
-        $tender = new Tender();
-        $tender->code = 'NL' . '/' . $tender_id . '/' . Carbon::now()->month . '/' . Carbon::now()->year;
-        $tender->title = $request->title;
-        $tender->material_id = $request->material_id;
-        $tender->origin = $request->origin;
-        $tender->packing = $request->packing;
-        $tender->delivery_condition = $request->delivery_condition;
-        $tender->payment_condition = $request->payment_condition;
-        $tender->certificate = $request->certificate;
-        $tender->other_term = $request->other_term;
-        $tender->creator_id = Auth::user()->id;
-        $tender->status = 'Open';
-        $tender->supplier_ids = '';
-
-        //Parse date range
-        $dates = explode(' - ', $request->date_range);
-        $tender->tender_start_time = Carbon::parse($dates[0]);
-        $tender->tender_end_time = Carbon::parse($dates[1]);
-        $tender->save();
-
-        $request->session()->put('tender', $tender);
-        return redirect()->route('admin.tenders.createQuantityAndDeliveryTimes');
     }
 
     /**
@@ -184,14 +194,19 @@ class AdminTenderController extends Controller
      */
     public function destroy($id)
     {
-        $tender = Tender::findOrFail($id);
-        if('Open' == $tender->status) {
-            $tender->destroy($id);
-            Alert::toast('Xóa tender thành công!', 'success', 'top-right');
-        } else {
-            Alert::toast('Tender đang diễn ra. Không thể xóa!', 'error', 'top-right');
+        if(Auth::user()->can('destroy-tender')){
+            $tender = Tender::findOrFail($id);
+            if('Open' == $tender->status) {
+                $tender->destroy($id);
+                Alert::toast('Xóa tender thành công!', 'success', 'top-right');
+            } else {
+                Alert::toast('Tender đang diễn ra. Không thể xóa!', 'error', 'top-right');
+            }
+            return redirect()->route('admin.tenders.index');
+        }else {
+            Alert::toast('Bạn không có quyền xóa tender!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
         }
-        return redirect()->route('admin.tenders.index');
     }
 
     public function anyData()
@@ -251,40 +266,45 @@ class AdminTenderController extends Controller
 
     public function changeStatus($id)
     {
-        $tender = Tender::findOrFail($id);
-        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        if(Auth::user()->can('change-status')){
+            $tender = Tender::findOrFail($id);
+            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
+            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
 
-        $selected_supplier_ids = [];
-        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+            $selected_supplier_ids = [];
+            $selected_supplier_ids = explode(",", $tender->supplier_ids);
 
-        //Get the array of Supplier Id that send the bid and selected
-        $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
-        $selected_bided_supplier_ids = [];
-        foreach($selected_bids as $bid) {
-            $user = User::findOrFail($bid->user_id);
-            array_push($selected_bided_supplier_ids, $user->supplier_id);
+            //Get the array of Supplier Id that send the bid and selected
+            $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
+            $selected_bided_supplier_ids = [];
+            foreach($selected_bids as $bid) {
+                $user = User::findOrFail($bid->user_id);
+                array_push($selected_bided_supplier_ids, $user->supplier_id);
+            }
+
+            //Get the array of Supplier Id that send the bid
+            $bided_supplier_ids = [];
+            $bids = Bid::where('tender_id', $tender->id)->get();
+            foreach($bids as $bid) {
+                $user = User::findOrFail($bid->user_id);
+                array_push($bided_supplier_ids, $user->supplier_id);
+            }
+            return view('admin.tender.changestatus',
+                        ['tender' => $tender,
+                        'suppliers' => $suppliers,
+                        'selected_supplier_ids' => $selected_supplier_ids,
+                        'bided_supplier_ids' => $bided_supplier_ids,
+                        'selected_bided_supplier_ids' => $selected_bided_supplier_ids,
+                        ]);
+        }else {
+            Alert::toast('Bạn không có quyền chuyển trạng thái tender!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
         }
-
-        //Get the array of Supplier Id that send the bid
-        $bided_supplier_ids = [];
-        $bids = Bid::where('tender_id', $tender->id)->get();
-        foreach($bids as $bid) {
-            $user = User::findOrFail($bid->user_id);
-            array_push($bided_supplier_ids, $user->supplier_id);
-        }
-        return view('admin.tender.changestatus',
-                    ['tender' => $tender,
-                     'suppliers' => $suppliers,
-                     'selected_supplier_ids' => $selected_supplier_ids,
-                     'bided_supplier_ids' => $bided_supplier_ids,
-                     'selected_bided_supplier_ids' => $selected_bided_supplier_ids,
-                    ]);
     }
 
     public function updateStatus(Request $request, $id)
     {
-        if('Nhân viên Mua Hàng' != Auth::user()->role->name){
+        if(Auth::user()->can('change-status')){
             $rules = [
                 'status' => 'required',
                 'supplier_ids' => 'required',
@@ -391,58 +411,73 @@ class AdminTenderController extends Controller
 
     public function result($id)
     {
-        $tender = Tender::findOrFail($id);
+        if(Auth::user()->can('send-result')){
+            $tender = Tender::findOrFail($id);
 
-        //Get the array of Supplier Id that send the bid
-        $bids = Bid::where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
-        $bided_supplier_ids = [];
-        foreach($bids as $bid) {
-            $user = User::findOrFail($bid->user_id);
-            array_push($bided_supplier_ids, $user->supplier_id);
+            //Get the array of Supplier Id that send the bid
+            $bids = Bid::where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
+            $bided_supplier_ids = [];
+            foreach($bids as $bid) {
+                $user = User::findOrFail($bid->user_id);
+                array_push($bided_supplier_ids, $user->supplier_id);
+            }
+            $suppliers = Supplier::whereIn('id', $bided_supplier_ids)->orderBy('id', 'asc')->get();
+
+            $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
+            return view('admin.tender.result', ['tender' => $tender, 'suppliers' => $suppliers, 'bids' => $bids, 'selected_bids' => $selected_bids]);
+        }else{
+            Alert::toast('Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+            return redirect()->back();
         }
-        $suppliers = Supplier::whereIn('id', $bided_supplier_ids)->orderBy('id', 'asc')->get();
-
-        $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
-        return view('admin.tender.result', ['tender' => $tender, 'suppliers' => $suppliers, 'bids' => $bids, 'selected_bids' => $selected_bids]);
     }
 
     public function sendResult(Request $request, $id)
     {
-        $rules = [
-            'tender_quantity' => 'required',
-            'tender_quantity_unit' => 'required',
-            'bid_id' => 'required',
-        ];
-        $messages = [
-            'tender_quantity.required' => 'Bạn phải nhập số lượng.',
-            'tender_quantity_unit.required' => 'Bạn phải chọn đơn vị.',
-            'bid_id.required' => 'Bạn phải chọn giá.',
-        ];
-        $request->validate($rules,$messages);
+        if(Auth::user()->can('send-result')){
+            $rules = [
+                'tender_quantity' => 'required',
+                'tender_quantity_unit' => 'required',
+                'bid_id' => 'required',
+            ];
+            $messages = [
+                'tender_quantity.required' => 'Bạn phải nhập số lượng.',
+                'tender_quantity_unit.required' => 'Bạn phải chọn đơn vị.',
+                'bid_id.required' => 'Bạn phải chọn giá.',
+            ];
+            $request->validate($rules,$messages);
 
-        //Update bid
-        $bid = Bid::findOrFail($request->bid_id);
-        $bid->tender_quantity = $request->tender_quantity;
-        $bid->tender_quantity_unit = $request->tender_quantity_unit;
-        $bid->is_selected = true;
-        $bid->save();
+            //Update bid
+            $bid = Bid::findOrFail($request->bid_id);
+            $bid->tender_quantity = $request->tender_quantity;
+            $bid->tender_quantity_unit = $request->tender_quantity_unit;
+            $bid->is_selected = true;
+            $bid->save();
 
-        Alert::toast('Chọn kết quả thầu thành công!', 'success', 'top-right');
-        return redirect()->route('admin.tenders.result', $id);
+            Alert::toast('Chọn kết quả thầu thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.result', $id);
+        }else{
+            Alert::toast('Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+            return redirect()->back();
+        }
     }
 
     public function destroyResult($bid_id)
     {
-        //Update bid
-        $bid = Bid::findOrFail($bid_id);
-        $bid->tender_quantity = 0;
-        $bid->tender_quantity_unit = 'tấn';
-        $bid->is_selected = false;
-        $bid->save();
+        if(Auth::user()->can('destroy-result')){
+            //Update bid
+            $bid = Bid::findOrFail($bid_id);
+            $bid->tender_quantity = 0;
+            $bid->tender_quantity_unit = 'tấn';
+            $bid->is_selected = false;
+            $bid->save();
 
-        $tender = Tender::findOrFail($bid->tender_id);
+            $tender = Tender::findOrFail($bid->tender_id);
 
-        Alert::toast('Xóa kết quả thầu thành công!', 'success', 'top-right');
-        return redirect()->route('admin.tenders.result', $tender->id);
+            Alert::toast('Xóa kết quả thầu thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.result', $tender->id);
+        }else{
+            Alert::toast('Bạn không có quyền xóa kết quả thầu!', 'error', 'top-right');
+            return redirect()->back();
+        }
     }
 }

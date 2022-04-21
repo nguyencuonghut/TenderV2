@@ -228,7 +228,8 @@
                                         @endforeach
                                       </table>
                                 </div>
-                                @if(Carbon\Carbon::now()->greaterThan($tender->tender_end_time))
+                                @if(Auth::user()->can('send-result')
+                                && Carbon\Carbon::now()->greaterThan($tender->tender_end_time))
                                   <div class="card-footer clearfix">
                                       <a href="{{route('admin.tenders.result', $tender->id)}}">
                                           <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
@@ -236,56 +237,6 @@
                                   </div>
                                 @endif
                               </div>
-
-                              <form class="form-horizontal" method="post" action="{{ route('user.bids.create', $tender->id) }}" name="create_bid" id="create_bid" novalidate="novalidate">
-                                {{ csrf_field() }}
-                                <div class="modal fade" id="add_bid">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <label class="required-field" class="control-label">Số lượng</label>
-                                                <div class="input-group">
-                                                    <input type="number" name="quantity" id="quantity" placeholder="0" class="form-control" />
-                                                    <select name="quantity_unit" id="quantity_unit" class="form-control" style="max-width:15%;">
-                                                        <option value="tấn" selected>tấn</option>
-                                                        <option value="kg">kg</option>
-                                                        <option value="chiếc">chiếc</option>
-                                                    </select>
-                                                </div>
-
-                                                <label class="required-field" class="control-label">Giá</label>
-                                                <div class="input-group">
-                                                    <input type="number" name="price" id="price" placeholder="0" step="any" class="form-control" />
-                                                    <select name="price_unit" id="price_unit" class="form-control" style="max-width:15%;">
-                                                        <option value="đồng/kg" selected>đồng/kg</option>
-                                                        <option value="USD/tấn">USD/tấn</option>
-                                                        <option value="USD/kg">USD/kg</option>
-                                                        <option value="đồng/tấn">đồng/chiếc</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="control-group">
-                                                    <label class="control-label">Ghi chú</label>
-                                                    <div class="controls">
-                                                        <input type="text" class="form-control" name="note" id="note" required="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                            </div>
-                                        </div>
-                                        <!-- /.modal-content -->
-                                    </div>
-                                </div>
-                              </form>
-                              <!-- /.modal -->
                         </div>
                         </div>
                       </div>
