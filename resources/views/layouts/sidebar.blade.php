@@ -29,6 +29,24 @@
               </p>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a href="{{route('admin.tenders.index')}}" class="nav-link {{ Request::is('admin/tender*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-th-list"></i>
+              <p>
+                Tender
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{route('admin.profile')}}" class="nav-link {{ Request::is('admin/profile*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-id-card"></i>
+              <p>
+                Hồ sơ của tôi
+              </p>
+            </a>
+          </li>
           @else
           <li class="nav-item">
             <a href="{{route('user.home')}}" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
@@ -38,18 +56,7 @@
               </p>
             </a>
           </li>
-          @endauth
 
-          @auth('admin')
-          <li class="nav-item">
-            <a href="{{route('admin.tenders.index')}}" class="nav-link {{ Request::is('admin/tender*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-th-list"></i>
-              <p>
-                Tender
-              </p>
-            </a>
-          </li>
-          @else
           <li class="nav-item">
             <a href="{{route('user.tenders.index')}}" class="nav-link {{ Request::is('tender*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-th-list"></i>
@@ -58,10 +65,19 @@
               </p>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a href="{{route('user.profile')}}" class="nav-link {{ Request::is('profile*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-id-card"></i>
+              <p>
+                Hồ sơ của tôi
+              </p>
+            </a>
+          </li>
           @endauth
 
-          <li class="nav-header">HỆ THỐNG</li>
           @auth('admin')
+          <li class="nav-header">HỆ THỐNG</li>
           <li class="nav-item">
             <a href="{{route('admin.users.index')}}" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-users"></i>
@@ -91,23 +107,6 @@
               <i class="nav-icon fas fa-box-open"></i>
               <p>
                 Hàng hóa
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('admin.profile')}}" class="nav-link {{ Request::is('admin/profile*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-id-card"></i>
-              <p>
-                Hồ sơ của tôi
-              </p>
-            </a>
-          </li>
-          @else
-          <li class="nav-item">
-            <a href="{{route('user.profile')}}" class="nav-link {{ Request::is('profile*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-id-card"></i>
-              <p>
-                Hồ sơ của tôi
               </p>
             </a>
           </li>
