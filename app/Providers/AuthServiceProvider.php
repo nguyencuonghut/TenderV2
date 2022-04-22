@@ -34,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         'store-tender' => ['Admin', 'Nhân viên Mua Hàng'],
         'edit-tender' => ['Admin', 'Nhân viên Mua Hàng'],
         'update-tender' => ['Admin', 'Nhân viên Mua Hàng'],
-        'destroy-tender' => ['Admin'],
+        'destroy-tender' => ['Admin', 'Nhân viên Mua Hàng'],
         'change-status' => ['Admin', 'Nhân viên Kiểm Soát'],
         'send-result' => ['Admin', 'Nhân viên Kiểm Soát'],
         'destroy-result' => ['Admin', 'Nhân viên Kiểm Soát'],

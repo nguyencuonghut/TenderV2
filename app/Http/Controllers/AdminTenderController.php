@@ -171,7 +171,21 @@ class AdminTenderController extends Controller
      */
     public function edit($id)
     {
-        //
+        if(Auth::user()->can('edit-tender')){
+            $tender = Tender::findOrFail($id);
+            $materials = Material::all()->pluck('name', 'id');
+            if($tender->status == 'Open'){
+                return view('admin.tender.edit', ['tender' => $tender,
+                                                  'materials' => $materials
+                                                 ]);
+            }else{
+                Alert::toast('Tender đang diễn ra hoặc đã đóng, không thể sửa!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+        }else{
+            Alert::toast('Bạn không có quyền sửa tender này!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
     }
 
     /**
@@ -183,7 +197,56 @@ class AdminTenderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if(Auth::user()->can('update-tender')){
+            $rules = [
+                'title' => 'required',
+                'material_id' => 'required',
+                'delivery_condition' => 'required',
+                'payment_condition' => 'required',
+                'date_range' => 'required',
+            ];
+            $messages = [
+                'title.required' => 'Bạn phải nhập tiêu đề.',
+                'material_id.required' => 'Bạn phải nhập tên hàng.',
+                'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
+                'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
+                'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
+            ];
+            $request->validate($rules,$messages);
+
+            //Check the Supplier is existed or not
+            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$request->material_id)->pluck('supplier_id')->toArray();
+            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+            if(!$suppliers->count()) {
+                Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+
+            $tender = Tender::findOrFail($id);
+            $tender->title = $request->title;
+            $tender->material_id = $request->material_id;
+            $tender->origin = $request->origin;
+            $tender->packing = $request->packing;
+            $tender->delivery_condition = $request->delivery_condition;
+            $tender->payment_condition = $request->payment_condition;
+            $tender->certificate = $request->certificate;
+            $tender->other_term = $request->other_term;
+            $tender->creator_id = Auth::user()->id;
+            $tender->status = 'Open';
+            $tender->supplier_ids = '';
+
+            //Parse date range
+            $dates = explode(' - ', $request->date_range);
+            $tender->tender_start_time = Carbon::parse($dates[0]);
+            $tender->tender_end_time = Carbon::parse($dates[1]);
+            $tender->save();
+
+            $request->session()->put('tender', $tender);
+            return redirect()->route('admin.tenders.editQuantityAndDeliveryTimes');
+        }else {
+            Alert::toast('Bạn không có quyền tạo tender!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
     }
 
     /**
@@ -364,6 +427,9 @@ class AdminTenderController extends Controller
                     Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
                     return redirect()->route('admin.tenders.index');
                 }
+            }else{
+                Alert::toast('Không cho phép chuyển về trạng thái Open!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
             }
         } else {
             Alert::toast('Bạn không có quyền chuyển trạng thái tender!', 'error', 'top-right');
@@ -388,6 +454,42 @@ class AdminTenderController extends Controller
 
         $tender = $request->session()->get('tender');
 
+        foreach ($request->addmore as $key => $value) {
+            QuantityAndDeliveryTime::create($value);
+        }
+
+        $request->session()->put('tender', $tender);
+        return redirect()->route('admin.tenders.createSuppliers');
+    }
+
+
+    public function editQuantityAndDeliveryTimes(Request $request)
+    {
+        $tender = $request->session()->get('tender');
+        $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+        return view('admin.tender.edit_quantity_and_delivery_times',
+                     ['tender' => $tender,
+                    'quantity_and_delivery_times' => $quantity_and_delivery_times
+                     ]);
+    }
+
+    public function updateQuantityAndDeliveryTimes(Request $request)
+    {
+        $request->validate([
+            'addmore.*.quantity' => 'required',
+            'addmore.*.quantity_unit' => 'required',
+            'addmore.*.delivery_time' => 'required',
+        ]);
+
+        $tender = $request->session()->get('tender');
+
+        //Delete all quantity and delivery times before
+        $old_quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+        foreach($old_quantity_and_delivery_times as $item) {
+            $item->destroy($item->id);
+        }
+
+        //Update new quantity and delivery times
         foreach ($request->addmore as $key => $value) {
             QuantityAndDeliveryTime::create($value);
         }
