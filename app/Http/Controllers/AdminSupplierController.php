@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bid;
+use App\Models\Material;
+use App\Models\MaterialSupplier;
 use Datatables;
 use App\Models\Supplier;
 use App\Models\User;
@@ -30,7 +32,8 @@ class AdminSupplierController extends Controller
     public function create()
     {
         if(Auth::user()->can('create-supplier')) {
-            return view('admin.supplier.create');
+            $materials = Material::orderBy('name', 'asc')->get();
+            return view('admin.supplier.create', ['materials' => $materials]);
         } else {
             Alert::toast('Bạn không có quyền tạo nhà cung cấp mới!', 'error', 'top-right');
             return redirect()->route('admin.suppliers.index');
@@ -49,19 +52,30 @@ class AdminSupplierController extends Controller
             $rules = [
                 'code' => 'required|unique:suppliers',
                 'name' => 'required|max:255',
+                'material_id' => 'required'
             ];
             $messages = [
                 'code.required' => 'Bạn phải nhập mã.',
                 'code.unique' => 'Mã đã tồn tại.',
                 'name.required' => 'Bạn phải nhập tên.',
                 'name.max' => 'Tên dài quá 255 ký tự.',
+                'material_id.required' => 'Bạn phải nhập hàng hóa.',
             ];
             $request->validate($rules,$messages);
 
+            //Create new Supplier
             $supplier = new Supplier();
             $supplier->name = $request->name;
             $supplier->code = $request->code;
             $supplier->save();
+
+            //Create new MaterialSupplier
+            foreach($request->material_id as $key => $value){
+                $material_supplier = new MaterialSupplier();
+                $material_supplier->material_id = $value;
+                $material_supplier->supplier_id = $supplier->id;
+                $material_supplier->save();
+            }
 
             Alert::toast('Tạo nhà cung cấp mới thành công!', 'success', 'top-right');
             return redirect()->route('admin.suppliers.index');
@@ -93,7 +107,11 @@ class AdminSupplierController extends Controller
     {
         if(Auth::user()->can('edit-supplier')) {
             $supplier = Supplier::findOrFail($id);
-            return view('admin.supplier.edit', ['supplier' => $supplier]);
+            $materials = Material::orderBy('name', 'asc')->get();
+            $selected_materials = MaterialSupplier::where('supplier_id', $id)->pluck('material_id')->toArray();
+            return view('admin.supplier.edit', ['supplier' => $supplier,
+                                                'materials' => $materials,
+                                                 'selected_materials' => $selected_materials]);
         } else {
             Alert::toast('Bạn không có quyền sửa nhà cung cấp!', 'error', 'top-right');
             return redirect()->route('admin.suppliers.index');
@@ -111,21 +129,36 @@ class AdminSupplierController extends Controller
     {
         if(Auth::user()->can('update-supplier')) {
             $rules = [
-                'code' => 'required|unique:suppliers',
+                'code' => 'required',
                 'name' => 'required|max:255',
+                'material_id' => 'required'
             ];
             $messages = [
                 'code.required' => 'Bạn phải nhập mã.',
-                'code.unique' => 'Mã đã tồn tại.',
                 'name.required' => 'Bạn phải nhập tên.',
                 'name.max' => 'Tên dài quá 255 ký tự.',
+                'material_id.required' => 'Bạn phải nhập hàng hóa.',
             ];
             $request->validate($rules,$messages);
 
+            //Update Supplier
             $supplier = Supplier::findOrFail($id);
             $supplier->name = $request->name;
             $supplier->code = $request->code;
             $supplier->save();
+
+            //Update MaterialSupplier
+            $old_material_suppliers = MaterialSupplier::where('supplier_id', $id)->get();
+            foreach($old_material_suppliers as $item){
+                $item->destroy($item->id);
+            }
+            //Create new MaterialSupplier
+            foreach($request->material_id as $key => $value){
+                $material_supplier = new MaterialSupplier();
+                $material_supplier->material_id = $value;
+                $material_supplier->supplier_id = $supplier->id;
+                $material_supplier->save();
+            }
 
             Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
             return redirect()->route('admin.suppliers.index');
@@ -183,6 +216,19 @@ class AdminSupplierController extends Controller
                     }
                 }
                 return $mail_list;
+            })
+            ->addColumn('materials', function ($suppliers) {
+                $i = 0;
+                $length = count($suppliers->materials);
+                $material_list = '';
+                foreach ($suppliers->materials as $item) {
+                    if(++$i === $length) {
+                        $material_list =  $material_list . $item->name;
+                    } else {
+                        $material_list = $material_list . $item->name . ', ';
+                    }
+                }
+                return $material_list;
             })
             ->addColumn('actions', function($suppliers) {
                 $btn = '<a href="' . route("admin.suppliers.show", $suppliers->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';

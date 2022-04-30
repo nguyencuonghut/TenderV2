@@ -48,7 +48,8 @@
                     <th>STT</th>
                     <th>Mã</th>
                     <th>Tên nhà cung cấp</th>
-                    <th>Liên hệ</th>
+                    <th style="width:30%;">Liên hệ</th>
+                    <th>Hàng hóa</th>
                     <th>Thao tác</th>
                   </tr>
                   </thead>
@@ -97,7 +98,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             /*
@@ -105,7 +106,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
 
             },
@@ -113,14 +114,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             */
@@ -128,14 +129,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             }
         ],
@@ -146,6 +147,7 @@
             {data: 'code', name: 'code'},
             {data: 'name', name: 'name'},
             {data: 'users', name: 'users'},
+            {data: 'materials', name: 'materials'},
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#suppliers-table_wrapper .col-md-6:eq(0)');
