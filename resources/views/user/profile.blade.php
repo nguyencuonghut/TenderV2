@@ -50,7 +50,7 @@
                         <b>Số tenders</b> <a class="float-right">{{$tenders_cnt}}</a>
                     </li>
                     <li class="list-group-item">
-                        <b>Số lần bỏ thầu</b> <a class="float-right">{{$bids_cnt}}</a>
+                        <b>Số lần chào thầu</b> <a class="float-right">{{$bids_cnt}}</a>
                     </li>
                     <li class="list-group-item">
                         <b>Số lần trúng thầu</b> <a class="float-right">{{$selected_bids_cnt}}</a>
