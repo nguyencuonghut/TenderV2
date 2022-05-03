@@ -202,7 +202,7 @@
                                           <th style="width: 30%;">Nhà cung cấp</th>
                                           <th>Giá</th>
                                           <th style="width: 30%;">Điều kiện thanh toán</th>
-                                          <th>Xuất xứ</th>
+                                          <th>Ghi chú</th>
                                         </tr>
                                         @foreach ($bids as $bid)
                                         <tr style="color:@if($bid->quantity_id % 2 == 0) #057ba9 @endif">
@@ -223,7 +223,7 @@
                                           <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                                           @endif
                                           <td>{{ $bid->payment_condition }}</td>
-                                          <td>{{ $bid->origin }}</td>
+                                          <td>{{ $bid->note }}</td>
                                         </tr>
                                         @endforeach
                                       </table>

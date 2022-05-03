@@ -532,7 +532,7 @@ class AdminTenderController extends Controller
         if(Auth::user()->can('send-result')){
             $tender = Tender::findOrFail($id);
             if(Carbon::now()->lessThan($tender->tender_end_time)){
-                Alert::toast('Thời gian bỏ thầu chưa kết thúc. Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+                Alert::toast('Thời gian chào thầu chưa kết thúc. Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
                 return redirect()->route('admin.tenders.index');
             }else{
                 //Get the array of Supplier Id that send the bid

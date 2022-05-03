@@ -1,5 +1,5 @@
 @section('title')
-{{ 'Bỏ thầu' }}
+{{ 'Chào thầu' }}
 @endsection
 
 @extends('layouts.base')
@@ -16,7 +16,7 @@
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('user.tenders.show', $tender->id) }}">Tender</a></li>
-            <li class="breadcrumb-item active">Bỏ thầu</li>
+            <li class="breadcrumb-item active">Chào thầu</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->

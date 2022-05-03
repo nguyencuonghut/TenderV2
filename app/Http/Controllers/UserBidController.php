@@ -27,7 +27,7 @@ class UserBidController extends Controller
                                            'tender' => $tender,
                                            'quantity_and_delivery_times' => $quantity_and_delivery_times]);
         } else {
-            Alert::toast('Bạn không quyền bỏ thầu tender này!', 'error', 'top-right');
+            Alert::toast('Bạn không quyền chào thầu tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
         }
     }
