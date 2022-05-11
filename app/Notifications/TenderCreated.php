@@ -47,7 +47,7 @@ class TenderCreated extends Notification
         return (new MailMessage)
                     ->subject('Yêu cầu duyệt tender: ' . $tender->title)
                     ->line('Xin mời duyệt thư chào thầu: ' . $tender->title)
-                    ->action('Duyệt thư mờ thầu', url($url))
+                    ->action('Duyệt thư mời thầu', url($url))
                     ->line('Xin cảm ơn!');
     }
 

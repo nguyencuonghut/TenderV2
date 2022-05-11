@@ -67,6 +67,8 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('tenders/result/{id}', [AdminTenderController::class, 'result'])->name('tenders.result');
         Route::post('tenders/sendResult/{id}', [AdminTenderController::class, 'sendResult'])->name('tenders.sendResult');
         Route::delete('tenders/destroyResult/{bid_id}', [AdminTenderController::class, 'destroyResult'])->name('tenders.destroyResult');
+        Route::post('tenders/createPropose/{id}', [AdminTenderController::class, 'createPropose'])->name('tenders.create.propose');
+        Route::delete('tenders/destroyPropose/{id}', [AdminTenderController::class, 'destroyPropose'])->name('tenders.destroy.propose');
     });
 });
 

@@ -10,7 +10,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">{{ $tender->title }}</h1>
+            <!--<h1 class="m-0">{{ $tender->title }}</h1> -->
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -75,6 +75,7 @@
                             </div>
 
                           <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                            <h2>{{$tender->title}}</h2>
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -133,7 +134,7 @@
                                         <div class="col-sm-4 invoice-col">
                                           <address>
                                             <strong>Điều kiện thanh toán</strong><br>
-                                            {{$tender->payment_condition}}<br>
+                                            {!!$tender->payment_condition!!}<br>
                                           </address>
                                         </div>
                                         <!-- /.col -->
@@ -167,6 +168,7 @@
                             </div>
                         </div>
                           <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                            <h2>{{$tender->title}}</h2>
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -227,16 +229,49 @@
                                         </tr>
                                         @endforeach
                                       </table>
+
+                                    @if($proposes->count())
+                                    <hr>
+                                    <table id="bids-table" class="table table-bordered table-hover">
+                                        <tr>
+                                          <th>Đề xuất</th>
+                                          <th style="width: 5%;">Xóa</th>
+                                        </tr>
+                                        @foreach ($proposes as $item)
+                                        <tr>
+                                          <td>{{ $item->propose }}</td>
+                                          <td>
+                                            <form action="{{route('admin.tenders.destroy.propose', $item->id)}}" method="POST">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" name="submit" class="btn btn-danger" onClick="return confirm('Bạn có chắc chắn muốn xóa?')"">
+                                                <i class="fas fa-trash-alt"></i>
+                                                </button>
+
+                                                {{csrf_field()}}
+                                            </form>
+                                          </td>
+                                        </tr>
+                                        @endforeach
+                                    </table>
+                                    @endif
                                 </div>
-                                @if(Auth::user()->can('send-result')
-                                && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                && $tender->status == 'In-progress')
                                   <div class="card-footer clearfix">
+                                    @if(Auth::user()->can('send-result')
+                                    && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                    && $tender->status == 'In-progress')
                                       <a href="{{route('admin.tenders.result', $tender->id)}}">
                                           <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
                                       </a>
+                                    @endif
+
+                                    @if(Auth::user()->can('create-propose')
+                                    && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                    && $tender->status == 'In-progress')
+                                      <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
+                                        <i class="fas fa-clipboard-check"></i> Đề xuất
+                                      </button>
+                                    @endif
                                   </div>
-                                @endif
                               </div>
                         </div>
                         </div>
@@ -247,6 +282,37 @@
             </div>
 
 
+            <form class="form-horizontal" method="post" action="{{ route('admin.tenders.create.propose', $tender->id) }}" name="store_propose" id="store_propose" novalidate="novalidate">
+                {{ csrf_field() }}
+                <div class="modal fade" id="create_propose">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="control-group">
+                                            <label class="control-label">Đề xuất của bạn</label>
+                                            <div class="controls">
+                                                <input type="text" class="form-control" name="propose" id="propose" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                </div>
+            </form>
 
             <div class="row">
                 <div class="col-12">

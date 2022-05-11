@@ -10,6 +10,7 @@ use App\Models\QuantityAndDeliveryTime;
 use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
+use App\Models\TenderPropose;
 use App\Models\User;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
@@ -148,6 +149,7 @@ class AdminTenderController extends Controller
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
 
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+            $proposes = TenderPropose::where('tender_id', $tender->id)->get();
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
@@ -155,7 +157,8 @@ class AdminTenderController extends Controller
                          'selected_supplier_ids' => $selected_supplier_ids,
                          'bided_supplier_ids' => $bided_supplier_ids,
                          'selected_bids' => $selected_bids,
-                         'quantity_and_delivery_times' => $quantity_and_delivery_times
+                         'quantity_and_delivery_times' => $quantity_and_delivery_times,
+                         'proposes' => $proposes
                         ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
@@ -599,6 +602,49 @@ class AdminTenderController extends Controller
             return redirect()->route('admin.tenders.result', $tender->id);
         }else{
             Alert::toast('Bạn không có quyền xóa kết quả thầu!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
+
+    public function createPropose(Request $request, $id)
+    {
+        if(Auth::user()->can('update-tender')){
+            $rules = [
+                'propose' => 'required',
+            ];
+            $messages = [
+                'propose.required' => 'Bạn phải nhập nội dung đề xuất.',
+            ];
+            $request->validate($rules,$messages);
+
+            //Create new Propose
+            $propose = new TenderPropose();
+            $propose->tender_id = $id;
+            $propose->propose = $request->propose;
+            $propose->save();
+
+            Alert::toast('Tạo đề xuất thành công!', 'success', 'top-right');
+            return redirect()->back();
+        }else{
+            Alert::toast('Bạn không có quyền tạo đề xuất cho Tender này!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
+
+    public function destroyPropose($id)
+    {
+        if(Auth::user()->can('destroy-propose')){
+            $propose = TenderPropose::findOrFail($id);
+            $tender = Tender::findOrFail($propose->tender_id);
+            if('Closed' != $tender->status) {
+                $propose->destroy($id);
+                Alert::toast('Xóa đề xuất thành công!', 'success', 'top-right');
+            } else {
+                Alert::toast('Tender đã đóng. Không thể xóa đề xuất!', 'error', 'top-right');
+            }
+            return redirect()->back();
+        }else {
+            Alert::toast('Bạn không có quyền xóa đề xuất này!', 'error', 'top-right');
             return redirect()->back();
         }
     }

@@ -38,6 +38,8 @@ class AuthServiceProvider extends ServiceProvider
         'change-status' => ['Admin', 'Nhân viên Kiểm Soát'],
         'send-result' => ['Admin', 'Nhân viên Kiểm Soát'],
         'destroy-result' => ['Admin', 'Nhân viên Kiểm Soát'],
+        'create-propose' => ['Admin', 'Nhân viên Mua Hàng'],
+        'destroy-propose' => ['Admin', 'Nhân viên Mua Hàng'],
     ];
 
     /**

@@ -130,7 +130,7 @@
                                         <div class="col-sm-4 invoice-col">
                                           <address>
                                             <strong>Điều kiện thanh toán</strong><br>
-                                            {{$tender->payment_condition}}<br>
+                                            {!!$tender->payment_condition!!}<br>
                                           </address>
                                         </div>
                                         <!-- /.col -->

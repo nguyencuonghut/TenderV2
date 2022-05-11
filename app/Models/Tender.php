@@ -57,4 +57,9 @@ class Tender extends Model
     {
         return 'kiemsoatmuahang@honghafeed.com.vn';
     }
+
+    public function propose()
+    {
+        return $this->hasOne(TenderPropose::class);
+    }
 }
