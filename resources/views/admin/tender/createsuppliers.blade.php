@@ -34,8 +34,9 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-6">
-                                  <label class="required-field" class="control-label">Nhà thầu</label>
+                                <div class="col-sm-8">
+                                  <label class="required-field" class="control-label float-left">Nhà thầu</label>
+                                  <label class="control-label float-right">Lý do (nếu không chọn)</label>
                                   <!-- checkbox -->
                                   <div class="form-group">
                                     @foreach($suppliers as $supplier)
@@ -43,6 +44,7 @@
                                       <input class="form-check-input" type="checkbox"
                                         name="supplier_ids[]" value="{{$supplier->id}}" checked>
                                       <label class="form-check-label">{{$supplier->name}}</label>
+                                      <input name="reasons[]" type="text" style="float:right; height: 20px;width: 60%;">
                                     </div>
                                     @endforeach
                                   </div>

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTenderProposesTable extends Migration
+class CreateTenderSuppliersSelectedStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,14 @@ class CreateTenderProposesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tender_proposes', function (Blueprint $table) {
+        Schema::create('tender_suppliers_selected_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('propose');
             $table->bigInteger('tender_id')->unsigned();
             $table->foreign('tender_id')->references('id')->on('tenders')->onDelete('cascade');
+            $table->bigInteger('supplier_id')->unsigned();
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->string('reason')->nullable();
+            $table->boolean('is_selected')->default(false);
             $table->timestamps();
         });
     }
@@ -31,7 +34,7 @@ class CreateTenderProposesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('tender_proposes');
+        Schema::dropIfExists('tender_suppliers_selected_statuses');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

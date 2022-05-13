@@ -46,6 +46,7 @@
                       <div class="card-body">
                         <div class="tab-content" id="custom-tabs-one-tabContent">
                             <div class="tab-pane fade" id="custom-tabs-one-profile-1" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab-1">
+                                <h2>{{$tender->title}}</h2>
                                 <div class="card">
                                     <!-- /.card-header -->
                                     <div class="card-body">
@@ -173,30 +174,39 @@
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                           <label class="control-label">Nhà thầu</label>
                                           <!-- checkbox -->
                                           <div class="form-group">
-                                            @foreach($suppliers as $supplier)
+                                            @foreach($supplier_selected_statuses as $supplier_status)
                                             <div class="form-check">
                                               <input class="form-check-input" type="checkbox" onclick="return false;"
-                                                name="supplier_ids[]" value="{{$supplier->id}}"
-                                                @if(in_array($supplier->id, $selected_supplier_ids))
+                                                name="supplier_ids[]" value="{{$supplier_status->supplier_id}}"
+                                                @if(in_array($supplier_status->supplier_id, $selected_supplier_ids))
                                                     checked
                                                 @endif
                                               >
-                                              @if(in_array($supplier->id, $bided_supplier_ids))
+                                              @if(in_array($supplier_status->supplier_id, $bided_supplier_ids))
                                                 <i class="fas fa-envelope fa-sm" style="color:#007BFF;"></i>
                                               @else
                                                 <i class="far fa-envelope fa-sm"></i>
                                               @endif
+                                              @php
+                                                  $supplier = App\Models\Supplier::findOrFail($supplier_status->supplier_id);
+                                              @endphp
                                               <label class="form-check-label">{{$supplier->name}}</label>
+                                              @if($supplier_status->reason)
+                                                <label class="form-check-label" style="color:red;">
+                                                    ({{$supplier_status->reason}})
+                                                </label>
+                                              @endif
                                             </div>
                                             @endforeach
                                           </div>
                                         </div>
                                     </div>
 
+                                    @if($bids->count())
                                     <table id="bids-table" class="table table-bordered table-hover">
                                         <tr>
                                           <th>Trúng thầu</th>
@@ -228,7 +238,8 @@
                                           <td>{{ $bid->note }}</td>
                                         </tr>
                                         @endforeach
-                                      </table>
+                                    </table>
+                                    @endif
 
                                     @if($proposes->count())
                                     <hr>

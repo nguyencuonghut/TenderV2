@@ -11,6 +11,7 @@ use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
 use App\Models\TenderPropose;
+use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
@@ -150,6 +151,7 @@ class AdminTenderController extends Controller
 
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
             $proposes = TenderPropose::where('tender_id', $tender->id)->get();
+            $supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
@@ -158,7 +160,8 @@ class AdminTenderController extends Controller
                          'bided_supplier_ids' => $bided_supplier_ids,
                          'selected_bids' => $selected_bids,
                          'quantity_and_delivery_times' => $quantity_and_delivery_times,
-                         'proposes' => $proposes
+                         'proposes' => $proposes,
+                         'supplier_selected_statuses' => $supplier_selected_statuses,
                         ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
@@ -521,6 +524,18 @@ class AdminTenderController extends Controller
         $updatedTender = Tender::findOrFail($tender->id);
         $updatedTender->supplier_ids = implode(',', $request->supplier_ids);
         $updatedTender->save();
+
+        //Store the selected status of suppliers
+        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        foreach($suppliers as $key => $value){
+            $supplier_selected_status = new TenderSuppliersSelectedStatus;
+            $supplier_selected_status->tender_id = $tender->id;
+            $supplier_selected_status->supplier_id = $value->id;
+            $supplier_selected_status->is_selected = isset($request->supplier_ids[$key]);
+            $supplier_selected_status->reason = $request->reasons[$key];
+            $supplier_selected_status->save();
+        }
 
         //Send email notification
         $tender->notify(new TenderCreated($updatedTender->id));
