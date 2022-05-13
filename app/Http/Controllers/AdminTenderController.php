@@ -73,7 +73,7 @@ class AdminTenderController extends Controller
                 'material_id.required' => 'Bạn phải nhập tên hàng.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-                'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
+                'date_range.required' => 'Bạn phải nhập thời gian mở thầu.',
             ];
             $request->validate($rules,$messages);
 
@@ -214,7 +214,7 @@ class AdminTenderController extends Controller
                 'material_id.required' => 'Bạn phải nhập tên hàng.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-                'date_range.required' => 'Bạn phải nhập thời gian áp dụng.',
+                'date_range.required' => 'Bạn phải nhập thời gian mở thầu.',
             ];
             $request->validate($rules,$messages);
 

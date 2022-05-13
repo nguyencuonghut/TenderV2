@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                                 <div class="col-4">
-                                    <label class="required-field">Thời gian áp dụng</label>
+                                    <label class="required-field">Thời gian mở thầu</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
