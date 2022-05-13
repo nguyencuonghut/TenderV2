@@ -61,10 +61,10 @@ class UserTenderController extends Controller
                 return $user_tenders->material->name;
             })
             ->editColumn('tender_start_time', function ($user_tenders) {
-                return $user_tenders->tender_start_time;
+                return date('d/m/Y H:i', strtotime($user_tenders->tender_start_time));
             })
             ->editColumn('tender_end_time', function ($user_tenders) {
-                return $user_tenders->tender_end_time;
+                return date('d/m/Y H:i', strtotime($user_tenders->tender_end_time));
             })
             ->addColumn('show', function ($user_tenders) {
                 return '<a href="' . route("user.tenders.show", $user_tenders->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';

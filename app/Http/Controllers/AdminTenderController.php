@@ -297,10 +297,10 @@ class AdminTenderController extends Controller
                 }
             })
             ->editColumn('tender_start_time', function ($tenders) {
-                return $tenders->tender_start_time;
+                return date('d/m/Y H:i', strtotime($tenders->tender_start_time));
             })
             ->editColumn('tender_end_time', function ($tenders) {
-                return $tenders->tender_end_time;
+                return date('d/m/Y H:i', strtotime($tenders->tender_end_time));
             })
             ->addColumn('change_status', function ($tenders) {
                 return '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-primary"><i class="fas fa-random"></i></a>';

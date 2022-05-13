@@ -75,13 +75,13 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                   @foreach($recent_tenders as $tender)
-                  <strong><i class="fas fa-clock mr-1"></i> {{$tender->created_at}}</strong>
+                  <strong><i class="fas fa-clock mr-1"></i> {{date('d/m/Y H:i:s', strtotime($tender->created_at))}}</strong>
 
                   <p class="text-muted">
-                    Đấu thầu {{$tender->title}}
+                    {{$tender->title}}
                   </p>
                   <p class="text-muted">
-                    Thời gian: {{date('y-m-d h:i'),strtotime($tender->tender_start_time)}} - {{date('y-m-d h:i'),strtotime($tender->tender_end_time)}}
+                    Thời gian: {{date('d/m/Y H:i',strtotime($tender->tender_start_time))}} - {{date('d/m/Y H:i',strtotime($tender->tender_end_time))}}
                   </p>
 
                   <hr>
