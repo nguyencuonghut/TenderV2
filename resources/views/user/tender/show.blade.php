@@ -189,6 +189,7 @@
                                   </div>
                                   <br>
                                   @endif
+                                  @if($bids->count())
                                   <table id="bids-table" class="table table-bordered table-striped">
                                     <tr>
                                       <th>Số lượng và thời gian giao</th>
@@ -232,6 +233,7 @@
                                     </tr>
                                     @endforeach
                                   </table>
+                                  @endif
                                 </div>
                               </div>
 

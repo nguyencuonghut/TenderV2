@@ -64,25 +64,31 @@
                                   <label class="required-field" class="control-label">Nhà thầu</label>
                                   <!-- checkbox -->
                                   <div class="form-group">
-                                    @foreach($suppliers as $supplier)
+                                    @foreach($supplier_selected_statuses as $supplier_status)
                                     <div class="form-check">
                                       <input class="form-check-input" type="checkbox"
-                                        name="supplier_ids[]" value="{{$supplier->id}}"
-                                        @if(in_array($supplier->id, $selected_supplier_ids))
+                                        name="supplier_ids[]" value="{{$supplier_status->supplier_id}}"
+                                        @if(in_array($supplier_status->supplier_id, $selected_supplier_ids))
                                             checked
                                         @endif
                                       >
-                                      @if(in_array($supplier->id, $bided_supplier_ids))
+                                      @if(in_array($supplier_status->supplier_id, $bided_supplier_ids))
                                         <i class="fas fa-envelope fa-sm" style="color:#007BFF;"></i>
                                         @else
                                         <i class="far fa-envelope fa-sm"></i>
                                         @endif
-                                      @if(in_array($supplier->id, $selected_bided_supplier_ids))
+                                      @if(in_array($supplier_status->supplier_id, $selected_bided_supplier_ids))
                                         <i class="fas fa-certificate fa-sm" style="color:#007BFF;"></i>
                                         @else
                                         <i class="far fa-certificate fa-sm"></i>
-                                        @endif
+                                      @endif
+                                      @php
+                                          $supplier = App\Models\Supplier::findOrFail($supplier_status->supplier_id);
+                                      @endphp
                                       <label class="form-check-label">{{$supplier->name}}</label>
+                                      @if($supplier_status->reason)
+                                        <label class="form-check-label" style="color:red;">({{$supplier_status->reason}})</label>
+                                      @endif
                                     </div>
                                     @endforeach
                                   </div>

@@ -25,7 +25,6 @@ class Tender extends Model
         'tender_end_time',
         'creator_id',
         'status',
-        'supplier_ids',
         'approver_id',
         'tender_in_progress_time',
         'tender_closed_time',
@@ -40,13 +39,6 @@ class Tender extends Model
     {
         return $this->belongsTo(Material::class);
     }
-
-    /*
-    public function suppliers()
-    {
-        return $this->belongsToMany(Tender::class, 'tender_supplier');
-    }
-    */
 
     public function bids()
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
+use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
 use Datatables;
 use Illuminate\Http\Request;
@@ -16,8 +17,7 @@ class UserTenderController extends Controller
     public function show($id)
     {
         $tender = Tender::findOrFail($id);
-        $selected_supplier_ids = [];
-        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if('Open' !=  $tender->status
             && in_array(Auth::user()->id, $users)) {
@@ -45,10 +45,9 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status', 'supplier_ids'])->get();
+        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
         foreach($tenders as $tender) {
-            $selected_supplier_ids = [];
-            $selected_supplier_ids = explode(",", $tender->supplier_ids);
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
                 $user_tenders->push($tender);
             }

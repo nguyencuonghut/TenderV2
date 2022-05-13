@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bid;
 use App\Models\Tender;
+use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +16,7 @@ class UserHomeController extends Controller
     {
         $tenders =  Tender::where('status', '<>', 'Open')->get();
         $my_all_tenders = $tenders->filter(function($item, $key) {
-            $selected_supplier_ids = [];
-            $selected_supplier_ids = explode(",", $item->supplier_ids);
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             $my_supplier_id = Auth::user()->supplier_id;
             if(in_array($my_supplier_id, $selected_supplier_ids)) {
                 return $item;
@@ -25,8 +25,7 @@ class UserHomeController extends Controller
 
         $closed_tenders =  Tender::where('status', 'Closed')->get();
         $my_completed_tenders = $closed_tenders->filter(function($item, $key) {
-            $selected_supplier_ids = [];
-            $selected_supplier_ids = explode(",", $item->supplier_ids);
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             $my_supplier_id = Auth::user()->supplier_id;
             if(in_array($my_supplier_id, $selected_supplier_ids)) {
                 return $item;
@@ -35,8 +34,7 @@ class UserHomeController extends Controller
 
         $in_progress_tenders =  Tender::where('status', 'In-progress')->get();
         $my_in_progress_tenders = $in_progress_tenders->filter(function($item, $key) {
-            $selected_supplier_ids = [];
-            $selected_supplier_ids = explode(",", $item->supplier_ids);
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             $my_supplier_id = Auth::user()->supplier_id;
             if(in_array($my_supplier_id, $selected_supplier_ids)) {
                 return $item;
@@ -56,7 +54,7 @@ class UserHomeController extends Controller
     public function profile()
     {
         $my_tenders = collect();
-        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status', 'supplier_ids'])->get();
+        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = [];
             $selected_supplier_ids = explode(",", $tender->supplier_ids);

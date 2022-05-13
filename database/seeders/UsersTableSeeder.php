@@ -150,6 +150,19 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
+
+            11 =>
+                array (
+                    'id' => 12,
+                    'name' => 'Nguyễn Văn Cường',
+                    'email' => 'nguyencuonghut55@gmail.com',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 9,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
         ));
     }
 }

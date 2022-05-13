@@ -82,6 +82,15 @@ class MaterialSupplierTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
+
+            8 =>
+                array (
+                    'id' => 9,
+                    'material_id' => 1,
+                    'supplier_id' => 9,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
         ));
     }
 }

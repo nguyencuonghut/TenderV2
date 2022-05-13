@@ -210,11 +210,11 @@
                                     <table id="bids-table" class="table table-bordered table-hover">
                                         <tr>
                                           <th>Trúng thầu</th>
-                                          <th style="width: 11%;">Số lượng</th>
+                                          <th style="width: 15%;">Số lượng</th>
                                           <th style="width: 30%;">Nhà cung cấp</th>
                                           <th>Giá</th>
                                           <th style="width: 30%;">Điều kiện thanh toán</th>
-                                          <th>Ghi chú</th>
+                                          <th style="width: 15%;">Ghi chú</th>
                                         </tr>
                                         @foreach ($bids as $bid)
                                         <tr style="color:@if($bid->quantity_id % 2 == 0) #057ba9 @endif">
@@ -227,7 +227,7 @@
                                                 >
                                               </div>
                                           </td>
-                                          <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}</td>
+                                          <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
                                           <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
                                           @if('VND' == $bid->price_unit)
                                           <td>{{ number_format($bid->price, 0, ',', ',') }} ({{$bid->price_unit}})</td>

@@ -104,7 +104,6 @@ class AdminTenderController extends Controller
             $tender->other_term = $request->other_term;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Open';
-            $tender->supplier_ids = '';
 
             //Parse date range
             $dates = explode(' - ', $request->date_range);
@@ -133,8 +132,7 @@ class AdminTenderController extends Controller
         //Get the array of Selected Supplier Id
         $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
         $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
-        $selected_supplier_ids = [];
-        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
 
         //Get the array of Supplier Id that send the bid
         $bids = Bid::where('tender_id', $tender->id)->get();
@@ -239,7 +237,6 @@ class AdminTenderController extends Controller
             $tender->other_term = $request->other_term;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Open';
-            $tender->supplier_ids = '';
 
             //Parse date range
             $dates = explode(' - ', $request->date_range);
@@ -280,7 +277,7 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->with('material')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status', 'supplier_ids'])->get();
+        $tenders = Tender::with('creator')->with('material')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($tenders) {
@@ -324,24 +321,12 @@ class AdminTenderController extends Controller
             ->make(true);
     }
 
-    /*
-    public function getSuppliers($materialId)
-    {
-        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$materialId)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
-        return response()->json($suppliers);
-    }
-    */
-
     public function changeStatus($id)
     {
         if(Auth::user()->can('change-status')){
             $tender = Tender::findOrFail($id);
-            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
-            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
-
-            $selected_supplier_ids = [];
-            $selected_supplier_ids = explode(",", $tender->supplier_ids);
+            $supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
 
             //Get the array of Supplier Id that send the bid and selected
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
@@ -360,7 +345,7 @@ class AdminTenderController extends Controller
             }
             return view('admin.tender.changestatus',
                         ['tender' => $tender,
-                        'suppliers' => $suppliers,
+                        'supplier_selected_statuses' => $supplier_selected_statuses,
                         'selected_supplier_ids' => $selected_supplier_ids,
                         'bided_supplier_ids' => $bided_supplier_ids,
                         'selected_bided_supplier_ids' => $selected_bided_supplier_ids,
@@ -396,8 +381,7 @@ class AdminTenderController extends Controller
             //Send notification email to suppliers
             if('In-progress' == $request->status) {
                 //Get the mail list
-                $selected_supplier_ids = [];
-                $selected_supplier_ids = explode(",", $tender->supplier_ids);
+                $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
                 $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
                 foreach($users as $user)  {
                     Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
@@ -520,25 +504,25 @@ class AdminTenderController extends Controller
 
     public function storeSuppliers(Request $request)
     {
+        //dd($request->all());
         $tender = $request->session()->get('tender');
-        $updatedTender = Tender::findOrFail($tender->id);
-        $updatedTender->supplier_ids = implode(',', $request->supplier_ids);
-        $updatedTender->save();
 
         //Store the selected status of suppliers
         $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
         $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        //dd($suppliers);
         foreach($suppliers as $key => $value){
             $supplier_selected_status = new TenderSuppliersSelectedStatus;
             $supplier_selected_status->tender_id = $tender->id;
             $supplier_selected_status->supplier_id = $value->id;
-            $supplier_selected_status->is_selected = isset($request->supplier_ids[$key]);
+            //dd(in_array($value->id, $request->supplier_ids));
+            $supplier_selected_status->is_selected = in_array($value->id, $request->supplier_ids);// ? 1:0;//isset($request->supplier_ids[$key]);
             $supplier_selected_status->reason = $request->reasons[$key];
             $supplier_selected_status->save();
         }
 
         //Send email notification
-        $tender->notify(new TenderCreated($updatedTender->id));
+        $tender->notify(new TenderCreated($tender->id));
 
         Alert::toast('Tạo tender thành công!', 'success', 'top-right');
         return redirect()->route('admin.tenders.index');

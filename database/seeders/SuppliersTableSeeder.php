@@ -82,6 +82,14 @@ class SuppliersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
+            8 =>
+                array (
+                    'id' => 9,
+                    'code' => 'BFG',
+                    'name' => 'Tập đoàn BestFood',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
         ));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bid;
 use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
+use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,8 +18,8 @@ class UserBidController extends Controller
     public function index($tender_id)
     {
         $tender = Tender::findOrFail($tender_id);
-        $selected_supplier_ids = [];
-        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if(in_array(Auth::user()->id, $users)) {
             $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
@@ -35,8 +36,7 @@ class UserBidController extends Controller
     public function destroy($id)
     {
         $bid = Bid::findOrFail($id);
-        $selected_supplier_ids = [];
-        $selected_supplier_ids = explode(",", $bid->tender->supplier_ids);
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $bid->tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
 
         if('Closed' != $bid->tender->status
@@ -53,8 +53,7 @@ class UserBidController extends Controller
     public function create(Request $request, $tender_id)
     {
         $tender = Tender::findOrFail($tender_id);
-        $selected_supplier_ids = [];
-        $selected_supplier_ids = explode(",", $tender->supplier_ids);
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         if('Closed' != $tender->status
             && Carbon::now()->lessThan($tender->tender_end_time)
