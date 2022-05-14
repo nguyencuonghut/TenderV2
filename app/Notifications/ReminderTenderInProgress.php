@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TenderInProgress extends Notification
+class ReminderTenderInProgress extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $tender_id;
@@ -45,8 +45,8 @@ class TenderInProgress extends Notification
         $url = url('tenders/' . $this->tender_id);
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
-                    ->subject('Thư chào thầu: ' . $tender->title)
-                    ->line('Xin mời quý nhà cung cấp chào thầu cho: ' . $tender->title . '.')
+                    ->subject('!!! Nhắc nhở !!! Thời gian chào thầu: ' . $tender->title)
+                    ->line('Chỉ còn 15 phút nữa là đến giờ mở thầu. Xin mời quý nhà cung cấp chào thầu cho: ' . $tender->title . '.')
                     ->line('Thời gian mở thầu: ' . date('d/m/Y H:i', strtotime($tender->tender_start_time)) . ' - '. date('d/m/Y H:i', strtotime($tender->tender_end_time)) . '.')
                     ->action('Mở tender', url($url))
                     ->line('Xin cảm ơn!');

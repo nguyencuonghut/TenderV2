@@ -13,6 +13,7 @@ use App\Models\Tender;
 use App\Models\TenderPropose;
 use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
+use App\Notifications\ReminderTenderInProgress;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
 use App\Notifications\TenderResult;
@@ -384,7 +385,12 @@ class AdminTenderController extends Controller
                 $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
                 $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
                 foreach($users as $user)  {
+                    //Notify now
                     Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
+                    //Send reminder to customers 15 minutes before the Tender starts
+                    $start_time = Carbon::parse($tender->tender_start_time);
+                    $delay = $start_time->addMinutes(-15);
+                    Notification::route('mail' , $user->email)->notify((new ReminderTenderInProgress($tender->id))->delay($delay));
                 }
 
                 //Update the in-progress time
