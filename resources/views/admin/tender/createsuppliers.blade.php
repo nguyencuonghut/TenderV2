@@ -34,7 +34,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                   <label class="required-field" class="control-label float-left">Nhà thầu</label>
                                   <label class="control-label float-right">Lý do (nếu không chọn)</label>
                                   <!-- checkbox -->
