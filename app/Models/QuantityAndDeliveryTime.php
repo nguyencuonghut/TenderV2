@@ -20,4 +20,9 @@ class QuantityAndDeliveryTime extends Model
     {
         return $this->hasMany(Bid::class);
     }
+
+    public function tender()
+    {
+        return $this->belongsTo(Tender::class);
+    }
 }

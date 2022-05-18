@@ -73,6 +73,7 @@ class UserBidController extends Controller
             $bid = new Bid();
             $bid->tender_id = $tender_id;
             $bid->user_id = Auth::user()->id;
+            $bid->supplier_id = Auth::user()->supplier->id;
             $bid->quantity_id = $request->quantity_id;
             $bid->price = $request->price;
             $bid->price_unit = $request->price_unit;

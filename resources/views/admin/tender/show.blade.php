@@ -284,6 +284,96 @@
                                     @endif
                                   </div>
                               </div>
+
+
+                            <!--
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h5 class="card-title">Báo cáo thầu</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            @php
+                                                $i = 0;
+                                            @endphp
+                                            <table id="bids-table" class="table table-bordered">
+                                                <tr>
+                                                  <th>STT</th>
+                                                  <th>Mã hàng</th>
+                                                  <th>Tên hàng</th>
+                                                  <th>Số lượng</th>
+                                                  <th>Thời gian giao</th>
+                                                  @foreach ($unique_bided_supplier_ids as $item)
+                                                  @php
+                                                      $supplier = App\Models\Supplier::findOrFail($item);
+                                                  @endphp
+                                                  <th>{{$supplier->name}}</th>
+                                                  @endforeach
+                                                </tr>
+                                                @foreach ($tender->quantity_and_delivery_times as $quantity_and_delivery_time)
+                                                <tr>
+                                                  <td>{{++$i}}</td>
+                                                  <td>{{$tender->material->code}}</td>
+                                                  <td>{{$tender->material->name}}</td>
+                                                  <td>{{$quantity_and_delivery_time->quantity}} {{$quantity_and_delivery_time->quantity_unit}}</td>
+                                                  <td>{{$quantity_and_delivery_time->delivery_time}}</td>
+
+                                                  @foreach ($unique_bided_supplier_ids as $item)
+                                                  @php
+                                                      $supplier = App\Models\Supplier::findOrFail($item);
+                                                      $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $quantity_and_delivery_time->id)->where('supplier_id', $item)->first();
+                                                  @endphp
+                                                  @if($current_bid != null)
+                                                  <td>{{$current_bid->price}} ({{$current_bid->price_unit}})</td>
+                                                  @else
+                                                  <td></td>
+                                                  @endif
+                                                  @endforeach
+                                                </tr>
+                                                @endforeach
+                                                <tr>
+                                                  <td colspan="5"><b>Điều kiện thanh toán</b></td>
+                                                  @foreach ($unique_bided_supplier_ids as $item)
+                                                  @php
+                                                      $supplier = App\Models\Supplier::findOrFail($item);
+                                                      $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->first();
+                                                  @endphp
+                                                  @if($current_bid != null)
+                                                  <td>{{$current_bid->payment_condition}}</td>
+                                                  @else
+                                                  <td></td>
+                                                  @endif
+                                                  @endforeach
+                                                </tr>
+
+                                                <tr>
+                                                  <td colspan="5"><b>Xuất xứ</b></td>
+                                                  @foreach ($unique_bided_supplier_ids as $item)
+                                                  @php
+                                                      $supplier = App\Models\Supplier::findOrFail($item);
+                                                      $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
+                                                      $origin = '';
+                                                      foreach($current_bids as $bid){
+                                                        if($origin != $bid->origin){
+                                                          if($origin != ''){
+                                                            $origin = $origin . ',' . $bid->origin;
+                                                          }else{
+                                                            $origin = $origin . $bid->origin;
+                                                          }
+                                                        }
+                                                      }
+                                                  @endphp
+                                                  <td>{{$origin}}</td>
+                                                  @endforeach
+                                                </tr>
+
+                                              </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            -->
                         </div>
                         </div>
                       </div>

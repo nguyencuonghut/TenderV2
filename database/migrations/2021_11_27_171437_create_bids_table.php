@@ -19,6 +19,8 @@ class CreateBidsTable extends Migration
             $table->bigInteger('tender_id')->unsigned();
             $table->foreign('tender_id')->references('id')->on('tenders')->onDelete('cascade');
             $table->bigInteger('user_id')->unsigned();
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->bigInteger('supplier_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->bigInteger('quantity_id')->unsigned();
             $table->foreign('quantity_id')->references('id')->on('quantity_and_delivery_times')->onDelete('cascade');

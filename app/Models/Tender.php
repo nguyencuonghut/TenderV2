@@ -54,4 +54,9 @@ class Tender extends Model
     {
         return $this->hasOne(TenderPropose::class);
     }
+
+    public function quantity_and_delivery_times()
+    {
+        return $this->hasMany(QuantityAndDeliveryTime::class);
+    }
 }

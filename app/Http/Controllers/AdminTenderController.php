@@ -151,6 +151,12 @@ class AdminTenderController extends Controller
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
             $proposes = TenderPropose::where('tender_id', $tender->id)->get();
             $supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
+
+            $unique_bided_supplier_ids = [];
+            foreach($bids as $bid) {
+                array_push($unique_bided_supplier_ids, $bid->user->supplier->id);
+            }
+            //dd($unique_bided_supplier_ids);
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
@@ -161,6 +167,7 @@ class AdminTenderController extends Controller
                          'quantity_and_delivery_times' => $quantity_and_delivery_times,
                          'proposes' => $proposes,
                          'supplier_selected_statuses' => $supplier_selected_statuses,
+                         'unique_bided_supplier_ids' => collect($unique_bided_supplier_ids)->unique()
                         ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
