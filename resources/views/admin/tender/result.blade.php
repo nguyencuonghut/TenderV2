@@ -11,12 +11,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-8">
-          <h1 class="m-0">Kết quả: {{$tender->title}}</h1>
+          <h1 class="m-0">Chọn kết quả: {{$tender->title}}</h1>
         </div><!-- /.col -->
         <div class="col-sm-4">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('admin.tenders.show', $tender->id) }}">Chi tiết tender</a></li>
-            <li class="breadcrumb-item active">Chọn kết quả thầu</li>
+            <li class="breadcrumb-item active">Chọn kết quả</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -42,15 +42,17 @@
                 <table id="bids-table" class="table table-bordered table-striped">
                   <tr>
                     <th>Nhà cung cấp</th>
-                    <th>Số lượng chọn</th>
+                    <th>Lượng mời thầu</th>
+                    <th>Lượng trúng</th>
                     <th>Giá</th>
                     <th>Thời gian giao</th>
                     <th>Xóa</th>
                   </tr>
                   @foreach ($selected_bids as $bid)
                   <tr>
-                    <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                    <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} ({{$bid->tender_quantity_unit}})</td>
+                    <td style="width:30%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
+                    <td>{{ number_format($bid->quantity->quantity, 0, '.', ' ') }} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
+                    <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} {{$bid->tender_quantity_unit}}</td>
                     @if('đồng/kg' == $bid->price_unit
                         || 'đồng/chiếc' == $bid->price_unit)
                     <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
@@ -76,7 +78,7 @@
       </div>
       <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    <form class="form-horizontal" method="post" action="{{ route('admin.tenders.sendResult', $tender->id) }}" name="send_result" id="send_result" novalidate="novalidate">
+    <form class="form-horizontal" method="post" action="{{ route('admin.tenders.storeResult', $tender->id) }}" name="store_result" id="store_result" novalidate="novalidate">
         {{ csrf_field() }}
         <div class="modal fade" id="add_result">
             <div class="modal-dialog modal-lg">
@@ -105,7 +107,7 @@
                                     <div class="controls">
                                         <select name="bid_id" id="bid_id" class="form-control select2">
                                             @foreach ($bids as $bid)
-                                                <option value="{{$bid->id}}">{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} | {{$bid->quantity->delivery_time}} - {{$bid->user->supplier->name}} | {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->note}}</option>
+                                                <option value="{{$bid->id}}">{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} | {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->quantity->delivery_time}} - {{$bid->user->supplier->name}} (Lượng giao {{$bid->bid_quantity}} {{$bid->bid_quantity_unit}})</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -36,7 +36,8 @@
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chào hàng</a>
                           </li>
-                          @if($selected_bids->count())
+                          @if($selected_bids->count()
+                                && $tender->status == 'Closed')
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab-1" data-toggle="pill" href="#custom-tabs-one-profile-1" role="tab" aria-controls="custom-tabs-one-profile-1" aria-selected="false">Kết quả</a>
                           </li>
@@ -192,7 +193,8 @@
                                   @if($bids->count())
                                   <table id="bids-table" class="table table-bordered table-striped">
                                     <tr>
-                                      <th>Số lượng và thời gian giao</th>
+                                      <th>Lượng và thời gian giao</th>
+                                      <th>Lượng và thời gian chào</th>
                                       <th>Giá</th>
                                       <th>Xuất xứ</th>
                                       <th>Đóng gói</th>
@@ -207,6 +209,7 @@
                                     @foreach ($bids as $bid)
                                     <tr>
                                       <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
+                                      <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->delivery_time}}</td>
                                       @if('đồng/kg' == $bid->price_unit
                                         || 'đồng/chiếc' == $bid->price_unit)
                                       <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
@@ -251,7 +254,7 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <div class="control-group">
-                                                            <label class="required-field" class="control-label">Số lượng</label>
+                                                            <label class="required-field" class="control-label">Lượng yêu cầu</label>
                                                             <div class="input-group">
                                                                 <select name="quantity_id" id="quantity_id" class="form-control">
                                                                     @foreach ($quantity_and_delivery_times as $item)
@@ -261,6 +264,21 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-6">
+                                                        <div class="control-group">
+                                                            <label class="required-field" class="control-label">Lượng chào</label>
+                                                            <div class="input-group">
+                                                                <input type="number" name="bid_quantity" id="bid_quantity" placeholder="0" step="any" class="form-control" />
+                                                                <select name="bid_quantity_unit" id="bid_quantity_unit" class="form-control" style="max-width:40%;">
+                                                                    <option value="tấn" selected>tấn</option>
+                                                                    <option value="kg">kg</option>
+                                                                    <option value="chiếc">chiếc</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col-6">
                                                         <div class="control-group">
                                                             <label class="required-field" class="control-label">Giá</label>
@@ -275,9 +293,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-3">
                                                         <div class="control-group">
                                                             <label class="control-label">Đóng gói</label>
                                                             <div class="controls">
@@ -285,7 +301,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-3">
                                                         <div class="control-group">
                                                             <label class="control-label">Xuất xứ</label>
                                                             <div class="controls">

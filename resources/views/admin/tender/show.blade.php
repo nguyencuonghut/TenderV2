@@ -36,7 +36,8 @@
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chào hàng</a>
                           </li>
-                          @if ($selected_bids->count())
+                          @if ($selected_bids->count()
+                                && $tender->status == 'Closed')
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab-1" data-toggle="pill" href="#custom-tabs-one-profile-1" role="tab" aria-controls="custom-tabs-one-profile-1" aria-selected="false">Kết quả</a>
                           </li>
@@ -210,11 +211,10 @@
                                     <table id="bids-table" class="table table-bordered table-hover">
                                         <tr>
                                           <th>Trúng thầu</th>
-                                          <th style="width: 15%;">Số lượng</th>
+                                          <th style="width: 30%;">Lượng trúng</th>
                                           <th style="width: 30%;">Nhà cung cấp</th>
                                           <th>Giá</th>
                                           <th style="width: 30%;">Điều kiện thanh toán</th>
-                                          <th style="width: 15%;">Ghi chú</th>
                                         </tr>
                                         @foreach ($bids as $bid)
                                         <tr style="color:@if($bid->quantity_id % 2 == 0) #057ba9 @endif">
@@ -227,7 +227,7 @@
                                                 >
                                               </div>
                                           </td>
-                                          <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
+                                          <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
                                           <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
                                           @if('VND' == $bid->price_unit)
                                           <td>{{ number_format($bid->price, 0, ',', ',') }} ({{$bid->price_unit}})</td>
@@ -235,7 +235,6 @@
                                           <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                                           @endif
                                           <td>{{ $bid->payment_condition }}</td>
-                                          <td>{{ $bid->note }}</td>
                                         </tr>
                                         @endforeach
                                     </table>
@@ -267,20 +266,20 @@
                                     @endif
                                 </div>
                                   <div class="card-footer clearfix">
-                                    @if(Auth::user()->can('send-result')
-                                    && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'In-progress')
-                                      <a href="{{route('admin.tenders.result', $tender->id)}}">
-                                          <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
-                                      </a>
-                                    @endif
-
                                     @if(Auth::user()->can('create-propose')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
                                     && $tender->status == 'In-progress')
                                       <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
                                         <i class="fas fa-clipboard-check"></i> Đề xuất
                                       </button>
+                                    @endif
+
+                                    @if(Auth::user()->can('create-result')
+                                    && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                    && $tender->status == 'In-progress')
+                                    <a href="{{route('admin.tenders.createResult', $tender->id)}}">
+                                        <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
+                                    </a>
                                     @endif
                                   </div>
                               </div>
@@ -381,7 +380,6 @@
                     </div>
                   </div>
             </div>
-
 
             <form class="form-horizontal" method="post" action="{{ route('admin.tenders.create.propose', $tender->id) }}" name="store_propose" id="store_propose" novalidate="novalidate">
                 {{ csrf_field() }}

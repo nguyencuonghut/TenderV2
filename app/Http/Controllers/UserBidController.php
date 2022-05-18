@@ -62,11 +62,15 @@ class UserBidController extends Controller
                 'quantity_id' => 'required',
                 'price' => 'required',
                 'price_unit' => 'required',
+                'bid_quantity' => 'required',
+                'bid_quantity_unit' => 'required',
             ];
             $messages = [
                 'quantity_id.required' => 'Bạn phải chọn số lượng.',
                 'price.required' => 'Bạn phải nhập giá.',
                 'price_unit.required' => 'Bạn phải chọn loại tiền tệ.',
+                'bid_quantity.required' => 'Bạn phải nhập số lượng chào.',
+                'bid_quantity_unit.required' => 'Bạn phải nhập đơn vị chào.',
             ];
             $request->validate($rules,$messages);
 
@@ -77,6 +81,8 @@ class UserBidController extends Controller
             $bid->quantity_id = $request->quantity_id;
             $bid->price = $request->price;
             $bid->price_unit = $request->price_unit;
+            $bid->bid_quantity = $request->bid_quantity;
+            $bid->bid_quantity_unit = $request->bid_quantity_unit;
             $bid->pack = $request->pack;
             $bid->origin = $request->origin;
             $bid->delivery_time = $request->delivery_time;

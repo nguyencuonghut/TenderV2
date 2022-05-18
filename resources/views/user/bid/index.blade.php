@@ -41,7 +41,8 @@
                 <br>
                 <table id="bids-table" class="table table-bordered table-striped">
                   <tr>
-                    <th>Số lượng và thời gian giao</th>
+                    <th>Lượng và thời gian yêu cầu</th>
+                    <th>Lượng và thời gian chào</th>
                     <th>Giá</th>
                     <th>Xuất xứ</th>
                     <th>Đóng gói</th>
@@ -53,6 +54,7 @@
                   @foreach ($bids as $bid)
                   <tr>
                     <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
+                    <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->delivery_time}}</td>
                     @if('đồng/kg' == $bid->price_unit
                         || 'đồng/chiếc' == $bid->price_unit)
                     <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
@@ -108,6 +110,21 @@
                             </div>
                             <div class="col-6">
                                 <div class="control-group">
+                                    <label class="required-field" class="control-label">Lượng chào</label>
+                                    <div class="input-group">
+                                        <input type="number" name="bid_quantity" id="bid_quantity" placeholder="0" step="any" class="form-control" />
+                                        <select name="bid_quantity_unit" id="bid_quantity_unit" class="form-control" style="max-width:40%;">
+                                            <option value="tấn" selected>tấn</option>
+                                            <option value="kg">kg</option>
+                                            <option value="chiếc">chiếc</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="control-group">
                                     <label class="required-field" class="control-label">Giá</label>
                                     <div class="input-group">
                                         <input type="number" name="price" id="price" placeholder="0" step="any" class="form-control" />
@@ -120,9 +137,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="control-group">
                                     <label class="control-label">Đóng gói</label>
                                     <div class="controls">
@@ -130,7 +145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="control-group">
                                     <label class="control-label">Xuất xứ</label>
                                     <div class="controls">

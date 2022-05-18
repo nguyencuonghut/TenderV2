@@ -542,12 +542,12 @@ class AdminTenderController extends Controller
     }
 
 
-    public function result($id)
+    public function createResult($id)
     {
-        if(Auth::user()->can('send-result')){
+        if(Auth::user()->can('create-result')){
             $tender = Tender::findOrFail($id);
             if(Carbon::now()->lessThan($tender->tender_end_time)){
-                Alert::toast('Thời gian chào thầu chưa kết thúc. Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+                Alert::toast('Thời gian chào thầu chưa kết thúc. Bạn không có chọn kết quả thầu!', 'error', 'top-right');
                 return redirect()->route('admin.tenders.index');
             }else{
                 //Get the array of Supplier Id that send the bid
@@ -563,14 +563,14 @@ class AdminTenderController extends Controller
                 return view('admin.tender.result', ['tender' => $tender, 'suppliers' => $suppliers, 'bids' => $bids, 'selected_bids' => $selected_bids]);
             }
         }else{
-            Alert::toast('Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền đề xuất kết quả thầu!', 'error', 'top-right');
             return redirect()->back();
         }
     }
 
-    public function sendResult(Request $request, $id)
+    public function storeResult(Request $request, $id)
     {
-        if(Auth::user()->can('send-result')){
+        if(Auth::user()->can('store-result')){
             $rules = [
                 'tender_quantity' => 'required',
                 'tender_quantity_unit' => 'required',
@@ -590,10 +590,10 @@ class AdminTenderController extends Controller
             $bid->is_selected = true;
             $bid->save();
 
-            Alert::toast('Chọn kết quả thầu thành công!', 'success', 'top-right');
-            return redirect()->route('admin.tenders.result', $id);
+            Alert::toast('Đề xuất kết quả thầu thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.createResult', $id);
         }else{
-            Alert::toast('Bạn không có quyền chọn kết quả thầu!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền đề xuất kết quả thầu!', 'error', 'top-right');
             return redirect()->back();
         }
     }
@@ -610,8 +610,8 @@ class AdminTenderController extends Controller
 
             $tender = Tender::findOrFail($bid->tender_id);
 
-            Alert::toast('Xóa kết quả thầu thành công!', 'success', 'top-right');
-            return redirect()->route('admin.tenders.result', $tender->id);
+            Alert::toast('Xóa đề xuất thầu thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.createResult', $tender->id);
         }else{
             Alert::toast('Bạn không có quyền xóa kết quả thầu!', 'error', 'top-right');
             return redirect()->back();
@@ -657,7 +657,7 @@ class AdminTenderController extends Controller
             return redirect()->back();
         }else {
             Alert::toast('Bạn không có quyền xóa đề xuất này!', 'error', 'top-right');
-            return redirect()->back();
+
         }
     }
 }

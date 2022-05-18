@@ -24,6 +24,8 @@ class Bid extends Model
         'payment_condition',
         'tender_quantity',
         'tender_quantity_unit',
+        'bid_quantity',
+        'bid_quantity_unit',
         'is_selected',
     ];
 
