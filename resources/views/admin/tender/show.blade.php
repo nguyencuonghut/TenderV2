@@ -54,14 +54,14 @@
                                       <table id="bids-table" class="table table-bordered table-striped">
                                         <tr>
                                           <th>Nhà cung cấp</th>
-                                          <th>Số lượng chọn</th>
+                                          <th>Lượng trúng</th>
                                           <th>Giá</th>
                                           <th>Thời gian giao</th>
                                         </tr>
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} ({{$bid->tender_quantity_unit}})</td>
+                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} {{$bid->tender_quantity_unit}}</td>
                                           @if('đồng/kg' == $bid->price_unit
                                               || 'đồng/chiếc' == $bid->price_unit)
                                           <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
@@ -191,6 +191,11 @@
                                                 <i class="fas fa-envelope fa-sm" style="color:#007BFF;"></i>
                                               @else
                                                 <i class="far fa-envelope fa-sm"></i>
+                                              @endif
+                                              @if(in_array($supplier_status->supplier_id, $selected_bided_supplier_ids))
+                                                <i class="fas fa-certificate fa-sm" style="color:#007BFF;"></i>
+                                                @else
+                                                <i class="far fa-certificate fa-sm"></i>
                                               @endif
                                               @php
                                                   $supplier = App\Models\Supplier::findOrFail($supplier_status->supplier_id);

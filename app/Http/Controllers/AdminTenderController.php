@@ -147,6 +147,11 @@ class AdminTenderController extends Controller
             || $tender->status != 'In-progress') {
             $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
+            $selected_bided_supplier_ids = [];
+            foreach($selected_bids as $bid) {
+                $user = User::findOrFail($bid->user_id);
+                array_push($selected_bided_supplier_ids, $user->supplier_id);
+            }
 
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
             $proposes = TenderPropose::where('tender_id', $tender->id)->get();
@@ -166,7 +171,8 @@ class AdminTenderController extends Controller
                          'quantity_and_delivery_times' => $quantity_and_delivery_times,
                          'proposes' => $proposes,
                          'supplier_selected_statuses' => $supplier_selected_statuses,
-                         'unique_bided_supplier_ids' => collect($unique_bided_supplier_ids)->unique()
+                         'unique_bided_supplier_ids' => collect($unique_bided_supplier_ids)->unique(),
+                         'selected_bided_supplier_ids' => $selected_bided_supplier_ids
                         ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');
