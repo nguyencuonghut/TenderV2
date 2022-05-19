@@ -25,7 +25,7 @@ class AdminHomeController extends Controller
 
     public function profile()
     {
-        $recent_tenders = Tender::where('creator_id', Auth::user()->id)->orderBy('id', 'desc')->take(3)->get();
+        $recent_tenders = Tender::where('creator_id', Auth::user()->id)->orWhere('approver_id', Auth::user()->id)->orderBy('id', 'desc')->take(3)->get();
         $my_tenders = Tender::where('creator_id', Auth::user()->id)->orderBy('id', 'desc')->get();
         $my_tenders_cnt = $my_tenders->count();
         $my_approved_tenders = Tender::where('approver_id', Auth::user()->id)->orderBy('id', 'desc')->get();
