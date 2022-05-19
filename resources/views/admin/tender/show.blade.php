@@ -207,6 +207,7 @@
                                         </div>
                                     </div>
 
+                                    <!--
                                     @if($bids->count())
                                     <table id="bids-table" class="table table-bordered table-hover">
                                         <tr>
@@ -264,6 +265,8 @@
                                         @endforeach
                                     </table>
                                     @endif
+                                    -->
+
                                 </div>
                                   <div class="card-footer clearfix">
                                     @if(Auth::user()->can('create-propose')
@@ -285,7 +288,8 @@
                               </div>
 
 
-                            <!--
+
+                            @if($bids->count())
                             <div class="card card-primary">
                                 <div class="card-header">
                                     <h5 class="card-title">Báo cáo thầu</h5>
@@ -324,7 +328,10 @@
                                                       $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $quantity_and_delivery_time->id)->where('supplier_id', $item)->first();
                                                   @endphp
                                                   @if($current_bid != null)
-                                                  <td>{{$current_bid->price}} ({{$current_bid->price_unit}})</td>
+                                                  <td>
+                                                      - Giá: {{$current_bid->price}} ({{$current_bid->price_unit}}) <br>
+                                                      - Lượng chào: {{$current_bid->bid_quantity}} {{$current_bid->bid_quantity_unit}} <br>
+                                                  </td>
                                                   @else
                                                   <td></td>
                                                   @endif
@@ -356,7 +363,7 @@
                                                       foreach($current_bids as $bid){
                                                         if($origin != $bid->origin){
                                                           if($origin != ''){
-                                                            $origin = $origin . ',' . $bid->origin;
+                                                            $origin = $origin . ', ' . $bid->origin;
                                                           }else{
                                                             $origin = $origin . $bid->origin;
                                                           }
@@ -366,13 +373,52 @@
                                                   <td>{{$origin}}</td>
                                                   @endforeach
                                                 </tr>
+                                                @if($selected_bids->count())
+                                                <tr>
+                                                    <td colspan="5"><b>Kết quả</b></td>
+                                                    @foreach ($unique_bided_supplier_ids as $item)
+                                                    @php
+                                                        $supplier = App\Models\Supplier::findOrFail($item);
+                                                        $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
+                                                        $result = '';
+                                                        foreach($current_bids as $bid){
+                                                          if($bid->is_selected){
+                                                              if($result == ''){
+                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit . ' (Giao ' . $bid->delivery_time . ').';
+                                                              }else{
+                                                                $result = $result . '<br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit. ' (Giao ' . $bid->delivery_time . ').';
+                                                              }
+                                                          }
+                                                        }
+                                                    @endphp
+                                                    <td style="color:red;">{!! $result !!}</td>
+                                                    @endforeach
+                                                </tr>
+                                                @endif
+                                                @if($proposes->count())
+                                                <tr>
+                                                    <td colspan="5"><b>Đề xuất</b></td>
+                                                    @php
+                                                        $propose = '';
+                                                        foreach($proposes as $item){
+                                                        if($propose == ''){
+                                                            $propose = $propose . '- ' . $item->propose;
+                                                        }else{
+                                                            $propose = $propose . '<br> - ' . $item->propose;
+                                                        }
+                                                        }
+                                                    @endphp
+                                                    <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $propose !!}</td>
+                                                </tr>
+                                                @endif
 
                                               </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            -->
+                            @endif
+
                         </div>
                         </div>
                       </div>

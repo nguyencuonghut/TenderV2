@@ -156,7 +156,6 @@ class AdminTenderController extends Controller
             foreach($bids as $bid) {
                 array_push($unique_bided_supplier_ids, $bid->user->supplier->id);
             }
-            //dd($unique_bided_supplier_ids);
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
