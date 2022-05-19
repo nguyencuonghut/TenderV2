@@ -193,7 +193,7 @@
                                   @if($bids->count())
                                   <table id="bids-table" class="table table-bordered table-striped">
                                     <tr>
-                                      <th>Lượng và thời gian giao</th>
+                                      <th>Lượng và thời gian yêu cầu</th>
                                       <th>Lượng và thời gian chào</th>
                                       <th>Giá</th>
                                       <th>Xuất xứ</th>
