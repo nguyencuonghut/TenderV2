@@ -231,6 +231,7 @@ class AdminSupplierController extends Controller
                 return $material_list;
             })
             ->addColumn('actions', function($suppliers) {
+                /*
                 $btn = '<a href="' . route("admin.suppliers.show", $suppliers->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';
                 if (Auth::user()->can('edit-supplier')) {
                     $btn = $btn . '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>';
@@ -242,6 +243,15 @@ class AdminSupplierController extends Controller
                     <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 }
                 return $btn;
+                */
+                $action = '<a href="' . route("admin.suppliers.show", $suppliers->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+                           <a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                           <form style="display:inline" action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                return $action;
+
             })
             ->rawColumns(['actions'])
             ->make(true);
