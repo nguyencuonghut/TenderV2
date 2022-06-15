@@ -51,6 +51,7 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::resource('suppliers', AdminSupplierController::class);
 
         Route::get('materials/data', [AdminMaterialController::class, 'anyData'])->name('materials.data');
+        Route::post('materials/import', [AdminMaterialController::class, 'import'])->name('materials.import');
         Route::resource('materials', AdminMaterialController::class);
 
         Route::patch('tenders/storeQuantityAndDeliveryTimes', [AdminTenderController::class, 'storeQuantityAndDeliveryTimes'])->name('tenders.storeQuantityAndDeliveryTimes');

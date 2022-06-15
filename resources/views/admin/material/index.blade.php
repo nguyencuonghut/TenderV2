@@ -40,7 +40,13 @@
               <!-- /.card-header -->
               <div class="card-body">
                 @can('create-material')
-                <a href="{{ route('admin.materials.create') }}" class="btn btn-success">Tạo mới hàng hóa</a>
+                <a href="{{ route('admin.materials.create') }}" class="btn btn-success">Tạo mới</a>
+                @endcan
+
+                @can('import-material')
+                <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#import_material">
+                    <i class="fas fa-plus"></i> Import
+                </button>
                 @endcan
                 <table id="materials-table" class="table table-bordered table-striped">
                   <thead>
@@ -53,6 +59,36 @@
                   </tr>
                   </thead>
                 </table>
+
+                <form class="form-horizontal" method="post" action="{{ route('admin.materials.import', 1) }}" enctype="multipart/form-data" name="import-material" id="import-material" novalidate="novalidate">
+                    {{ csrf_field() }}
+                    <div class="modal fade" id="import_material">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group mb-4">
+                                        <div class="custom-file text-left">
+                                            <input type="file" name="file" class="custom-file-input" id="customFile">
+                                            <label class="custom-file-label" for="customFile">Chọn file</label>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-success">Import</button>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                    </div>
+                  </form>
+                  <!-- /.modal -->
               </div>
             </div>
         </div>

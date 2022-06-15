@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\MaterialsImport;
 use App\Models\Material;
 use Datatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminMaterialController extends Controller
 {
@@ -183,5 +185,10 @@ class AdminMaterialController extends Controller
             })
             ->rawColumns(['quality', 'actions'])
             ->make(true);
+    }
+
+    public function import(Request $request){
+        Excel::import(new MaterialsImport, $request->file('file')->store('files'));
+        return redirect()->back();
     }
 }

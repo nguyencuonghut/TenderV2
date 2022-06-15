@@ -25,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
         'edit-material' => ['Admin'],
         'update-material' => ['Admin'],
         'destroy-material' => ['Admin'],
+        'import-material' => ['Admin'],
         'create-user' => ['Admin', 'Nhân viên Mua Hàng'],
         'store-user' => ['Admin', 'Nhân viên Mua Hàng'],
         'edit-user' => ['Admin', 'Nhân viên Mua Hàng'],
