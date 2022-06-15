@@ -42,7 +42,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Tổng số tender</span>
                     <span class="info-box-number">
-                    {{$all_tenders->count()}}
+                    {{$all_tenders_count}}
                     </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -56,7 +56,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Tender hoàn thành</span>
-                    <span class="info-box-number">{{$completed_tenders->count()}}</span>
+                    <span class="info-box-number">{{$completed_tenders_count}}</span>
                 </div>
                 <!-- /.info-box-content -->
                 </div>
@@ -73,7 +73,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Tender đang diễn ra</span>
-                    <span class="info-box-number">{{$in_progress_tenders->count()}}</span>
+                    <span class="info-box-number">{{$in_progress_tenders_count}}</span>
                 </div>
                 <!-- /.info-box-content -->
                 </div>
@@ -86,7 +86,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Số nhà cung cấp</span>
-                    <span class="info-box-number">{{$suppliers->count()}}</span>
+                    <span class="info-box-number">{{$suppliers_count}}</span>
                 </div>
                 <!-- /.info-box-content -->
                 </div>

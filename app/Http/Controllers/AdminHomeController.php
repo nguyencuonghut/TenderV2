@@ -12,15 +12,15 @@ class AdminHomeController extends Controller
 {
     public function index()
     {
-        $all_tenders = Tender::orderBy('id', 'desc')->get();
-        $completed_tenders = Tender::where('status', 'Closed')->orderBy('id', 'desc')->get();
-        $in_progress_tenders = Tender::where('status', 'In-progress')->orderBy('id', 'desc')->get();
-        $suppliers = Supplier::orderBy('id', 'desc')->get();
+        $all_tenders_count = Tender::count();
+        $completed_tenders_count = Tender::where('status', 'Closed')->count();
+        $in_progress_tenders_count= Tender::where('status', 'In-progress')->count();
+        $suppliers_count = Supplier::count();
 
-        return view('admin.home', ['all_tenders' => $all_tenders,
-                                    'completed_tenders' =>$completed_tenders,
-                                    'in_progress_tenders' =>$in_progress_tenders,
-                                    'suppliers' => $suppliers]);
+        return view('admin.home', ['all_tenders_count' => $all_tenders_count,
+                                    'completed_tenders_count' =>$completed_tenders_count,
+                                    'in_progress_tenders_count' =>$in_progress_tenders_count,
+                                    'suppliers_count' => $suppliers_count]);
     }
 
     public function profile()
