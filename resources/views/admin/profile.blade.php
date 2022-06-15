@@ -78,16 +78,20 @@
                   <strong><i class="fas fa-gavel mr-1" style="color:#ffc107;"></i> {{$tender->title}}</strong>
 
                   <p class="text-muted">
-                    Thời gian chào thầu {{date('d/m/Y H:i',strtotime($tender->tender_start_time))}} - {{date('d/m/Y H:i',strtotime($tender->tender_end_time))}} <br>
+                    {{date('d/m/Y H:i',strtotime($tender->tender_start_time))}} - {{date('d/m/Y H:i',strtotime($tender->tender_end_time))}} <br>
                   </p>
 
                   <p class="text-muted">
                   @if ($tender->creator_id == Auth::user()->id)
-                    Tôi tạo tender lúc {{date('d/m/Y H:i',strtotime($tender->created_at))}}
+                    Tôi tạo tender lúc {{date('d/m/Y H:i',strtotime($tender->created_at))}} <br>
                   @endif
                   @if ($tender->approver_id == Auth::user()->id)
+                    @if($tender->tender_in_progress_time)
                     Tôi mời thầu lúc {{date('d/m/Y H:i',strtotime($tender->tender_in_progress_time))}} <br>
+                    @endif
+                    @if($tender->tender_closed_time)
                     Tôi trả kết quả lúc {{date('d/m/Y H:i',strtotime($tender->tender_closed_time))}}
+                    @endif
                   </p>
                   @endif
 
