@@ -318,19 +318,16 @@ class AdminTenderController extends Controller
             ->addColumn('change_status', function ($tenders) {
                 return '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-primary"><i class="fas fa-random"></i></a>';
             })
-            ->addColumn('edit', function ($tenders) {
-                return '<a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a>';
+            ->addColumn('actions', function ($tenders) {
+                $action = '<a href="' . route("admin.tenders.show", $tenders->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+                           <a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                           <form style="display:inline" action="'. route("admin.tenders.destroy", $tenders->id) . '" method="POST">
+                           <input type="hidden" name="_method" value="DELETE">
+                           <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                           <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                return $action;
             })
-            ->addColumn('delete', '
-                <form action="{{ route(\'admin.tenders.destroy\', $id) }}" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" name="submit" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
-                    <i class="fas fa-trash-alt"></i>
-                    </button>
-
-                    {{csrf_field()}}
-                </form>')
-            ->rawColumns(['titlelink', 'status', 'edit', 'delete', 'change_status'])
+            ->rawColumns(['titlelink', 'status', 'actions', 'change_status'])
             ->make(true);
     }
 

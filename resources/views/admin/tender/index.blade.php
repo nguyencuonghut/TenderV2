@@ -54,8 +54,7 @@
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
                     <th>Chuyển trạng thái</th>
-                    <th>Sửa</th>
-                    <th>Xóa</th>
+                    <th style="width: 18%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
@@ -156,8 +155,7 @@
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
             {data: 'change_status', name: 'change_status', orderable: false, searchable: false},
-            {data: 'edit', name: 'edit', orderable: false, searchable: false},
-            {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#tenders-table_wrapper .col-md-6:eq(0)');
     });
