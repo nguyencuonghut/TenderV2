@@ -163,9 +163,15 @@ class AdminUserController extends Controller
     {
         if(Auth::user()->can('destroy-user')){
             $user = User::findOrFail($id);
-            $user->destroy($id);
-            Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
-            return redirect()->route('admin.users.index');
+            //Check condition before destroying
+            if($user->bids->count() == 0) {
+                $user->destroy($id);
+                Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
+                return redirect()->route('admin.users.index');
+            } else {
+                Alert::toast('Người dùng đang có thông tin đấu thầu. Không thể xóa!', 'error', 'top-right');
+                return redirect()->route('admin.users.index');
+            }
         }else {
             Alert::toast('Bạn không có quyền xóa tài khoản!', 'error', 'top-right');
             return redirect()->route('admin.users.index');
@@ -186,17 +192,15 @@ class AdminUserController extends Controller
             ->editColumn('supplier_id', function ($users) {
                 return $users->supplier->name;
             })
-            ->addColumn('edit', function ($users) {
-                return '<a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning"> Sửa</a>';
+            ->addColumn('actions', function ($users) {
+                $action = '<a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                           <form style="display:inline" action="'. route("admin.users.destroy", $users->id) . '" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                return $action;
             })
-            ->addColumn('delete', '
-                <form action="{{ route(\'admin.users.destroy\', $id) }}" method="POST">
-                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" name="submit" value="Xóa" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
-
-                    {{csrf_field()}}
-                </form>')
-            ->rawColumns(['edit', 'delete'])
+            ->rawColumns(['actions'])
             ->make(true);
     }
 }

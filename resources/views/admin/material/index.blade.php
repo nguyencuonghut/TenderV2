@@ -49,8 +49,7 @@
                     <th>Mã</th>
                     <th style="width: 13%;">Hàng hóa</th>
                     <th>Tiêu chuẩn chất lượng</th>
-                    <th>Sửa</th>
-                    <th>Xóa</th>
+                    <th style="width: 13%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
@@ -147,8 +146,7 @@
             {data: 'code', name: 'code'},
             {data: 'name', name: 'name'},
             {data: 'quality', name: 'quality'},
-            {data: 'edit', name: 'edit', orderable: false, searchable: false},
-            {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#materials-table_wrapper .col-md-6:eq(0)');
     });

@@ -48,8 +48,7 @@
                     <th>STT</th>
                     <th>Họ tên</th>
                     <th>Email</th>
-                    <th>Sửa</th>
-                    <th>Xóa</th>
+                    <th style="width: 13%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
@@ -145,8 +144,7 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
-            {data: 'edit', name: 'edit', orderable: false, searchable: false},
-            {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#admins-table_wrapper .col-md-6:eq(0)');
     });

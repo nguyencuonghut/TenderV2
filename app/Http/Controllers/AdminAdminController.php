@@ -163,10 +163,15 @@ class AdminAdminController extends Controller
     {
         if(Auth::user()->can('destroy-admin')) {
             $admin = Admin::findOrFail($id);
-            $admin->destroy($id);
-            Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
-            return redirect()->route('admin.admins.index');
-
+            //Check condition before destroying
+            if($admin->tenders->count() == 0) {
+                $admin->destroy($id);
+                Alert::toast('Xóa người quản trị thành công!', 'success', 'top-right');
+                return redirect()->route('admin.admins.index');
+            } else {
+                Alert::toast('Người quản trị đang có thông tin đấu thầu. Không thể xóa!', 'error', 'top-right');
+                return redirect()->route('admin.admins.index');
+            }
         } else {
             Alert::toast('Bạn không có quyền xóa tài khoản!', 'error', 'top-right');
             return redirect()->route('admin.admins.index');
@@ -184,17 +189,15 @@ class AdminAdminController extends Controller
             ->editColumn('email', function ($admins) {
                 return $admins->email;
             })
-            ->addColumn('edit', function ($admins) {
-                return '<a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning"> Sửa</a>';
+            ->addColumn('actions', function ($admins) {
+                $action = '<a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                           <form style="display:inline" action="'. route("admin.admins.destroy", $admins->id) . '" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                return $action;
             })
-            ->addColumn('delete', '
-                <form action="{{ route(\'admin.admins.destroy\', $id) }}" method="POST">
-                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" name="submit" value="Xóa" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
-
-                    {{csrf_field()}}
-                </form>')
-            ->rawColumns(['edit', 'delete'])
+            ->rawColumns(['actions'])
             ->make(true);
     }
 }

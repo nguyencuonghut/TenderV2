@@ -144,9 +144,15 @@ class AdminMaterialController extends Controller
     {
         if(Auth::user()->can('destroy-material')){
             $material = Material::findOrFail($id);
-            $material->destroy($id);
-            Alert::toast('Xóa hàng hóa thành công!', 'success', 'top-right');
-            return redirect()->route('admin.materials.index');
+            //Check condition before destroying
+            if($material->suppliers->count() == 0) {
+                $material->destroy($id);
+                Alert::toast('Xóa hàng hóa thành công!', 'success', 'top-right');
+                return redirect()->route('admin.materials.index');
+            } else {
+                Alert::toast('Hàng hóa đang được gán cho nhà cung cấp. Không thể xóa!', 'error', 'top-right');
+                return redirect()->route('admin.materials.index');
+            }
         }else{
             Alert::toast('Bạn không có quyền xóa hàng hóa!', 'error', 'top-right');
             return redirect()->route('admin.materials.index');
@@ -167,17 +173,15 @@ class AdminMaterialController extends Controller
             ->editColumn('quality', function ($materials) {
                 return $materials->quality;
             })
-            ->addColumn('edit', function ($materials) {
-                return '<a href="' . route("admin.materials.edit", $materials->id) . '" class="btn btn-warning"> Sửa</a>';
+            ->addColumn('actions', function ($materials) {
+                $action = '<a href="' . route("admin.materials.edit", $materials->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                           <form style="display:inline" action="'. route("admin.materials.destroy", $materials->id) . '" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                return $action;
             })
-            ->addColumn('delete', '
-                <form action="{{ route(\'admin.materials.destroy\', $id) }}" method="POST">
-                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" name="submit" value="Xóa" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')"">
-
-                    {{csrf_field()}}
-                </form>')
-            ->rawColumns(['quality', 'edit', 'delete'])
+            ->rawColumns(['quality', 'actions'])
             ->make(true);
     }
 }

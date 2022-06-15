@@ -49,8 +49,7 @@
                     <th>Họ tên</th>
                     <th>Email</th>
                     <th>Công ty</th>
-                    <th>Sửa</th>
-                    <th>Xóa</th>
+                    <th style="width: 13%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
@@ -147,8 +146,7 @@
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
             {data: 'supplier_id', name: 'supplier_id'},
-            {data: 'edit', name: 'edit', orderable: false, searchable: false},
-            {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#users-table_wrapper .col-md-6:eq(0)');
     });

@@ -20,4 +20,9 @@ class Admin extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function tenders()
+    {
+        return $this->hasMany(Tender::class, 'creator_id');
+    }
 }
