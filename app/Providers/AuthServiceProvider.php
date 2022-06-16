@@ -32,6 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         'edit-user' => ['Admin', 'Nhân viên Mua Hàng'],
         'update-user' => ['Admin', 'Nhân viên Mua Hàng'],
         'destroy-user' => ['Admin'],
+        'import-user' => ['Admin'],
         'create-tender' => ['Admin', 'Nhân viên Mua Hàng'],
         'store-tender' => ['Admin', 'Nhân viên Mua Hàng'],
         'edit-tender' => ['Admin', 'Nhân viên Mua Hàng'],

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\UsersImport;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Notifications\UserCreated;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminUserController extends Controller
 {
@@ -202,5 +204,19 @@ class AdminUserController extends Controller
             })
             ->rawColumns(['actions'])
             ->make(true);
+    }
+
+    public function import(Request $request)
+    {
+        $import = new UsersImport;
+        Excel::import($import, $request->file('file')->store('files'));
+        $rows = $import->getRowCount();
+        $duplicates = $import->getDuplicateCount();
+        if($duplicates){
+            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công! Có ' . $duplicates . ' dòng bị trùng lặp!', 'success', 'top-right');
+        }else{
+            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công!', 'success', 'top-right');
+        }
+        return redirect()->back();
     }
 }

@@ -42,6 +42,7 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('/profile', [AdminHomeController::class, 'profile'])->name('profile');
         Route::get('users/data', [AdminUserController::class, 'anyData'])->name('users.data');
         Route::resource('users', AdminUserController::class);
+        Route::post('users/import', [AdminUserController::class, 'import'])->name('users.import');
 
         Route::get('admins/data', [AdminAdminController::class, 'anyData'])->name('admins.data');
         Route::resource('admins', AdminAdminController::class);
