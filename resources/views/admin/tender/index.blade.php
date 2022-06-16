@@ -42,7 +42,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 @can('create-tender')
-                <a href="{{ route('admin.tenders.create') }}" class="btn btn-success">Tạo mới tender</a>
+                <a href="{{ route('admin.tenders.create') }}" class="btn btn-success"><i class="fas fa-plus"></i> Tạo mới</a>
                 @endcan
                 <table id="tenders-table" class="table table-bordered table-striped">
                   <thead>

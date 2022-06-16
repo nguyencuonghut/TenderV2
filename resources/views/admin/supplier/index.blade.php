@@ -40,12 +40,12 @@
               <!-- /.card-header -->
               <div class="card-body">
                 @can('create-supplier')
-                <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success">Tạo mới</a>
+                <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success"><i class="fas fa-plus"></i> Tạo mới</a>
                 @endcan
 
                 @can('import-supplier')
                 <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#import_supplier">
-                    Import
+                    <i class="fas fa-file-excel"></i> Import
                 </button>
                 @endcan
                 <table id="suppliers-table" class="table table-bordered table-striped">
