@@ -15,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
         'edit-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
         'update-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
         'destroy-supplier' => ['Admin'],
+        'import-supplier' => ['Admin'],
         'create-admin' => ['Admin'],
         'store-admin' => ['Admin'],
         'edit-admin' => ['Admin'],
