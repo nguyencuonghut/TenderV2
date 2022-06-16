@@ -42,6 +42,12 @@
                 @can('create-supplier')
                 <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success">Tạo mới nhà cung cấp</a>
                 @endcan
+
+                @can('import-supplier')
+                <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#import_supplier">
+                    Import
+                </button>
+                @endcan
                 <table id="suppliers-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
@@ -54,6 +60,35 @@
                   </tr>
                   </thead>
                 </table>
+
+                <form class="form-horizontal" method="post" action="{{ route('admin.suppliers.import') }}" enctype="multipart/form-data" name="import-supplier" id="import-supplier" novalidate="novalidate">
+                    {{ csrf_field() }}
+                    <div class="modal fade" id="import_supplier">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group mb-4">
+                                        <div class="custom-file text-left">
+                                            <input type="file" name="file" class="custom-file-input" id="customFile">
+                                            <label class="custom-file-label" for="customFile">Chọn file</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Import</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                    </div>
+                  </form>
+                  <!-- /.modal -->
               </div>
             </div>
         </div>

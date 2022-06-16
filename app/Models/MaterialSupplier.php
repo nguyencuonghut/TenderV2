@@ -9,5 +9,10 @@ class MaterialSupplier extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'material_id',
+        'supplier_id',
+    ];
+
     protected $table = 'material_supplier';
 }

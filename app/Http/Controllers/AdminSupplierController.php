@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\SuppliersImport;
 use App\Models\Bid;
 use App\Models\Material;
 use App\Models\MaterialSupplier;
@@ -10,6 +11,7 @@ use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminSupplierController extends Controller
@@ -302,5 +304,19 @@ class AdminSupplierController extends Controller
             })
             ->rawColumns(['titlelink', 'is_selected'])
             ->make(true);
+    }
+
+    public function import(Request $request)
+    {
+        $import = new SuppliersImport;
+        Excel::import($import, $request->file('file')->store('files'));
+        $rows = $import->getRowCount();
+        $duplicates = $import->getDuplicateCount();
+        if($duplicates){
+            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công! Có ' . $duplicates . ' dòng bị trùng lặp!', 'success', 'top-right');
+        }else{
+            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công!', 'success', 'top-right');
+        }
+        return redirect()->back();
     }
 }

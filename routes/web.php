@@ -46,6 +46,7 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('admins/data', [AdminAdminController::class, 'anyData'])->name('admins.data');
         Route::resource('admins', AdminAdminController::class);
 
+        Route::post('suppliers/import', [AdminSupplierController::class, 'import'])->name('suppliers.import');
         Route::get('suppliers/bidData/{supplier_id}', [AdminSupplierController::class, 'bidData'])->name('suppliers.bidData');
         Route::get('suppliers/data', [AdminSupplierController::class, 'anyData'])->name('suppliers.data');
         Route::resource('suppliers', AdminSupplierController::class);
