@@ -4,23 +4,47 @@ namespace App\Imports;
 
 use App\Models\Material;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-class MaterialsImport implements ToModel
+class MaterialsImport implements ToCollection
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+    private $rows = 0;
+    private $duplicates = 0;
+
+    public function collection(Collection $rows)
     {
-        return new Material([
-            'code'          => $row[1],
-            'name'          => $row[2],
-            'quality'       => $row[3],
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now(),
-        ]);
+        $i = 0;
+        foreach ($rows as $row)
+        {
+            $i++;
+            //Skip the heading row (first row)
+            if($i > 1){
+                $data = Material::where('code', $row['1'])->get();
+                if($data->count() == 0){
+                    //Create Material
+                    Material::create([
+                        'code'          => $row[1],
+                        'name'          => $row[2],
+                        'quality'       => $row[3],
+                        'created_at'    => Carbon::now(),
+                        'updated_at'    => Carbon::now(),
+                    ]);
+                    ++$this->rows;
+                }else{
+                    ++$this->duplicates;
+                }
+            }
+        }
+    }
+
+    public function getRowCount(): int
+    {
+        return $this->rows;
+    }
+
+    public function getDuplicateCount(): int
+    {
+        return $this->duplicates;
     }
 }

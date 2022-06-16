@@ -45,7 +45,7 @@
 
                 @can('import-material')
                 <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#import_material">
-                    <i class="fas fa-plus"></i> Import
+                    Import
                 </button>
                 @endcan
                 <table id="materials-table" class="table table-bordered table-striped">
@@ -60,7 +60,7 @@
                   </thead>
                 </table>
 
-                <form class="form-horizontal" method="post" action="{{ route('admin.materials.import', 1) }}" enctype="multipart/form-data" name="import-material" id="import-material" novalidate="novalidate">
+                <form class="form-horizontal" method="post" action="{{ route('admin.materials.import') }}" enctype="multipart/form-data" name="import-material" id="import-material">
                     {{ csrf_field() }}
                     <div class="modal fade" id="import_material">
                         <div class="modal-dialog modal-lg">
@@ -77,11 +77,10 @@
                                             <label class="custom-file-label" for="customFile">Chọn file</label>
                                         </div>
                                     </div>
-                                    <button class="btn btn-success">Import</button>
                                 </div>
                                 <div class="modal-footer justify-content-between">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                <button type="submit" class="btn btn-primary">Import</button>
                                 </div>
                             </div>
                             <!-- /.modal-content -->
@@ -185,6 +184,12 @@
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#materials-table_wrapper .col-md-6:eq(0)');
+    });
+
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
   </script>
 @endpush

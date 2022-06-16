@@ -187,8 +187,17 @@ class AdminMaterialController extends Controller
             ->make(true);
     }
 
-    public function import(Request $request){
-        Excel::import(new MaterialsImport, $request->file('file')->store('files'));
+    public function import(Request $request)
+    {
+        $import = new MaterialsImport;
+        Excel::import($import, $request->file('file')->store('files'));
+        $rows = $import->getRowCount();
+        $duplicates = $import->getDuplicateCount();
+        if($duplicates){
+            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công! Có ' . $duplicates . ' dòng bị trùng lặp!', 'success', 'top-right');
+        }else{
+            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công!', 'success', 'top-right');
+        }
         return redirect()->back();
     }
 }
