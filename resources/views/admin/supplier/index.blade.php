@@ -40,7 +40,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 @can('create-supplier')
-                <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success">Tạo mới nhà cung cấp</a>
+                <a href="{{ route('admin.suppliers.create') }}" class="btn btn-success">Tạo mới</a>
                 @endcan
 
                 @can('import-supplier')

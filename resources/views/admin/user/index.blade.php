@@ -40,7 +40,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 @can('create-user')
-                <a href="{{ route('admin.users.create') }}" class="btn btn-success">Tạo mới người dùng</a>
+                <a href="{{ route('admin.users.create') }}" class="btn btn-success">Tạo mới</a>
                 @endcan
 
                 @can('import-user')
@@ -184,6 +184,12 @@
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#users-table_wrapper .col-md-6:eq(0)');
+    });
+
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
   </script>
 @endpush

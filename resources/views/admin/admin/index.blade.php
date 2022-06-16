@@ -40,7 +40,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 @can('create-admin')
-                <a href="{{ route('admin.admins.create') }}" class="btn btn-success">Tạo mới tài khoản quản trị</a>
+                <a href="{{ route('admin.admins.create') }}" class="btn btn-success">Tạo mới</a>
                 @endcan
                 <table id="admins-table" class="table table-bordered table-striped">
                   <thead>
