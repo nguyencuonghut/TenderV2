@@ -631,6 +631,12 @@ class AdminTenderController extends Controller
             ];
             $request->validate($rules,$messages);
 
+            //Delete all old Propose
+            $old_proposes = TenderPropose::where('tender_id', $id)->get();
+            foreach($old_proposes as $propose){
+                $propose->destroy($propose->id);
+            }
+
             //Create new Propose
             $propose = new TenderPropose();
             $propose->tender_id = $id;
