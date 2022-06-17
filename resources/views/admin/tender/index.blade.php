@@ -53,8 +53,7 @@
                     <th>Bắt đầu</th>
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
-                    <th>Chuyển trạng thái</th>
-                    <th style="width: 15%;">Thao tác</th>
+                    <th style="width: 18%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
@@ -154,7 +153,6 @@
             {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
-            {data: 'change_status', name: 'change_status', orderable: false, searchable: false},
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#tenders-table_wrapper .col-md-6:eq(0)');

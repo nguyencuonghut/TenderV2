@@ -315,15 +315,13 @@ class AdminTenderController extends Controller
             ->editColumn('tender_end_time', function ($tenders) {
                 return date('d/m/Y H:i', strtotime($tenders->tender_end_time));
             })
-            ->addColumn('change_status', function ($tenders) {
-                return '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-random"></i></a>';
-            })
             ->addColumn('actions', function ($tenders) {
-                $action = '<a href="' . route("admin.tenders.show", $tenders->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
-                           <a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                $action = '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-success btn-sm"><i class="fas fa-random"></i></a>
+                           <a href="' . route("admin.tenders.show", $tenders->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
+                           <a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-dark btn-sm"><i class="fas fa-pen"></i></a>
                            <form style="display:inline" action="'. route("admin.tenders.destroy", $tenders->id) . '" method="POST">
                            <input type="hidden" name="_method" value="DELETE">
-                           <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-minus-circle"></i></button>
+                           <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                            <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 return $action;
             })

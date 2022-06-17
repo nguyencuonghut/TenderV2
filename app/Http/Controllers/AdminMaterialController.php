@@ -179,7 +179,7 @@ class AdminMaterialController extends Controller
                 $action = '<a href="' . route("admin.materials.edit", $materials->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                            <form style="display:inline" action="'. route("admin.materials.destroy", $materials->id) . '" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-minus-circle"></i></button>
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
                     <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 return $action;
             })
