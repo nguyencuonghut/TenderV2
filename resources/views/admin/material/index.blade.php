@@ -55,7 +55,7 @@
                     <th>Mã</th>
                     <th style="width: 13%;">Hàng hóa</th>
                     <th>Tiêu chuẩn chất lượng</th>
-                    <th style="width: 13%;">Thao tác</th>
+                    <th style="width: 11%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>

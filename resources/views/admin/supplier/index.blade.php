@@ -56,7 +56,7 @@
                     <th>Tên nhà cung cấp</th>
                     <th style="width:20%;">Liên hệ</th>
                     <th style="width:13%;">Hàng hóa</th>
-                    <th style="width:18%;">Thao tác</th>
+                    <th style="width:15%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>

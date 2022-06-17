@@ -54,7 +54,7 @@
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
                     <th>Chuyển trạng thái</th>
-                    <th style="width: 18%;">Thao tác</th>
+                    <th style="width: 15%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>

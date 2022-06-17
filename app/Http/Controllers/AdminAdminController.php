@@ -190,10 +190,10 @@ class AdminAdminController extends Controller
                 return $admins->email;
             })
             ->addColumn('actions', function ($admins) {
-                $action = '<a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                $action = '<a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                            <form style="display:inline" action="'. route("admin.admins.destroy", $admins->id) . '" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger"><i class="fas fa-minus-circle"></i></button>
+                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-minus-circle"></i></button>
                     <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 return $action;
             })

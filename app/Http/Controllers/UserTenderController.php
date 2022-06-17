@@ -66,10 +66,16 @@ class UserTenderController extends Controller
             ->editColumn('tender_end_time', function ($user_tenders) {
                 return date('d/m/Y H:i', strtotime($user_tenders->tender_end_time));
             })
-            ->addColumn('show', function ($user_tenders) {
-                return '<a href="' . route("user.tenders.show", $user_tenders->id) . '" class="btn btn-primary"><i class="fas fa-eye"></i></a>';
+            ->editColumn('status', function ($user_tenders) {
+                if($user_tenders->status == 'Open') {
+                    return '<span class="badge badge-primary">Open</span>';
+                } else if($user_tenders->status == 'Closed'){
+                    return '<span class="badge badge-success">Closed</span>';
+                } else {
+                    return '<span class="badge badge-warning">In-progress</span>';
+                }
             })
-            ->rawColumns(['title', 'show'])
+            ->rawColumns(['title', 'status'])
             ->make(true);
     }
 }
