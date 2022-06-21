@@ -21,7 +21,7 @@ class UserBidController extends Controller
 
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
-        $existed_qty_ids = Bid::where('tender_id', $tender->id)->pluck('quantity_id')->toArray();
+        $existed_qty_ids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->pluck('quantity_id')->toArray();
         if(in_array(Auth::user()->id, $users)) {
             $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
