@@ -258,7 +258,7 @@
                                                             <div class="input-group">
                                                                 <select name="quantity_id" id="quantity_id" class="form-control">
                                                                     @foreach ($quantity_and_delivery_times as $item)
-                                                                    <option value="{{$item->id}}" selected>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
+                                                                    <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>

@@ -21,12 +21,14 @@ class UserBidController extends Controller
 
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
+        $existed_qty_ids = Bid::where('tender_id', $tender->id)->pluck('quantity_id')->toArray();
         if(in_array(Auth::user()->id, $users)) {
             $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
             return view('user.bid.index', ['bids' => $bids,
                                            'tender' => $tender,
-                                           'quantity_and_delivery_times' => $quantity_and_delivery_times]);
+                                           'quantity_and_delivery_times' => $quantity_and_delivery_times,
+                                           'existed_qty_ids' => $existed_qty_ids]);
         } else {
             Alert::toast('Bạn không quyền chào thầu tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
@@ -73,6 +75,13 @@ class UserBidController extends Controller
                 'bid_quantity_unit.required' => 'Bạn phải nhập đơn vị chào.',
             ];
             $request->validate($rules,$messages);
+
+            //Check if exits Bid for this QuantityAndDeliveryTime
+            $exited_bids = Bid::where('quantity_id', $request->quantity_id)->get();
+            if($exited_bids->count()){
+                Alert::toast('Chào giá cho lượng này đã tồn tại! Bạn vui lòng chọn lượng khác', 'error', 'top-right');
+                return redirect()->back();
+            }
 
             $bid = new Bid();
             $bid->tender_id = $tender_id;
