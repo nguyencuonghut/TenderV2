@@ -203,7 +203,7 @@
                                       <th>Ghi chú</th>
                                       @if('Closed' != $tender->status
                                             && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
-                                      <th style="Width: 8%;">Xóa</th>
+                                      <th style="Width: 11%;">Thao tác</th>
                                       @endif
                                     </tr>
                                     @foreach ($bids as $bid)
@@ -224,13 +224,13 @@
                                       @if('Closed' != $tender->status
                                             && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                                       <td>
-                                          <form action="{{ route('user.bids.destroy', $bid->id) }}" method="POST">
-                                              <input type="hidden" name="_method" value="DELETE">
-                                              <input type="submit" name="submit" value="Xóa" class="btn btn-danger" onClick="return confirm(\'Bạn có chắc chắn muốn xóa?\')">
-
-                                              {{csrf_field()}}
-                                              @method('delete')
-                                         </form>
+                                          <a href="{{route('user.bids.edit', $bid->id)}}" class="btn btn-dark btn-sm"><i class="fas fa-pen"></i></a>
+                                          <form style="display:inline" action="{{ route('user.bids.destroy', $bid->id) }}" method="POST">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" name="submit" onclick="return confirm('Bạn có muốn xóa?')" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                            {{csrf_field()}}
+                                            @method('delete')
+                                          </form>
                                       </td>
                                       @endif
                                     </tr>

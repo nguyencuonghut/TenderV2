@@ -99,6 +99,8 @@ Route::group(['middleware'=>'auth:web'], function() {
 
     Route::get('bids/{id}/index', [UserBidController::class, 'index'])->name('user.bids.index');
     Route::post('bids/{id}/create', [UserBidController::class, 'create'])->name('user.bids.create');
+    Route::get('bids/{id}/edit', [UserBidController::class, 'edit'])->name('user.bids.edit');
+    Route::patch('bids/{id}/update', [UserBidController::class, 'update'])->name('user.bids.update');
     Route::delete('bids/{id}/destroy', [UserBidController::class, 'destroy'])->name('user.bids.destroy');
     Route::get('bids/data', [UserBidController::class, 'anyData'])->name('user.bids.data');
 });

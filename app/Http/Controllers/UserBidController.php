@@ -135,4 +135,71 @@ class UserBidController extends Controller
             ->rawColumns(['titlelink', 'is_selected'])
             ->make(true);
     }
+
+    public function edit($id)
+    {
+        $bid = Bid::findOrFail($id);
+        $tender = Tender::findOrFail($bid->tender_id);
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+        $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
+        if('Closed' != $tender->status
+            && Carbon::now()->lessThan($tender->tender_end_time)
+            && in_array(Auth::user()->id, $users)) {
+            $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->orderBy('id', 'desc')->get();
+            return view('user.bid.edit',
+                        ['tender' => $tender,
+                        'bid' => $bid,
+                        'quantity_and_delivery_times' => $quantity_and_delivery_times]);
+        }else{
+            Alert::toast('Tender đã hết hạn. Không thể sửa!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $bid = Bid::findOrFail($id);
+        $tender = Tender::findOrFail($bid->tender_id);
+        $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+        $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
+
+        if('Closed' != $tender->status
+            && Carbon::now()->lessThan($tender->tender_end_time)
+            && in_array(Auth::user()->id, $users)) {
+            $rules = [
+                'quantity_id' => 'required',
+                'price' => 'required',
+                'price_unit' => 'required',
+                'bid_quantity' => 'required',
+                'bid_quantity_unit' => 'required',
+            ];
+            $messages = [
+                'quantity_id.required' => 'Bạn phải chọn số lượng.',
+                'price.required' => 'Bạn phải nhập giá.',
+                'price_unit.required' => 'Bạn phải chọn loại tiền tệ.',
+                'bid_quantity.required' => 'Bạn phải nhập số lượng chào.',
+                'bid_quantity_unit.required' => 'Bạn phải nhập đơn vị chào.',
+            ];
+            $request->validate($rules,$messages);
+            $bid->user_id = Auth::user()->id;
+            $bid->supplier_id = Auth::user()->supplier->id;
+            $bid->quantity_id = $request->quantity_id;
+            $bid->price = $request->price;
+            $bid->price_unit = $request->price_unit;
+            $bid->bid_quantity = $request->bid_quantity;
+            $bid->bid_quantity_unit = $request->bid_quantity_unit;
+            $bid->pack = $request->pack;
+            $bid->origin = $request->origin;
+            $bid->delivery_time = $request->delivery_time;
+            $bid->delivery_place = $request->delivery_place;
+            $bid->payment_condition = $request->payment_condition;
+            $bid->note = $request->note;
+            $bid->save();
+                Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
+                return redirect()->route('user.bids.index', $tender->id);
+        }else{
+            Alert::toast('Tender đã hết hạn. Không thể sửa!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
 }
