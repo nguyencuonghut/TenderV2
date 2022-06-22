@@ -7,11 +7,13 @@ use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
 use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
+use App\Notifications\BidCreatedOrUpdated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Datatables;
+use Illuminate\Support\Facades\Notification;
 
 class UserBidController extends Controller
 {
@@ -103,6 +105,13 @@ class UserBidController extends Controller
             $bid->payment_condition = $request->payment_condition;
             $bid->note = $request->note;
             $bid->save();
+
+            //Send notification to email
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+            $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
+            foreach($users as $user)  {
+                Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
+            }
 
             Alert::toast('Tạo mới thành công!', 'success', 'top-right');
             return redirect()->route('user.bids.index', $tender_id);
@@ -208,8 +217,16 @@ class UserBidController extends Controller
             $bid->payment_condition = $request->payment_condition;
             $bid->note = $request->note;
             $bid->save();
-                Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
-                return redirect()->route('user.bids.index', $tender->id);
+
+            //Send notification to email
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+            $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
+            foreach($users as $user)  {
+                Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
+            }
+
+            Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');
+            return redirect()->route('user.bids.index', $tender->id);
         }else{
             Alert::toast('Tender đã hết hạn. Không thể sửa!', 'error', 'top-right');
             return redirect()->back();
