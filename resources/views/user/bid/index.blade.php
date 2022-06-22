@@ -75,7 +75,7 @@
                         $my_key = array_search($bid->price, $all_current_bid_prices);
                     @endphp
                     @if($is_rating)
-                    <td>{{$my_key + 1}}/{{sizeof($all_current_bid_prices)}} bids</td>
+                    <td>{{$my_key + 1}} | {{sizeof($all_current_bid_prices)}} bids</td>
                     @endif
                     @if('Closed' != $tender->status
                         && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
