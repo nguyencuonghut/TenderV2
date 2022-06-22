@@ -22,13 +22,17 @@ class UserBidController extends Controller
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
         $existed_qty_ids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->pluck('quantity_id')->toArray();
+        $price_unit_arr = Bid::where('tender_id', $tender->id)->pluck('price_unit')->toArray();
+        $unique = array_count_values($price_unit_arr);
+        $is_rating = sizeof($unique) > 1 ? false : true;
         if(in_array(Auth::user()->id, $users)) {
             $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
             return view('user.bid.index', ['bids' => $bids,
                                            'tender' => $tender,
                                            'quantity_and_delivery_times' => $quantity_and_delivery_times,
-                                           'existed_qty_ids' => $existed_qty_ids]);
+                                           'existed_qty_ids' => $existed_qty_ids,
+                                           'is_rating' => $is_rating]);
         } else {
             Alert::toast('Bạn không quyền chào thầu tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
@@ -77,7 +81,7 @@ class UserBidController extends Controller
             $request->validate($rules,$messages);
 
             //Check if exits Bid for this QuantityAndDeliveryTime
-            $exited_bids = Bid::where('quantity_id', $request->quantity_id)->get();
+            $exited_bids = Bid::where('quantity_id', $request->quantity_id)->where('user_id', Auth::user()->id)->get();
             if($exited_bids->count()){
                 Alert::toast('Chào giá cho lượng này đã tồn tại! Bạn vui lòng chọn lượng khác', 'error', 'top-right');
                 return redirect()->back();

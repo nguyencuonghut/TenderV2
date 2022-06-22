@@ -26,12 +26,16 @@ class UserTenderController extends Controller
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->orderBy('id', 'desc')->get();
             $existed_qty_ids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->pluck('quantity_id')->toArray();
+            $price_unit_arr = Bid::where('tender_id', $tender->id)->pluck('price_unit')->toArray();
+            $unique = array_count_values($price_unit_arr);
+            $is_rating = sizeof($unique) > 1 ? false : true;
 
             return view('user.tender.show', ['tender' => $tender,
                                              'bids' => $bids,
                                              'selected_bids' => $selected_bids,
                                              'quantity_and_delivery_times' => $quantity_and_delivery_times,
-                                             'existed_qty_ids' => $existed_qty_ids]);
+                                             'existed_qty_ids' => $existed_qty_ids,
+                                             'is_rating' => $is_rating]);
         } else {
             Alert::toast('Bạn không quyền xem tender này!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');

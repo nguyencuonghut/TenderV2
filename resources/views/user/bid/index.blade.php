@@ -48,7 +48,9 @@
                     <th>Đóng gói</th>
                     <th>Địa điểm giao</th>
                     <th>Điều kiện thanh toán</th>
-                    <th>Ghi chú</th>
+                    @if($is_rating)
+                    <th>Xếp hạng</th>
+                    @endif
                     @if('Closed' != $tender->status
                         && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                     <th style="width: 10%;">Thao tác</th>
@@ -68,7 +70,13 @@
                     <td>{{ $bid->pack }}</td>
                     <td>{{ $bid->delivery_place }}</td>
                     <td>{{ $bid->payment_condition }}</td>
-                    <td>{{ $bid->note }}</td>
+                    @php
+                        $all_current_bid_prices = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $bid->quantity_id)->orderBy('price', 'asc')->pluck('price')->toArray();
+                        $my_key = array_search($bid->price, $all_current_bid_prices);
+                    @endphp
+                    @if($is_rating)
+                    <td>{{$my_key + 1}}/{{sizeof($all_current_bid_prices)}} bids</td>
+                    @endif
                     @if('Closed' != $tender->status
                         && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                     <td>
