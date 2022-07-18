@@ -43,13 +43,13 @@ class TenderResult extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('tenders/' . $this->tender_id);
+        $url = 'tender.honghafeed.com.vn/tenders/' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
         $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
         return (new MailMessage)
                     ->subject('Thư báo kết quả đấu thầu: ' . $tender->title)
                     ->line('Công ty CP dinh dưỡng Hồng Hà xin thông báo kết quả đấu thầu cho: ' . $tender->title)
-                    ->action('Mở tender', url($url))
+                    ->action('Mở tender', $url)
                     ->line('Xin cảm ơn!')
                     ->markdown('mail.tender.result', ['url' => $url, 'tender' => $tender, 'selected_bids' => $selected_bids]);
 

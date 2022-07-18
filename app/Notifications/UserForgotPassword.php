@@ -45,11 +45,11 @@ class UserForgotPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/reset-password/' . $this->token);
+        $url = 'tender.honghafeed.com.vn/reset-password' . $this->token;
         return (new MailMessage)
                     ->subject('Cấp lại mật khẩu Tender - Honghafeed')
                     ->line('Bạn vừa yêu cầu cấp lại mật khẩu cho ' . $this->user_email . '. Bạn hãy ấn nút dưới đây.')
-                    ->action('Yêu cầu cấp mật khẩu', url($url))
+                    ->action('Yêu cầu cấp mật khẩu', $url)
                     ->line('Xin cảm ơn!');
     }
 

@@ -42,13 +42,13 @@ class BidCreatedOrUpdated extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('bids/' . $this->tender_id . '/index');
+        $url = 'tender.honghafeed.com.vn/bids/' . $this->tender_id . '/index';
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
                     ->subject('Có đối thủ gửi hoặc sửa chào giá cho tender: ' . $tender->title)
                     ->line('Đối thủ của bạn vừa gửi hoặc sửa chào giá cho tender: ' . $tender->title)
                     ->line('Bạn hãy vào xem để biết được xếp hạng chào giá của mình và điều chỉnh chào giá nếu cần!')
-                    ->action('Mở tender', url($url))
+                    ->action('Mở tender', $url)
                     ->line('Xin cảm ơn!');
     }
 

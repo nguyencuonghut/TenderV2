@@ -45,11 +45,11 @@ class AdminForgotPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('admin/reset-password/' . $this->token);
+        $url = '172.16.2.60/admin' . $this->token;
         return (new MailMessage)
                     ->subject('Cấp lại mật khẩu Tender - Honghafeed')
                     ->line('Bạn vừa yêu cầu cấp lại mật khẩu cho ' . $this->admin_email . '. Bạn hãy ấn nút dưới đây.')
-                    ->action('Yêu cầu cấp mật khẩu', url($url))
+                    ->action('Yêu cầu cấp mật khẩu', $url)
                     ->line('Xin cảm ơn!');
     }
 

@@ -51,7 +51,7 @@
                                         </select>
                                     </td>
                                     <td><input type="text" name="addmore[0][delivery_time]" placeholder="Thời gian giao hàng" class="form-control" /></td>
-                                    <td><button type="button" name="add" id="add" class="btn btn-success">Thêm mới</button></td>
+                                    <td><button type="button" name="add" id="add" class="btn btn-success">Thêm</button></td>
                                 </tr>
                             </table>
                             <br>

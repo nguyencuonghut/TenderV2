@@ -42,13 +42,13 @@ class TenderInProgress extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('tenders/' . $this->tender_id);
+        $url = 'tender.honghafeed.com.vn/tenders/' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
                     ->subject('Thư chào thầu: ' . $tender->title)
                     ->line('Xin mời quý nhà cung cấp chào thầu cho: ' . $tender->title . '.')
                     ->line('Thời gian mở thầu: ' . date('d/m/Y H:i', strtotime($tender->tender_start_time)) . ' - '. date('d/m/Y H:i', strtotime($tender->tender_end_time)) . '.')
-                    ->action('Mở tender', url($url))
+                    ->action('Mở tender', $url)
                     ->line('Xin cảm ơn!');
     }
 

@@ -42,12 +42,12 @@ class TenderCreated extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('admin/tenders/changeStatus/' . $this->tender_id);
+        $url = '172.16.2.60/admin/tenders/changeStatus' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
                     ->subject('Yêu cầu duyệt tender: ' . $tender->title)
                     ->line('Xin mời duyệt thư chào thầu: ' . $tender->title)
-                    ->action('Duyệt thư mời thầu', url($url))
+                    ->action('Duyệt thư mời thầu', $url)
                     ->line('Xin cảm ơn!');
     }
 
