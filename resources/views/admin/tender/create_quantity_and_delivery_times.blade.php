@@ -35,9 +35,9 @@
                         <div class="card-body">
                             <table class="table table-bordered" id="dynamicTable">
                                 <tr>
-                                    <th style="width: 20%;">Số lượng</th>
-                                    <th style="width: 12%;">Đơn vị</th>
-                                    <th>Thời gian giao hàng</th>
+                                    <th class="required-field" style="width: 20%;">Số lượng</th>
+                                    <th class="required-field" style="width: 12%;">Đơn vị</th>
+                                    <th class="required-field">Thời gian giao hàng</th>
                                     <th style="width: 14%;">Thao tác</th>
                                 </tr>
                                 <tr>
