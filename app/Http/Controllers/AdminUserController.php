@@ -167,11 +167,13 @@ class AdminUserController extends Controller
             $user = User::findOrFail($id);
             //Check condition before destroying
             if($user->bids->count() == 0) {
-                $user->destroy($id);
+                $user->forceDelete($id);
                 Alert::toast('Xóa người dùng thành công!', 'success', 'top-right');
                 return redirect()->route('admin.users.index');
             } else {
-                Alert::toast('Người dùng đang có thông tin đấu thầu. Không thể xóa!', 'error', 'top-right');
+                //Soft delete the User
+                $user->destroy($id);
+                Alert::toast('Người dùng đang có thông tin đấu thầu.Tài khoản người dùng này sẽ chuyển sang trạng thái đình chỉ!', 'success', 'top-right');
                 return redirect()->route('admin.users.index');
             }
         }else {

@@ -139,7 +139,7 @@ class AdminTenderController extends Controller
         $bids = Bid::where('tender_id', $tender->id)->get();
         $bided_supplier_ids = [];
         foreach($bids as $bid) {
-            $user = User::findOrFail($bid->user_id);
+            $user = User::withTrashed()->findOrFail($bid->user_id);
             array_push($bided_supplier_ids, $user->supplier_id);
         }
 
@@ -149,7 +149,7 @@ class AdminTenderController extends Controller
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
             $selected_bided_supplier_ids = [];
             foreach($selected_bids as $bid) {
-                $user = User::findOrFail($bid->user_id);
+                $user = User::withTrashed()->findOrFail($bid->user_id);
                 array_push($selected_bided_supplier_ids, $user->supplier_id);
             }
 
