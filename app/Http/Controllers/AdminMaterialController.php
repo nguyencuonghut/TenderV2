@@ -189,15 +189,20 @@ class AdminMaterialController extends Controller
 
     public function import(Request $request)
     {
-        $import = new MaterialsImport;
-        Excel::import($import, $request->file('file')->store('files'));
-        $rows = $import->getRowCount();
-        $duplicates = $import->getDuplicateCount();
-        if($duplicates){
-            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công! Có ' . $duplicates . ' dòng bị trùng lặp!', 'success', 'top-right');
-        }else{
-            Alert::toast('Import '. $rows . ' dòng dữ liệu thành công!', 'success', 'top-right');
+        try{
+            $import = new MaterialsImport;
+            Excel::import($import, $request->file('file')->store('files'));
+            $rows = $import->getRowCount();
+            $duplicates = $import->getDuplicateCount();
+            if($duplicates){
+                Alert::toast('Import '. $rows . ' dòng dữ liệu thành công! Có ' . $duplicates . ' dòng bị trùng lặp!', 'success', 'top-right');
+            }else{
+                Alert::toast('Import '. $rows . ' dòng dữ liệu thành công!', 'success', 'top-right');
+            }
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::toast('Có lỗi xảy ra trong quá trình import dữ liệu. Vui lòng kiểm tra lại file!', 'error', 'top-right');
+            return redirect()->back();
         }
-        return redirect()->back();
     }
 }
