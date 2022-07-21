@@ -53,7 +53,7 @@
                     <th>Bắt đầu</th>
                     <th>Kết thúc</th>
                     <th>Trạng thái</th>
-                    <th style="width: 20%;">Thao tác</th>
+                    <th style="width: 18%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
