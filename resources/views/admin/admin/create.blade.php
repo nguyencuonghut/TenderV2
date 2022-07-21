@@ -56,6 +56,7 @@
                                         <label class="required-field" class="control-label">Vai trò</label>
                                         <div class="controls">
                                             <select name="role_id" id="role_id" class="form-control select2">
+                                                <option selected="selected" disabled>Chọn vai trò</option>
                                                 @foreach($roles as $role)
                                                     <option value="{{$role->id}}">{{$role->name}}</option>
                                                 @endforeach

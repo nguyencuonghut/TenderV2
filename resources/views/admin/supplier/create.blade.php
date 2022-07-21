@@ -58,7 +58,7 @@
                                     <div class="control-group">
                                         <label class="required-field" class="control-label">Hàng hóa</label>
                                         <div class="controls">
-                                            <select name="material_id[]" id="material_id[]" data-placeholder="Chọn hàng hóa" class="form-control select2" multiple="multiple">
+                                            <select name="material_id[]" id="material_id[]" data-placeholder="Chọn hàng hóa" class="form-control select2" multiple="multiple" style="width: 100%;">
                                                 @foreach($materials as $item)
                                                     <option value="{{$item->id}}">{{$item->code}} - {{$item->name}}</option>
                                                 @endforeach

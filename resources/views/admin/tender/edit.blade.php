@@ -56,7 +56,7 @@
                                         <label class="required-field" class="control-label">Tên hàng</label>
                                         <div class="controls">
                                             <select name="material_id" id="material_id" class="form-control select2">
-                                                <option selected="selected">-- Chọn tên hàng --</option>
+                                                <option selected="selected" disabled>Chọn tên hàng</option>
                                                 @foreach($materials as $key => $value)
                                                     <option value="{{$key}}" {{ $key == $tender->material_id ? 'selected' : '' }}>{{$value}}</option>
                                                 @endforeach
@@ -222,7 +222,7 @@
             success: function(data) {
                 console.log(data);
                 var supplierList = data;
-                var str = '<option value="0">-- Chọn nhà thầu -- </option>';
+                var str = '<option value="0">Chọn nhà thầu</option>';
                 $.each(supplierList, function(index, value) {
                     str = str + "<option value='" + value.id + "'>" + value.name + "</option>";
                 });

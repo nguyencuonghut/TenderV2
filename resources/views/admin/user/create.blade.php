@@ -61,7 +61,7 @@
                                         <label class="required-field" class="control-label">Công ty</label>
                                         <div class="controls">
                                             <select name="supplier_id" id="supplier_id" class="form-control select2">
-                                                <option selected="selected">-- Chọn công ty --</option>
+                                                <option selected="selected" disabled>Chọn công ty</option>
                                                 @foreach($suppliers as $key => $value)
                                                     <option value="{{$key}}">{{$value}}</option>
                                                 @endforeach
