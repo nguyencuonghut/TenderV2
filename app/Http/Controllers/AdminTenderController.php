@@ -276,6 +276,11 @@ class AdminTenderController extends Controller
         if(Auth::user()->can('destroy-tender')){
             $tender = Tender::findOrFail($id);
             if('Open' == $tender->status) {
+                //Destroy all TenderSuppliersSelectedStatus
+                $tender_suppliers_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $id)->get();
+                foreach($tender_suppliers_selected_statuses as $item){
+                    $item->destroy($item->id);
+                }
                 $tender->destroy($id);
                 Alert::toast('Xóa tender thành công!', 'success', 'top-right');
             } else {
