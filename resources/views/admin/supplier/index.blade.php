@@ -51,12 +51,12 @@
                 <table id="suppliers-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>STT</th>
-                    <th>Mã</th>
-                    <th>Tên nhà cung cấp</th>
+                    <th style="width:3%;">STT</th>
+                    <th style="width:10%;">Mã</th>
+                    <th style="width:20%;">Tên nhà cung cấp</th>
                     <th style="width:20%;">Liên hệ</th>
-                    <th style="width:13%;">Hàng hóa</th>
-                    <th style="width:15%;">Thao tác</th>
+                    <th>Hàng hóa</th>
+                    <th style="width:12%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>

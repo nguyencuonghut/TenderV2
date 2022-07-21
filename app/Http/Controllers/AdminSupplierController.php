@@ -201,10 +201,10 @@ class AdminSupplierController extends Controller
         return Datatables::of($suppliers)
             ->addIndexColumn()
             ->editColumn('code', function ($suppliers) {
-                return $suppliers->code;
+                return '<a href="'.route('admin.suppliers.show', $suppliers->id).'">'.$suppliers->code.'</a>';
             })
             ->editColumn('name', function ($suppliers) {
-                return $suppliers->name;
+                return '<a href="'.route('admin.suppliers.show', $suppliers->id).'">'.$suppliers->name.'</a>';
             })
             ->addColumn('users', function ($suppliers) {
                 $i = 0;
@@ -233,29 +233,15 @@ class AdminSupplierController extends Controller
                 return $material_list;
             })
             ->addColumn('actions', function($suppliers) {
-                /*
-                $btn = '<a href="' . route("admin.suppliers.show", $suppliers->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>';
-                if (Auth::user()->can('edit-supplier')) {
-                    $btn = $btn . '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
-                }
-                if (Auth::user()->can('destroy-supplier')) {
-                    $btn = $btn . '<form action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-minus-circle"></i></button>
-                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
-                }
-                return $btn;
-                */
-                $action = '<a href="' . route("admin.suppliers.show", $suppliers->id) . '" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
-                           <a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                $action = '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                            <form style="display:inline" action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
-                    <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                           <input type="hidden" name="_method" value="DELETE">
+                           <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                           <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 return $action;
 
             })
-            ->rawColumns(['actions'])
+            ->rawColumns(['code','name', 'actions'])
             ->make(true);
     }
 

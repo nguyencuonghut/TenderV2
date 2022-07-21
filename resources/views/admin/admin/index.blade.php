@@ -48,7 +48,7 @@
                     <th>STT</th>
                     <th>Họ tên</th>
                     <th>Email</th>
-                    <th style="width: 11%;">Thao tác</th>
+                    <th style="width: 12%;">Thao tác</th>
                   </tr>
                   </thead>
                 </table>
