@@ -116,7 +116,7 @@ class UserBidController extends Controller
             Alert::toast('Tạo mới thành công!', 'success', 'top-right');
             return redirect()->route('user.bids.index', $tender_id);
         } else {
-            Alert::toast('Tender đã hết hạn!', 'error', 'top-right');
+            Alert::toast('Không thể tạo mới chào giá vì Tender đã hết hạn!', 'error', 'top-right');
             return redirect()->route('user.tenders.index');
         }
     }

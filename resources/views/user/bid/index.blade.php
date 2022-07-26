@@ -34,9 +34,11 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <div class="pull-right">
+                    @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_bid">
                         <i class="fas fa-plus"></i> Thêm
                     </button>
+                    @endif
                 </div>
                 <br>
                 <table id="bids-table" class="table table-bordered table-striped">
@@ -59,7 +61,7 @@
                   @foreach ($bids as $bid)
                   <tr>
                     <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
-                    <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->delivery_time}}</td>
+                    <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} ({{$bid->delivery_time}})</td>
                     @if('đồng/kg' == $bid->price_unit
                         || 'đồng/chiếc' == $bid->price_unit)
                     <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>

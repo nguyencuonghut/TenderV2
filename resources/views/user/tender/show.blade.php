@@ -211,7 +211,7 @@
                                     @foreach ($bids as $bid)
                                     <tr>
                                       <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
-                                      <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->delivery_time}}</td>
+                                      <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} ({{$bid->delivery_time}})</td>
                                       @if('đồng/kg' == $bid->price_unit
                                         || 'đồng/chiếc' == $bid->price_unit)
                                       <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
