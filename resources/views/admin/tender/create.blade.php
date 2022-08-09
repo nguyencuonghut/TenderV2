@@ -170,7 +170,7 @@
             startDate: moment().startOf('hour').add(30, 'minutes'),
             endDate: moment().startOf('hour').add(60, 'minutes'),
             locale: {
-                format: 'M/DD hh:mm A'
+                format: 'MM/DD hh:mm A'
             }
         })
 

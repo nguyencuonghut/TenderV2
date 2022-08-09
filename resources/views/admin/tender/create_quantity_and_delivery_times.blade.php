@@ -75,7 +75,7 @@
 
         ++i;
 
-        $("#dynamicTable").append('<tr><input type="hidden" name="addmore['+i+'][tender_id]" value="{{$tender->id}}"><td><input type="text" name="addmore['+i+'][quantity]" placeholder="Số lượng" class="form-control" /></td><td><select name="addmore['+i+'][quantity_unit]" class="form-control"><option value="tấn">tấn</option><option value="kg">kg</option><option value="chiếc">chiếc</option></select></td><td><input type="text" name="addmore['+i+'][delivery_time]" placeholder="Thời gian giao hàng" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>');
+        $("#dynamicTable").append('<tr><input type="hidden" name="addmore['+i+'][tender_id]" value="{{$tender->id}}"><td><input type="text" name="addmore['+i+'][quantity]" placeholder="Số lượng" class="form-control" /></td><td><select name="addmore['+i+'][quantity_unit]" class="form-control"><option value="tấn">tấn</option><option value="kg">kg</option><option value="chiếc">chiếc</option></select></td><td><input type="text" name="addmore['+i+'][delivery_time]" placeholder="Thời gian giao hàng" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Xóa</button></td></tr>');
     });
 
     $(document).on('click', '.remove-tr', function(){

@@ -28,6 +28,7 @@ class Tender extends Model
         'approver_id',
         'tender_in_progress_time',
         'tender_closed_time',
+        'is_competitive_bids',
     ];
 
     public function creator()

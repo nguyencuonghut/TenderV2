@@ -28,7 +28,12 @@ class UserTenderController extends Controller
             $existed_qty_ids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->pluck('quantity_id')->toArray();
             $price_unit_arr = Bid::where('tender_id', $tender->id)->pluck('price_unit')->toArray();
             $unique = array_count_values($price_unit_arr);
-            $is_rating = sizeof($unique) > 1 ? false : true;
+            if($tender->is_competitive_bids
+                && 1 == sizeof($unique)){
+                $is_rating = true;
+            }else{
+                $is_rating = false;
+            }
 
             return view('user.tender.show', ['tender' => $tender,
                                              'bids' => $bids,

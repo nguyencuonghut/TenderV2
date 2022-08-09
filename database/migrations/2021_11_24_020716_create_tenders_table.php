@@ -35,6 +35,7 @@ class CreateTendersTable extends Migration
             $table->foreign('approver_id')->references('id')->on('admins')->onDelete('cascade');
             $table->dateTime('tender_in_progress_time')->nullable();
             $table->dateTime('tender_closed_time')->nullable();
+            $table->boolean('is_competitive_bids')->default(false);
             $table->timestamps();
         });
     }

@@ -107,7 +107,8 @@
                                             <strong>Số lượng và thời gian giao hàng</strong><br>
                                             @foreach ($quantity_and_delivery_times as $item)
                                                 - {{$item->quantity}} {{$item->quantity_unit}} ({{$item->delivery_time}})<br>
-                                            @endforeach                                          </address>
+                                            @endforeach
+                                          </address>
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">

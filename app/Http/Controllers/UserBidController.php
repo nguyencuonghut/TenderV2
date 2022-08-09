@@ -26,7 +26,12 @@ class UserBidController extends Controller
         $existed_qty_ids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->pluck('quantity_id')->toArray();
         $price_unit_arr = Bid::where('tender_id', $tender->id)->pluck('price_unit')->toArray();
         $unique = array_count_values($price_unit_arr);
-        $is_rating = sizeof($unique) > 1 ? false : true;
+        if($tender->is_competitive_bids
+        && 1 == sizeof($unique)){
+            $is_rating = true;
+        }else{
+            $is_rating = false;
+        }
         if(in_array(Auth::user()->id, $users)) {
             $bids = Bid::where('tender_id', $tender_id)->where('user_id', Auth::user()->id)->get();
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
@@ -107,10 +112,12 @@ class UserBidController extends Controller
             $bid->save();
 
             //Send notification to email
-            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
-            $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
-            foreach($users as $user)  {
-                Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
+            if($tender->is_competitive_bids){
+                $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+                $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
+                foreach($users as $user)  {
+                    Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
+                }
             }
 
             Alert::toast('Tạo mới thành công!', 'success', 'top-right');
@@ -219,10 +226,12 @@ class UserBidController extends Controller
             $bid->save();
 
             //Send notification to email
-            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
-            $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
-            foreach($users as $user)  {
-                Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
+            if($tender->is_competitive_bids){
+                $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+                $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
+                foreach($users as $user)  {
+                    Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
+                }
             }
 
             Alert::toast('Cập nhật thông tin thành công!', 'success', 'top-right');

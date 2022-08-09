@@ -389,6 +389,9 @@ class AdminTenderController extends Controller
             }
             $tender->status = $request->status;
             $tender->approver_id = Auth::user()->id;
+            if(null != $request->is_competitive_bids){
+                $tender->is_competitive_bids = true;
+            }
 
             //Send notification email to suppliers
             if('In-progress' == $request->status) {
