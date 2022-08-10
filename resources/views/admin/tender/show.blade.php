@@ -396,7 +396,7 @@
                                                           }
                                                         }
                                                     @endphp
-                                                    <td style="color:red;">{!! $result !!}</td>
+                                                    <td>{!! $result !!}</td>
                                                     @endforeach
                                                 </tr>
                                                 @endif
@@ -416,15 +416,56 @@
                                                     <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $propose !!}</td>
                                                 </tr>
                                                 @endif
+                                                @if($tender->approve_result)
+                                                <tr>
+                                                    <td colspan="5"><b>Phê duyệt</b></td>
+                                                    @php
+                                                        $approve_result = '';
+                                                        if('Đồng ý' == $tender->approve_result){
+                                                            $approve_result = $approve_result . '<span class="badge bg-success">' . $tender->approve_result . '</span>';
+                                                        }elseif('Từ chối' == $tender->approve_result){
+                                                            $approve_result = $approve_result . '<span class="badge bg-danger">' . $tender->approve_result . '</span>' . '<br>';
+                                                            $approve_result = $approve_result . 'Bình luận:' . '<br>';
 
+                                                            $comment = App\Models\TenderApproveComment::where('tender_id', $tender->id)->latest()->first();
+                                                            $approve_result = $approve_result . $comment->comment;
+                                                        }
+                                                    @endphp
+                                                    <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $approve_result !!}</td>
+                                                </tr>
+                                                @endif
                                               </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            @if(Auth::user()->can('create-result')
+                            && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                            && $tender->status == 'In-progress')
+                            <br>
+                            <form class="form-horizontal" method="post" action="{{ route('admin.tenders.requestApprove', $tender->id) }}" name="request_approve" id="request_approve" novalidate="novalidate">
+                                @method('PATCH')
+                                {{ csrf_field() }}
+                                <input type="hidden" name="tender_id" value="{{$tender->id}}">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <input type="submit" value="Yêu cầu duyệt" class="btn btn-success">
+                                    </div>
+                                </div>
+                            </form>
                             @endif
 
-                        </div>
+                            @if(Auth::user()->can('approve-result')
+                            && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                            && $tender->status == 'In-progress')
+                            <br>
+                            <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
+                                <button role="button" type="button" class="btn btn-success"><i class="fas fa-check"></i> Duyệt kết quả</button>
+                            </a>
+                            @endif
+
+                            @endif
                         </div>
                       </div>
                       <!-- /.card -->

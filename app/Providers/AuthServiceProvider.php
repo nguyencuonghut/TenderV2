@@ -42,6 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         'create-result' => ['Admin', 'Nhân viên Mua Hàng'],
         'store-result' => ['Admin', 'Nhân viên Mua Hàng'],
         'destroy-result' => ['Admin', 'Nhân viên Mua Hàng'],
+        'approve-result' => ['Admin', 'Quản lý'],
         'create-propose' => ['Admin', 'Nhân viên Mua Hàng'],
         'destroy-propose' => ['Admin', 'Nhân viên Mua Hàng'],
     ];

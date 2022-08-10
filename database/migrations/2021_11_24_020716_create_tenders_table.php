@@ -36,6 +36,7 @@ class CreateTendersTable extends Migration
             $table->dateTime('tender_in_progress_time')->nullable();
             $table->dateTime('tender_closed_time')->nullable();
             $table->boolean('is_competitive_bids')->default(false);
+            $table->enum('approve_result', ['Đồng ý', 'Từ chối'])->nullable();
             $table->timestamps();
         });
     }

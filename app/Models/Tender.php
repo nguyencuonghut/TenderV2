@@ -29,6 +29,7 @@ class Tender extends Model
         'tender_in_progress_time',
         'tender_closed_time',
         'is_competitive_bids',
+        'approve_result',
     ];
 
     public function creator()
@@ -59,5 +60,10 @@ class Tender extends Model
     public function quantity_and_delivery_times()
     {
         return $this->hasMany(QuantityAndDeliveryTime::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(TenderApproveComment::class);
     }
 }

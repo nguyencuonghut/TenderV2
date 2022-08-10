@@ -10,12 +10,15 @@ use App\Models\QuantityAndDeliveryTime;
 use App\Models\Supplier;
 use Datatables;
 use App\Models\Tender;
+use App\Models\TenderApproveComment;
 use App\Models\TenderPropose;
 use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
 use App\Notifications\ReminderTenderInProgress;
+use App\Notifications\TenderApproved;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
+use App\Notifications\TenderRequestApprove;
 use App\Notifications\TenderResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -670,7 +673,68 @@ class AdminTenderController extends Controller
             return redirect()->back();
         }else {
             Alert::toast('Bạn không có quyền xóa đề xuất này!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
 
+    public function requestApprove(Request $request, $id)
+    {
+        $tender = Tender::findOrFail($id);
+        //Send email notification
+        $admin_managers = Admin::where('role_id', 2)->get();
+        foreach($admin_managers as $manager){
+            Notification::route('mail' , $manager->email)->notify(new TenderRequestApprove($tender->id));
+        }
+        Alert::toast('Gửi yêu cầu duyệt kết quả Tender thành công!', 'success', 'top-right');
+        return redirect()->back();
+    }
+
+    public function getApproveResult($id)
+    {
+        if(Auth::user()->can('approve-result')){
+            $tender = Tender::findOrFail($id);
+            return view('admin.tender.approve', ['tender' => $tender]);
+        }else{
+            Alert::toast('Bạn không có quyền phê duyệt tender này!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
+
+    public function approveResult(Request $request, $id)
+    {
+        $tender = Tender::findOrFail($id);
+
+        if(Auth::user()->can('approve-result')){
+            $rules = [
+                'approve_result' => 'required',
+            ];
+            $messages = [
+                'approve_result.required' => 'Bạn phải chọn Đồn ý hoặc Từ chối',
+            ];
+            $request->validate($rules,$messages);
+
+            //Update tender approve result
+            $tender = Tender::findOrFail($id);
+            $tender->approve_result = $request->approve_result;
+            $tender->save();
+
+            //Create new comment
+            $comment = new TenderApproveComment();
+            $comment->tender_id = $id;
+            $comment->comment = $request->approve_comments;
+            $comment->save();
+
+            //Send email notification
+            $admins = Admin::where('role_id', 3)->orWhere('role_id', 4)->get();
+            foreach($admins as $admin){
+                Notification::route('mail' , $admin->email)->notify(new TenderApproved($tender->id));
+            }
+
+            Alert::toast('Duyệt kết quả thầu thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }else{
+            Alert::toast('Bạn không có quyền duyệt kết quả thầu!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
         }
     }
 }
