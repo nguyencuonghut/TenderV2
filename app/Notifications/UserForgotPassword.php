@@ -45,7 +45,7 @@ class UserForgotPassword extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = 'tender.honghafeed.com.vn/reset-password' . $this->token;
+        $url = 'tender.honghafeed.com.vn/reset-password/' . $this->token;
         return (new MailMessage)
                     ->subject('Cấp lại mật khẩu Tender - Honghafeed')
                     ->line('Bạn vừa yêu cầu cấp lại mật khẩu cho ' . $this->user_email . '. Bạn hãy ấn nút dưới đây.')
