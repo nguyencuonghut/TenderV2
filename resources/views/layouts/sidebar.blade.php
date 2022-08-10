@@ -47,6 +47,15 @@
               </p>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a href="{{route('admin.logout')}}" class="nav-link">
+              <i class="nav-icon fas fa-power-off"></i>
+              <p>
+                Đăng xuất
+              </p>
+            </a>
+          </li>
           @else
           <li class="nav-item">
             <a href="{{route('user.home')}}" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
@@ -71,6 +80,15 @@
               <i class="nav-icon fas fa-id-card"></i>
               <p>
                 Hồ sơ của tôi
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{route('user.logout')}}" class="nav-link">
+              <i class="nav-icon fas fa-power-off"></i>
+              <p>
+                Đăng xuất
               </p>
             </a>
           </li>

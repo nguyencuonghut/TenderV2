@@ -13,16 +13,5 @@
         @endauth
       </li>
     </ul>
-
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item d-none d-sm-inline-block">
-          @auth('admin')
-          <a href="{{route('admin.logout')}}" class="nav-link">Đăng xuất</a>
-          @else
-          <a href="{{route('user.logout')}}" class="nav-link">Đăng xuất</a>
-          @endauth
-        </li>
-      </ul>
   </nav>
   <!-- /.navbar -->
