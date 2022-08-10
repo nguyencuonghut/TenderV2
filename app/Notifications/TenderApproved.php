@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TenderApproved extends Notification
+class TenderApproved extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $tender_id;

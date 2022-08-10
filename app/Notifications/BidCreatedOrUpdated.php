@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BidCreatedOrUpdated extends Notification
+class BidCreatedOrUpdated extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $tender_id;
