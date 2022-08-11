@@ -442,7 +442,8 @@
 
                             @if(Auth::user()->can('create-result')
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'In-progress')
+                            && $tender->status == 'In-progress'
+                            && 0 != $selected_bids->count())
                             <br>
                             <form class="form-horizontal" method="post" action="{{ route('admin.tenders.requestApprove', $tender->id) }}" name="request_approve" id="request_approve" novalidate="novalidate">
                                 @method('PATCH')
