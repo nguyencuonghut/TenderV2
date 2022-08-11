@@ -43,7 +43,7 @@ class TenderApproved extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = '172.16.2.60/admin/tenders/' . $this->tender_id;
+        $url = '/admin/tenders/' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
         if('Đồng ý' == $tender->approve_result){
             $subject = 'Kết quả tender ' . '('. $tender->title . ' )' . ' đã được Đồng Ý.';
@@ -58,13 +58,13 @@ class TenderApproved extends Notification implements ShouldQueue
                         ->line('Ban lãnh đạo đã phê duyệt xong kết quả cho tender: ' . $tender->title)
                         ->line('Bình luận:')
                         ->line($comment->comment)
-                        ->action('Xem kết quả', $url)
+                        ->action('Xem kết quả', url($url))
                         ->line('Xin cảm ơn!');
         }else{
             return (new MailMessage)
             ->subject($subject)
             ->line('Ban lãnh đạo đã phê duyệt xong kết quả cho tender: ' . $tender->title)
-            ->action('Xem kết quả', $url)
+            ->action('Xem kết quả', url($url))
             ->line('Xin cảm ơn!');
         }
     }

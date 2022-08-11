@@ -71,7 +71,7 @@ class UserLoginController extends Controller
             'email' => $request->email,
             'token' => $token,
             'created_at' => Carbon::now()
-          ]);
+        ]);
 
         Notification::route('mail' , $request->email)->notify(new UserForgotPassword($request->email, $token));
 

@@ -44,13 +44,13 @@ class UserCreated extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = 'tender.honghafeed.com.vn';
+        $url = '/';
         $user = User::findOrFail($this->user_id);
         return (new MailMessage)
                     ->subject('Kích hoạt tài khoản phần mềm Tender Honghafeed ' . $user->name)
                     ->line('Xin mời kích hoạt tài khoản: ' . $user->name .  ' (' . $user->email . ')')
                     ->line('Mật khẩu: ' . $this->password)
-                    ->action('Đăng nhập tài khoản của bạn', $url)
+                    ->action('Đăng nhập tài khoản của bạn', url($url))
                     ->line('Xin cảm ơn!');
     }
 

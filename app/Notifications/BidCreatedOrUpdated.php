@@ -42,13 +42,13 @@ class BidCreatedOrUpdated extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = 'tender.honghafeed.com.vn/bids/' . $this->tender_id . '/index';
+        $url = '/bids/' . $this->tender_id . '/index';
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
                     ->subject('Có một nhà thầu gửi hoặc sửa chào giá cho tender: ' . $tender->title)
                     ->line('Một nhà thầu vừa gửi hoặc sửa chào giá cho tender: ' . $tender->title)
                     ->line('Bạn hãy vào xem để biết được xếp hạng chào giá của mình và điều chỉnh chào giá nếu cần!')
-                    ->action('Mở tender', $url)
+                    ->action('Mở tender', url($url))
                     ->line('Xin cảm ơn!');
     }
 

@@ -42,12 +42,12 @@ class TenderRequestApprove extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = '172.16.2.60/admin/tenders/' . $this->tender_id;
+        $url = '/admin/tenders/' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
                     ->subject('Yêu cầu duyệt kết quả tender: ' . $tender->title)
                     ->line('Phòng Thu Mua đã đề xuất kết quả thầu. Xin mời anh/chị vào duyệt kết quả cuối cùng cho tender: ' . $tender->title)
-                    ->action('Duyệt kết quả', $url)
+                    ->action('Duyệt kết quả', url($url))
                     ->line('Xin cảm ơn!');
     }
 

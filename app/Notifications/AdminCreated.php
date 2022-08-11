@@ -44,13 +44,13 @@ class AdminCreated extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = '172.16.2.60/admin';
+        $url = '/admin/';
         $admin = Admin::findOrFail($this->admin_id);
         return (new MailMessage)
                     ->subject('Kích hoạt tài khoản Admin phần mềm Tender Honghafeed ' . $admin->name)
                     ->line('Xin mời kích hoạt tài khoản: ' . $admin->name .  ' (' . $admin->email . ')')
                     ->line('Mật khẩu: ' . $this->password)
-                    ->action('Đăng nhập tài khoản của bạn', $url)
+                    ->action('Đăng nhập tài khoản của bạn', url($url))
                     ->line('Xin cảm ơn!');
     }
 
