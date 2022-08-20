@@ -276,7 +276,8 @@
                                   <div class="card-footer clearfix">
                                     @if(Auth::user()->can('create-propose')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'In-progress')
+                                    && $tender->status == 'In-progress'
+                                    && $bids->count())
                                       <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
                                         <i class="fas fa-clipboard-check"></i> Đề xuất
                                       </button>
@@ -284,7 +285,8 @@
 
                                     @if(Auth::user()->can('create-result')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'In-progress')
+                                    && $tender->status == 'In-progress'
+                                    && $bids->count())
                                     <a href="{{route('admin.tenders.createResult', $tender->id)}}">
                                         <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
                                     </a>
