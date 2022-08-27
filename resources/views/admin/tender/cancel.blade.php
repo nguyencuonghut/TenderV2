@@ -47,6 +47,7 @@
                                     <label class="required-field" class="control-label">Lý do hủy</label>
                                     <div class="controls">
                                         <textarea id="cancel_reason" name="cancel_reason">
+                                            {{$tender->cancel_reason}}
                                         </textarea>
                                     </div>
                                 </div>

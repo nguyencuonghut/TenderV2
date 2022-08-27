@@ -200,7 +200,7 @@ class AdminTenderController extends Controller
                                                   'materials' => $materials
                                                  ]);
             }else{
-                Alert::toast('Tender đang diễn ra hoặc đã đóng, không thể sửa!', 'error', 'top-right');
+                Alert::toast('Tender không ở trạng thái Mở nên không thể sửa!', 'error', 'top-right');
                 return redirect()->route('admin.tenders.index');
             }
         }else{
@@ -288,7 +288,7 @@ class AdminTenderController extends Controller
                 $tender->destroy($id);
                 Alert::toast('Xóa tender thành công!', 'success', 'top-right');
             } else {
-                Alert::toast('Tender đang diễn ra. Không thể xóa!', 'error', 'top-right');
+                Alert::toast('Tender không ở trạng thái Mở nên không thể xóa!', 'error', 'top-right');
             }
             return redirect()->route('admin.tenders.index');
         }else {
@@ -405,6 +405,11 @@ class AdminTenderController extends Controller
                 Alert::toast('Trạng thái không có gì thay đổi. Bạn vui lòng kiểm tra lại!', 'warning', 'top-right');
                 return redirect()->back();
             }
+            //Check status is Hủy
+            if('Hủy' == $tender->status) {
+                Alert::toast('Tender đang ở trạng thái Hủy. Bạn không thể chuyển trạng thái!', 'warning', 'top-right');
+                return redirect()->back();
+            }
             $tender->status = $request->status;
             $tender->approver_id = Auth::user()->id;
             if(null != $request->is_competitive_bids){
@@ -456,7 +461,7 @@ class AdminTenderController extends Controller
                     return redirect()->route('admin.tenders.index');
                 }
             }else{
-                Alert::toast('Không cho phép chuyển về trạng thái mở!', 'error', 'top-right');
+                Alert::toast('Không cho phép chuyển về trạng thái Mở!', 'error', 'top-right');
                 return redirect()->route('admin.tenders.index');
             }
         } else {
@@ -757,6 +762,10 @@ class AdminTenderController extends Controller
     {
         if(Auth::user()->can('cancel-tender')){
             $tender = Tender::findOrFail($id);
+            if('Hủy' == $tender->status){
+                Alert::toast('Tender đã ở trạng thái Hủy!', 'error', 'top-right');
+                return redirect()->back();
+            }
             return view('admin.tender.cancel', ['tender' => $tender]);
         }else{
             Alert::toast('Bạn không có quyền hủy tender này!', 'error', 'top-right');
