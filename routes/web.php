@@ -75,6 +75,8 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::patch('tenders/requestApprove/{id}', [AdminTenderController::class, 'requestApprove'])->name('tenders.requestApprove');
         Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'getApproveResult'])->name('tenders.getApproveResult');
         Route::post('tenders/approveResult/{id}', [AdminTenderController::class, 'approveResult'])->name('tenders.approveResult');
+        Route::get('tenders/cancel/{id}', [AdminTenderController::class, 'getCancelTender'])->name('tenders.getCancelTender');
+        Route::post('tenders/cancel/{id}', [AdminTenderController::class, 'postCancelTender'])->name('tenders.postCancelTender');
     });
 });
 

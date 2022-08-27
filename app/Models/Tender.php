@@ -30,6 +30,7 @@ class Tender extends Model
         'tender_closed_time',
         'is_competitive_bids',
         'approve_result',
+        'cancel_reason',
     ];
 
     public function creator()

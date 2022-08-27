@@ -19,7 +19,7 @@ class UserTenderController extends Controller
         $tender = Tender::findOrFail($id);
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
-        if('Open' !=  $tender->status
+        if('Mở' !=  $tender->status
             && in_array(Auth::user()->id, $users)) {
 
             $bids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->get();
@@ -78,12 +78,14 @@ class UserTenderController extends Controller
                 return date('d/m/Y H:i', strtotime($user_tenders->tender_end_time));
             })
             ->editColumn('status', function ($user_tenders) {
-                if($user_tenders->status == 'Open') {
-                    return '<span class="badge badge-primary">Open</span>';
-                } else if($user_tenders->status == 'Closed'){
-                    return '<span class="badge badge-success">Closed</span>';
+                if($user_tenders->status == 'Mở') {
+                    return '<span class="badge badge-primary">Mở</span>';
+                } else if($user_tenders->status == 'Đóng'){
+                    return '<span class="badge badge-success">Đóng</span>';
+                } else if($user_tenders->status == 'Hủy'){
+                    return '<span class="badge badge-secondary">Đóng</span>';
                 } else {
-                    return '<span class="badge badge-warning">In-progress</span>';
+                    return '<span class="badge badge-warning">Đang diễn ra</span>';
                 }
             })
             ->rawColumns(['title', 'status'])

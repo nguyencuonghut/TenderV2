@@ -14,7 +14,7 @@ class UserHomeController extends Controller
 {
     public function index()
     {
-        $tenders =  Tender::where('status', '<>', 'Open')->get();
+        $tenders =  Tender::where('status', '<>', 'Mở')->get();
         $my_all_tenders = $tenders->filter(function($item, $key) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             $my_supplier_id = Auth::user()->supplier_id;
@@ -23,7 +23,7 @@ class UserHomeController extends Controller
             }
         });
 
-        $closed_tenders =  Tender::where('status', 'Closed')->get();
+        $closed_tenders =  Tender::where('status', 'Đóng')->get();
         $my_completed_tenders = $closed_tenders->filter(function($item, $key) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             $my_supplier_id = Auth::user()->supplier_id;
@@ -32,7 +32,7 @@ class UserHomeController extends Controller
             }
         });
 
-        $in_progress_tenders =  Tender::where('status', 'In-progress')->get();
+        $in_progress_tenders =  Tender::where('status', 'Đang diễn ra')->get();
         $my_in_progress_tenders = $in_progress_tenders->filter(function($item, $key) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             $my_supplier_id = Auth::user()->supplier_id;
@@ -54,7 +54,7 @@ class UserHomeController extends Controller
     public function profile()
     {
         $my_tenders = collect();
-        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
+        $tenders = Tender::with('material')->where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = [];
             $selected_supplier_ids = explode(",", $tender->supplier_ids);

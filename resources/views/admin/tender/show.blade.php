@@ -37,7 +37,7 @@
                             <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chào hàng</a>
                           </li>
                           @if ($selected_bids->count()
-                                && $tender->status == 'Closed')
+                                && $tender->status == 'Đóng')
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab-1" data-toggle="pill" href="#custom-tabs-one-profile-1" role="tab" aria-controls="custom-tabs-one-profile-1" aria-selected="false">Kết quả</a>
                           </li>
@@ -276,7 +276,7 @@
                                   <div class="card-footer clearfix">
                                     @if(Auth::user()->can('create-propose')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'In-progress'
+                                    && $tender->status == 'Đang diễn ra'
                                     && $bids->count())
                                       <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
                                         <i class="fas fa-clipboard-check"></i> Đề xuất
@@ -285,7 +285,7 @@
 
                                     @if(Auth::user()->can('create-result')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'In-progress'
+                                    && $tender->status == 'Đang diễn ra'
                                     && $bids->count())
                                     <a href="{{route('admin.tenders.createResult', $tender->id)}}">
                                         <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
@@ -444,7 +444,7 @@
 
                             @if(Auth::user()->can('create-result')
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'In-progress'
+                            && $tender->status == 'Đang diễn ra'
                             && 0 != $selected_bids->count())
                             <br>
                             <form class="form-horizontal" method="post" action="{{ route('admin.tenders.requestApprove', $tender->id) }}" name="request_approve" id="request_approve" novalidate="novalidate">
@@ -461,7 +461,7 @@
 
                             @if(Auth::user()->can('approve-result')
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'In-progress')
+                            && $tender->status == 'Đang diễn ra')
                             <br>
                             <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
                                 <button role="button" type="button" class="btn btn-success"><i class="fas fa-check"></i> Duyệt kết quả</button>

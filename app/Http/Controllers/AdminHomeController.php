@@ -13,8 +13,8 @@ class AdminHomeController extends Controller
     public function index()
     {
         $all_tenders_count = Tender::count();
-        $completed_tenders_count = Tender::where('status', 'Closed')->count();
-        $in_progress_tenders_count= Tender::where('status', 'In-progress')->count();
+        $completed_tenders_count = Tender::where('status', 'Đóng')->count();
+        $in_progress_tenders_count= Tender::where('status', 'Đang diễn ra')->count();
         $suppliers_count = Supplier::count();
 
         return view('admin.home', ['all_tenders_count' => $all_tenders_count,

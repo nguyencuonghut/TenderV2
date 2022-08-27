@@ -52,7 +52,7 @@ class UserBidController extends Controller
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $bid->tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
 
-        if('Closed' != $bid->tender->status
+        if('Đóng' != $bid->tender->status
             && Carbon::now()->lessThan($bid->tender->tender_end_time)
             && in_array(Auth::user()->id, $users)) {
             $bid->destroy($id);
@@ -68,7 +68,7 @@ class UserBidController extends Controller
         $tender = Tender::findOrFail($tender_id);
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
-        if('Closed' != $tender->status
+        if('Đóng' != $tender->status
             && Carbon::now()->lessThan($tender->tender_end_time)
             && in_array(Auth::user()->id, $users)) {
             $rules = [
@@ -150,7 +150,7 @@ class UserBidController extends Controller
                 return $bids->origin;
             })
             ->editColumn('is_selected', function ($bids) {
-                if($bids->tender->status == 'Closed') {
+                if($bids->tender->status == 'Đóng') {
                     if($bids->is_selected == 1) {
                         return '<span class="badge badge-success">Trúng</span>';
 
@@ -171,7 +171,7 @@ class UserBidController extends Controller
         $tender = Tender::findOrFail($bid->tender_id);
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
-        if('Closed' != $tender->status
+        if('Đóng' != $tender->status
             && Carbon::now()->lessThan($tender->tender_end_time)
             && in_array(Auth::user()->id, $users)) {
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->orderBy('id', 'desc')->get();
@@ -192,7 +192,7 @@ class UserBidController extends Controller
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
 
-        if('Closed' != $tender->status
+        if('Đóng' != $tender->status
             && Carbon::now()->lessThan($tender->tender_end_time)
             && in_array(Auth::user()->id, $users)) {
             $rules = [

@@ -51,9 +51,9 @@
                                         <label class="required-field" class="control-label">Trạng thái</label>
                                         <div class="controls">
                                             <select name="status" id="status" class="form-control select2">
-                                                <option value="Open" @if("Open" == $tender->status) selected @endif>Open</option>
-                                                <option value="In-progress" @if("In-progress" == $tender->status) selected @endif>In-progress</option>
-                                                <option value="Closed" @if("Closed" == $tender->status) selected @endif>Closed</option>
+                                                <option value="Mở" @if("Mở" == $tender->status) selected @endif>Mở</option>
+                                                <option value="Đang diễn ra" @if("Đang diễn ra" == $tender->status) selected @endif>Đang diễn ra</option>
+                                                <option value="Đóng" @if("Đóng" == $tender->status) selected @endif>Đóng</option>
                                             </select>
                                         </div>
                                     </div>
@@ -95,7 +95,7 @@
                                 </div>
                             </div>
 
-                            @if('Open' == $tender->status)
+                            @if('Mở' == $tender->status)
                             <div class="row">
                                 <div class="col-12">
                                     <div class="control-group">

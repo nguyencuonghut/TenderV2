@@ -277,7 +277,7 @@ class AdminSupplierController extends Controller
                 return $bids->origin;
             })
             ->editColumn('is_selected', function ($bids) {
-                if($bids->tender->status == 'Closed') {
+                if($bids->tender->status == 'Đóng') {
                     if($bids->is_selected == 1) {
                         return '<span class="badge badge-success">Trúng</span>';
 

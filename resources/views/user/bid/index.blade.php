@@ -53,7 +53,7 @@
                     @if($is_rating)
                     <th>Xếp hạng</th>
                     @endif
-                    @if('Closed' != $tender->status
+                    @if('Đóng' != $tender->status
                         && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                     <th style="width: 10%;">Thao tác</th>
                     @endif
@@ -79,7 +79,7 @@
                     @if($is_rating)
                     <td>{{$my_key + 1}} | {{sizeof($all_current_bid_prices)}} bids</td>
                     @endif
-                    @if('Closed' != $tender->status
+                    @if('Đóng' != $tender->status
                         && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                     <td>
                         <a href="{{route('user.bids.edit', $bid->id)}}" class="btn btn-dark btn-sm"><i class="fas fa-pen"></i></a>

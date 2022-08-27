@@ -30,13 +30,14 @@ class CreateTendersTable extends Migration
             $table->dateTime('tender_end_time');
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('admins')->onDelete('cascade');
-            $table->enum('status', ['Open', 'Closed', 'In-progress']);
+            $table->enum('status', ['Mở', 'Đóng', 'Đang diễn ra', 'Hủy']);
             $table->bigInteger('approver_id')->unsigned()->nullable();
             $table->foreign('approver_id')->references('id')->on('admins')->onDelete('cascade');
             $table->dateTime('tender_in_progress_time')->nullable();
             $table->dateTime('tender_closed_time')->nullable();
             $table->boolean('is_competitive_bids')->default(false);
             $table->enum('approve_result', ['Đồng ý', 'Từ chối'])->nullable();
+            $table->text('cancel_reason')->nullable();
             $table->timestamps();
         });
     }
