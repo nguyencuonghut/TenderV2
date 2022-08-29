@@ -336,7 +336,7 @@ class AdminTenderController extends Controller
                     $action = $action . ' <a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen"></i></a>';
                 }
                 if(Auth::user()->can('cancel-tender')){
-                    $action = $action . '<a href="' . route("admin.tenders.getCancelTender", $tenders->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-ban"></i></a>';
+                    $action = $action . ' <a href="' . route("admin.tenders.getCancelTender", $tenders->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-ban"></i></a>';
                 }
                 if(Auth::user()->can('destroy-tender')){
                     $action = $action . '<form style="display:inline" action="'. route("admin.tenders.destroy", $tenders->id) . '" method="POST">
