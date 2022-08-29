@@ -56,7 +56,7 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::with('material')->where('status', '<>', 'Open')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
+        $tenders = Tender::with('material')->where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
