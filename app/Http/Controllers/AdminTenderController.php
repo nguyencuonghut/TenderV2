@@ -148,7 +148,7 @@ class AdminTenderController extends Controller
         }
 
         if(Carbon::now()->greaterThan($tender->tender_end_time)
-            || $tender->status != 'Đang điễn ra') {
+            || $tender->status != 'Đang diễn ra') {
             $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
             $selected_bided_supplier_ids = [];
