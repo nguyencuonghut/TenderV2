@@ -74,13 +74,18 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                   @foreach($recent_bids as $bid)
-                  <strong><i class="fas fa-clock mr-1"></i> {{date('d/m/Y H:i:s', strtotime($bid->created_at))}}</strong>
+                  <strong><i class="fas fa-clock mr-1"></i> {{date('d/m/Y H:i', strtotime($bid->created_at))}}</strong>
 
                   <p class="text-muted">
                     Đấu thầu {{$bid->tender->material->name}} : {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}
                   </p>
                   <p class="text-muted">
-                    Chào thầu: {{number_format($bid->price, 2, ',', ' ')}} ({{$bid->price_unit}})
+                    Chào thầu:
+                    @if('đồng/kg' == $bid->price_unit || 'đồng/chiếc' == $bid->price_unit)
+                    {{number_format($bid->price, 0, ',', ' ')}} ({{$bid->price_unit}})
+                    @else
+                    {{number_format($bid->price, 2, ',', ' ')}} ({{$bid->price_unit}})
+                    @endif
                   </p>
 
                   <hr>
