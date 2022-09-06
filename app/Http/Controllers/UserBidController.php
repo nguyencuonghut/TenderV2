@@ -135,7 +135,7 @@ class UserBidController extends Controller
         return Datatables::of($bids)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($bids) {
-                return '<a href="'.route('user.tenders.show', $bids->tender_id).'">' . '('. $bids->tender->code . ') ' .$bids->tender->title.'</a>';
+                return '<a href="'.route('user.tenders.show', $bids->tender_id).'">' .$bids->tender->title.'</a>';
             })
             ->editColumn('material_id', function ($bids) {
                 return $bids->tender->material->name;
