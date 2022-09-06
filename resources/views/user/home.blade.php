@@ -18,11 +18,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">User Dashboard</h1>
+            <h1 class="m-0">Dashboard</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item active">User Dashboard</li>
+              <li class="breadcrumb-item active">Dashboard</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -40,7 +40,7 @@
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th-list"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Tổng số tender</span>
+                    <span class="info-box-text">Tổng tender</span>
                     <span class="info-box-number">
                     {{$my_all_tenders->count()}}
                     </span>
@@ -55,7 +55,7 @@
                 <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Tender hoàn thành</span>
+                    <span class="info-box-text">Đã đóng</span>
                     <span class="info-box-number">{{$my_completed_tenders->count()}}</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -72,7 +72,7 @@
                 <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-spinner"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Tender đang diễn ra</span>
+                    <span class="info-box-text">Đang diễn ra</span>
                     <span class="info-box-number">{{$my_in_progress_tenders->count()}}</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -85,7 +85,7 @@
                 <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-dollar-sign"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Chào giá của tôi</span>
+                    <span class="info-box-text">Tôi chào giá</span>
                     <span class="info-box-number">{{$my_bids->count()}}</span>
                 </div>
                 <!-- /.info-box-content -->
