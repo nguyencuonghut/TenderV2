@@ -51,9 +51,14 @@
                   @foreach ($selected_bids as $bid)
                   <tr>
                     <td style="width:30%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                    <td>{{ $bid->quantity->quantity }} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
-                    <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
-                    <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                    <td>{{ number_format($bid->quantity->quantity, 0, '.', ' ') }} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
+                    <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} {{$bid->tender_quantity_unit}}</td>
+                    @if('đồng/kg' == $bid->price_unit
+                        || 'đồng/chiếc' == $bid->price_unit)
+                    <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
+                    @else
+                    <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
+                    @endif
                     <td>{{ $bid->delivery_time }}</td>
                     <td>
                         <form action="{{route('admin.tenders.destroyResult', $bid->id)}}" method="POST">

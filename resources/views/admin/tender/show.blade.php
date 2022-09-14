@@ -61,12 +61,12 @@
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                                          <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
+                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} {{$bid->tender_quantity_unit}}</td>
                                           @if('đồng/kg' == $bid->price_unit
                                               || 'đồng/chiếc' == $bid->price_unit)
-                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                                          <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
                                           @else
-                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                                          <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                                           @endif
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
