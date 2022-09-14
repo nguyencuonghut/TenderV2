@@ -151,6 +151,17 @@
                                         </div>
                                     </div>
                                     <!-- /.row -->
+                                    @if($tender->freight_charge)
+                                        <hr>
+                                        <div class="row invoice-info">
+                                            <div class="col-sm-12 invoice-col">
+                                            <address>
+                                                <strong>Ghi chú cước vận tải</strong><br>
+                                                {!!$tender->freight_charge!!}<br>
+                                            </address>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <hr>
                                     <div class="row invoice-info">
                                         <div class="col-sm-12 invoice-col">
@@ -197,10 +208,7 @@
                                       <th>Lượng và thời gian yêu cầu</th>
                                       <th>Lượng và thời gian chào</th>
                                       <th>Giá</th>
-                                      <th>Xuất xứ</th>
                                       <th>Đóng gói</th>
-                                      <th>Địa điểm giao</th>
-                                      <th>Điều kiện thanh toán</th>
                                       @if($is_rating)
                                       <th>Xếp hạng</th>
                                       @endif
@@ -219,10 +227,7 @@
                                       @else
                                       <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                                       @endif
-                                      <td>{{ $bid->origin }}</td>
                                       <td>{{ $bid->pack }}</td>
-                                      <td>{{ $bid->delivery_place }}</td>
-                                      <td>{{ $bid->payment_condition }}</td>
                                       @php
                                         $all_current_bid_prices = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $bid->quantity_id)->orderBy('price', 'asc')->pluck('price')->toArray();
                                         $my_key = array_search($bid->price, $all_current_bid_prices);
@@ -302,19 +307,11 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-3">
+                                                    <div class="col-6">
                                                         <div class="control-group">
                                                             <label class="control-label">Đóng gói</label>
                                                             <div class="controls">
                                                                 <input type="text" class="form-control" name="pack" id="pack" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <div class="control-group">
-                                                            <label class="control-label">Xuất xứ</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="form-control" name="origin" id="origin" required="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -326,25 +323,6 @@
                                                             <label class="control-label">Thời gian giao</label>
                                                             <div class="controls">
                                                                 <input type="text" class="form-control" name="delivery_time" id="delivery_time" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="control-group">
-                                                            <label class="control-label">Địa điểm giao</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="form-control" name="delivery_place" id="delivery_place" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <div class="control-group">
-                                                            <label class="control-label">Điều kiện thanh toán</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="form-control" name="payment_condition" id="payment_condition" required="">
                                                             </div>
                                                         </div>
                                                     </div>

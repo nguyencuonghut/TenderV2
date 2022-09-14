@@ -28,6 +28,7 @@ class CreateTendersTable extends Migration
             $table->text('other_term')->nullable();
             $table->dateTime('tender_start_time');
             $table->dateTime('tender_end_time');
+            $table->text('freight_charge')->nullable();
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('admins')->onDelete('cascade');
             $table->enum('status', ['Mở', 'Đóng', 'Đang diễn ra', 'Hủy']);

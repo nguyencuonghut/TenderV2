@@ -23,6 +23,7 @@ class Tender extends Model
         'other_term',
         'tender_start_time',
         'tender_end_time',
+        'freight_charge',
         'creator_id',
         'status',
         'approver_id',
