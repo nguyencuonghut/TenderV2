@@ -58,13 +58,8 @@
                                         </tr>
                                         @foreach ($selected_bids as $bid)
                                         <tr>
-                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} {{$bid->tender_quantity_unit}}</td>
-                                          @if('đồng/kg' == $bid->price_unit
-                                              || 'đồng/chiếc' == $bid->price_unit)
-                                          <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
-                                          @else
-                                          <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
-                                          @endif
+                                          <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
                                         @endforeach
@@ -223,9 +218,9 @@
                                       <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} ({{$bid->delivery_time}})</td>
                                       @if('đồng/kg' == $bid->price_unit
                                         || 'đồng/chiếc' == $bid->price_unit)
-                                      <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                      <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                       @else
-                                      <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                      <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                       @endif
                                       <td>{{ $bid->pack }}</td>
                                       @php
