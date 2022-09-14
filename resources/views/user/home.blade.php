@@ -114,6 +114,7 @@
                                   <th>Tên hàng</th>
                                   <th>Gói thầu</th>
                                   <th>Giá</th>
+                                  <th>Xuất xứ</th>
                                   <th>Kết quả</th>
                                 </tr>
                                 </thead>
@@ -179,7 +180,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4,5,6]
                 }
 
             },
@@ -194,7 +195,7 @@
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4,5,6]
                 }
             },
             */
@@ -209,7 +210,7 @@
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4,5,6]
                 }
             }
         ],
@@ -221,6 +222,7 @@
             {data: 'material_id', name: 'material_id'},
             {data: 'quantity_and_delivery_id', name: 'quantity_and_delivery_id'},
             {data: 'price', name: 'price'},
+            {data: 'origin', name: 'origin'},
             {data: 'is_selected', name: 'is_selected'},
        ]
       }).buttons().container().appendTo('#bids-table_wrapper .col-md-6:eq(0)');

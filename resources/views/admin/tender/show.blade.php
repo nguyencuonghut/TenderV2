@@ -155,17 +155,6 @@
                                         </div>
                                     </div>
                                     <!-- /.row -->
-                                    @if($tender->freight_charge)
-                                        <hr>
-                                        <div class="row invoice-info">
-                                            <div class="col-sm-12 invoice-col">
-                                            <address>
-                                                <strong>Ghi chú cước vận tải</strong><br>
-                                                {!!$tender->freight_charge!!}<br>
-                                            </address>
-                                            </div>
-                                        </div>
-                                    @endif
                                     <hr>
                                     <div class="row invoice-info">
                                         <div class="col-sm-12 invoice-col">
@@ -356,7 +345,6 @@
                                                   @endforeach
                                                 </tr>
                                                 @endforeach
-                                                <!--
                                                 <tr>
                                                   <td colspan="5"><b>Điều kiện thanh toán</b></td>
                                                   @foreach ($unique_bided_supplier_ids as $item)
@@ -392,7 +380,6 @@
                                                   <td>{{$origin}}</td>
                                                   @endforeach
                                                 </tr>
-                                                -->
                                                 @if($selected_bids->count())
                                                 <tr>
                                                     <td colspan="5"><b>Kết quả</b></td>

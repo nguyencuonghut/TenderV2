@@ -109,7 +109,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="control-group">
                                         <label class="control-label">Chứng từ cung cấp</label>
                                         <div class="controls">
@@ -117,21 +117,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <div class="control-group">
                                         <label class="control-label">Điều khoản khác</label>
                                         <div class="controls">
                                             <input type="text" class="form-control" name="other_term" id="other_term" required="" value="{{$tender->other_term}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="control-group">
-                                        <label class="control-label">Ghi chú cước vận tải</label>
-                                        <div class="controls">
-                                            <input type="text" class="form-control" name="freight_charge" id="freight_charge" required="" value="{{$tender->other_term}}">
                                         </div>
                                     </div>
                                 </div>

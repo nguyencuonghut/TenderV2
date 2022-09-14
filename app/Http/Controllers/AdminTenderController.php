@@ -107,7 +107,6 @@ class AdminTenderController extends Controller
             $tender->payment_condition = $request->payment_condition;
             $tender->certificate = $request->certificate;
             $tender->other_term = $request->other_term;
-            $tender->freight_charge = $request->freight_charge;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Mở';
 
@@ -253,7 +252,6 @@ class AdminTenderController extends Controller
             $tender->payment_condition = $request->payment_condition;
             $tender->certificate = $request->certificate;
             $tender->other_term = $request->other_term;
-            $tender->freight_charge = $request->freight_charge;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Mở';
 
