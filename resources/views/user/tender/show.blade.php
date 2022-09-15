@@ -230,10 +230,10 @@
                                       @else
                                       <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
                                       @endif
-                                      <td>{{ $bid->origin }}</td>
+                                      <td>{{ $tender->origin }}</td>
                                       <td>{{ $bid->pack }}</td>
-                                      <td>{{ $bid->delivery_place }}</td>
-                                      <td>{{ $bid->payment_condition }}</td>
+                                      <td>{{ $tender->delivery_condition }}</td>
+                                      <td>{{ $tender->payment_condition }}</td>
                                       @php
                                         $all_current_bid_prices = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $bid->quantity_id)->orderBy('price', 'asc')->pluck('price')->toArray();
                                         $my_key = array_search($bid->price, $all_current_bid_prices);
@@ -325,7 +325,26 @@
                                                         <div class="control-group">
                                                             <label class="control-label">Xuất xứ</label>
                                                             <div class="controls">
-                                                                <input type="text" class="form-control" name="origin" id="origin" required="">
+                                                                <input type="text" class="form-control" name="origin" id="origin" required="" disabled value="{{$tender->origin}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="control-group">
+                                                            <label class="control-label">Điều kiện thanh toán</label>
+                                                            <div class="controls">
+                                                                <input type="text" class="form-control" name="payment_condition" id="payment_condition" required="" disabled value="{{$tender->payment_condition}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="control-group">
+                                                            <label class="control-label">Địa điểm giao</label>
+                                                            <div class="controls">
+                                                                <input type="text" class="form-control" name="delivery_place" id="delivery_place" required="" disabled value="{{$tender->delivery_condition}}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -337,25 +356,6 @@
                                                             <label class="control-label">Thời gian giao</label>
                                                             <div class="controls">
                                                                 <input type="text" class="form-control" name="delivery_time" id="delivery_time" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="control-group">
-                                                            <label class="control-label">Địa điểm giao</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="form-control" name="delivery_place" id="delivery_place" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <div class="control-group">
-                                                            <label class="control-label">Điều kiện thanh toán</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="form-control" name="payment_condition" id="payment_condition" required="">
                                                             </div>
                                                         </div>
                                                     </div>

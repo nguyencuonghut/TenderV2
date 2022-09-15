@@ -90,7 +90,26 @@
                                 <div class="control-group">
                                     <label class="control-label">Xuất xứ</label>
                                     <div class="controls">
-                                        <input type="text" class="form-control" name="origin" id="origin" value="{{$bid->origin}}" required="">
+                                        <input type="text" class="form-control" name="origin" id="origin" disabled value="{{$tender->origin}}" required="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Điều kiện thanh toán</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="payment_condition" id="payment_condition" disabled value="{{$tender->payment_condition}}" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="control-group">
+                                    <label class="control-label">Địa điểm giao</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="delivery_place" id="delivery_place" disabled value="{{$tender->delivery_condition}}" required="">
                                     </div>
                                 </div>
                             </div>
@@ -102,25 +121,6 @@
                                     <label class="control-label">Thời gian giao</label>
                                     <div class="controls">
                                         <input type="text" class="form-control" name="delivery_time" id="delivery_time" value="{{$bid->delivery_time}}" required="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="control-group">
-                                    <label class="control-label">Địa điểm giao</label>
-                                    <div class="controls">
-                                        <input type="text" class="form-control" name="delivery_place" id="delivery_place" value="{{$bid->delivery_place}}" required="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="control-group">
-                                    <label class="control-label">Điều kiện thanh toán</label>
-                                    <div class="controls">
-                                        <input type="text" class="form-control" name="payment_condition" id="payment_condition" value="{{$bid->payment_condition}}" required="">
                                     </div>
                                 </div>
                             </div>

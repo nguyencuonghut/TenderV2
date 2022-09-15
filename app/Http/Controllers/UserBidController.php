@@ -104,10 +104,7 @@ class UserBidController extends Controller
             $bid->bid_quantity = $request->bid_quantity;
             $bid->bid_quantity_unit = $request->bid_quantity_unit;
             $bid->pack = $request->pack;
-            $bid->origin = $request->origin;
             $bid->delivery_time = $request->delivery_time;
-            $bid->delivery_place = $request->delivery_place;
-            $bid->payment_condition = $request->payment_condition;
             $bid->note = $request->note;
             $bid->save();
 
@@ -218,10 +215,7 @@ class UserBidController extends Controller
             $bid->bid_quantity = $request->bid_quantity;
             $bid->bid_quantity_unit = $request->bid_quantity_unit;
             $bid->pack = $request->pack;
-            $bid->origin = $request->origin;
             $bid->delivery_time = $request->delivery_time;
-            $bid->delivery_place = $request->delivery_place;
-            $bid->payment_condition = $request->payment_condition;
             $bid->note = $request->note;
             $bid->save();
 

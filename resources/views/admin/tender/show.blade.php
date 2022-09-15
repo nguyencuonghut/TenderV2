@@ -61,12 +61,12 @@
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ' ') }} {{$bid->tender_quantity_unit}}</td>
+                                          <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
                                           @if('đồng/kg' == $bid->price_unit
                                               || 'đồng/chiếc' == $bid->price_unit)
-                                          <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           @else
-                                          <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           @endif
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
@@ -155,6 +155,17 @@
                                         </div>
                                     </div>
                                     <!-- /.row -->
+                                    @if($tender->freight_charge)
+                                        <hr>
+                                        <div class="row invoice-info">
+                                            <div class="col-sm-12 invoice-col">
+                                            <address>
+                                                <strong>Ghi chú cước vận tải</strong><br>
+                                                {!!$tender->freight_charge!!}<br>
+                                            </address>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <hr>
                                     <div class="row invoice-info">
                                         <div class="col-sm-12 invoice-col">
@@ -235,11 +246,7 @@
                                           </td>
                                           <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
                                           <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
-                                          @if('VND' == $bid->price_unit)
-                                          <td>{{ number_format($bid->price, 0, ',', ',') }} ({{$bid->price_unit}})</td>
-                                          @else
-                                          <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
-                                          @endif
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>s
                                           <td>{{ $bid->payment_condition }}</td>
                                         </tr>
                                         @endforeach
@@ -353,7 +360,7 @@
                                                       $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->first();
                                                   @endphp
                                                   @if($current_bid != null)
-                                                  <td>{{$current_bid->payment_condition}}</td>
+                                                  <td>{{$tender->payment_condition}}</td>
                                                   @else
                                                   <td></td>
                                                   @endif
@@ -363,6 +370,7 @@
                                                 <tr>
                                                   <td colspan="5"><b>Xuất xứ</b></td>
                                                   @foreach ($unique_bided_supplier_ids as $item)
+                                                  <!--
                                                   @php
                                                       $supplier = App\Models\Supplier::findOrFail($item);
                                                       $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
@@ -377,7 +385,8 @@
                                                         }
                                                       }
                                                   @endphp
-                                                  <td>{{$origin}}</td>
+                                                  -->
+                                                  <td>{{$tender->origin}}</td>
                                                   @endforeach
                                                 </tr>
                                                 @if($selected_bids->count())
@@ -391,9 +400,9 @@
                                                         foreach($current_bids as $bid){
                                                           if($bid->is_selected){
                                                               if($result == ''){
-                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit . ' (Giao ' . $bid->delivery_time . ').';
+                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit;
                                                               }else{
-                                                                $result = $result . '<br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit. ' (Giao ' . $bid->delivery_time . ').';
+                                                                $result = $result . '<br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit;
                                                               }
                                                           }
                                                         }
