@@ -24,6 +24,7 @@ class CreateTendersTable extends Migration
             $table->text('origin')->nullable();
             $table->text('delivery_condition');
             $table->text('payment_condition');
+            $table->text('freight_charge')->nullable();
             $table->text('certificate')->nullable();
             $table->text('other_term')->nullable();
             $table->dateTime('tender_start_time');

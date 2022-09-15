@@ -21,6 +21,7 @@ class Tender extends Model
         'payment_condition',
         'certificate',
         'other_term',
+        'freight_charge',
         'tender_start_time',
         'tender_end_time',
         'creator_id',

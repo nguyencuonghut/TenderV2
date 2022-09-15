@@ -109,7 +109,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="control-group">
                                         <label class="control-label">Chứng từ cung cấp</label>
                                         <div class="controls">
@@ -117,7 +117,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6>
                                     <div class="control-group">
                                         <label class="control-label">Điều khoản khác</label>
                                         <div class="controls">
@@ -125,7 +125,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="control-group">
+                                        <label class="control-label">Ghi chú giá cước vận tải</label>
+                                        <div class="controls">
+                                            <input type="text" class="form-control" name="freight_charge" id="freight_charge" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
                                     <label class="required-field">Thời gian mở thầu</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
