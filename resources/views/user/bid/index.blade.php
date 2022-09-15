@@ -62,12 +62,7 @@
                   <tr>
                     <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
                     <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} ({{$bid->delivery_time}})</td>
-                    @if('đồng/kg' == $bid->price_unit
-                        || 'đồng/chiếc' == $bid->price_unit)
-                    <td>{{ number_format($bid->price, 0, ',', ' ') }} ({{$bid->price_unit}})</td>
-                    @else
-                    <td>{{ number_format($bid->price, 2, ',', ' ') }} ({{$bid->price_unit}})</td>
-                    @endif
+                    <td>{{ $bid->price}} ({{$bid->price_unit}})</td>
                     <td>{{ $tender->origin }}</td>
                     <td>{{ $bid->pack }}</td>
                     <td>{{ $tender->delivery_condition }}</td>

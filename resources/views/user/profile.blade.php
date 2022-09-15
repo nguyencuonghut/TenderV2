@@ -81,11 +81,7 @@
                   </p>
                   <p class="text-muted">
                     Chào thầu:
-                    @if('đồng/kg' == $bid->price_unit || 'đồng/chiếc' == $bid->price_unit)
-                    {{number_format($bid->price, 0, ',', ' ')}} ({{$bid->price_unit}})
-                    @else
-                    {{number_format($bid->price, 2, ',', ' ')}} ({{$bid->price_unit}})
-                    @endif
+                    {{$bid->price}} ({{$bid->price_unit}})
                   </p>
 
                   <hr>
