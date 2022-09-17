@@ -90,6 +90,94 @@ class SuppliersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
+            9 =>
+                array (
+                    'id' => 10,
+                    'code' => 'NUT0003',
+                    'name' => 'Công ty TNHH Nutreco International (Việt Nam)',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            10 =>
+                array (
+                    'id' => 11,
+                    'code' => 'BOM0001',
+                    'name' => 'Công ty TNHH Biomin Việt Nam',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            11 =>
+                array (
+                    'id' => 12,
+                    'code' => 'AB0003',
+                    'name' => 'Công ty TNHH AB Agri Việt Nam',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            12 =>
+                array (
+                    'id' => 13,
+                    'code' => 'NBC0001',
+                    'name' => 'Công ty TNHH MTV NBC Pacific',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            13 =>
+                array (
+                    'id' => 14,
+                    'code' => 'MX0002',
+                    'name' => 'Công ty cổ phần thương mại Màu Xanh',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            14 =>
+                array (
+                    'id' => 15,
+                    'code' => 'TL0001',
+                    'name' => 'Công ty TNHH Tiến Lợi',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            15 =>
+                array (
+                    'id' => 16,
+                    'code' => 'RVM004',
+                    'name' => 'Công ty TNHH MTV Provimi',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            16 =>
+                array (
+                    'id' => 17,
+                    'code' => 'BBHH0010',
+                    'name' => 'Công ty TNHH Hoa Hạ Việt Nam',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            17 =>
+                array (
+                    'id' => 18,
+                    'code' => 'DH0002',
+                    'name' => 'Công ty cổ phần Đại Hữu',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            18 =>
+                array (
+                    'id' => 19,
+                    'code' => 'MH0001',
+                    'name' => 'Công ty TNHH xuất nhập khẩu Minh Hải',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+            19 =>
+                array (
+                    'id' => 20,
+                    'code' => 'TD0007',
+                    'name' => 'Công ty cổ phần đầu tư và phát triển Thái Dương',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
         ));
     }
 }
