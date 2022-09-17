@@ -163,6 +163,149 @@ class UsersTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
-        ));
+
+            12 =>
+                array (
+                    'id' => 13,
+                    'name' => 'Nutreco',
+                    'email' => 'nutreco@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 10,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            13 =>
+                array (
+                    'id' => 14,
+                    'name' => 'Biomin',
+                    'email' => 'biomin@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 11,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            14 =>
+                array (
+                    'id' => 15,
+                    'name' => 'AB Agri',
+                    'email' => 'abagri@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 12,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            15 =>
+                array (
+                    'id' => 16,
+                    'name' => 'NBC Pacific',
+                    'email' => 'nbcpacific@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 13,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            16 =>
+                array (
+                    'id' => 17,
+                    'name' => 'Màu xanh',
+                    'email' => 'mauxanh@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 14,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            17 =>
+                array (
+                    'id' => 18,
+                    'name' => 'Tiến Lợi',
+                    'email' => 'tienloi@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 15,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            18 =>
+                array (
+                    'id' => 19,
+                    'name' => 'Provimi',
+                    'email' => 'provimi@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 16,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            19 =>
+                array (
+                    'id' => 20,
+                    'name' => 'Hoa Hạ',
+                    'email' => 'hoaha@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 17,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            20 =>
+                array (
+                    'id' => 21,
+                    'name' => 'Đại Hữu',
+                    'email' => 'daihuu@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 18,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            21 =>
+                array (
+                    'id' => 22,
+                    'name' => 'Thái Dương',
+                    'email' => 'thaiduong@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 20,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+
+            22 =>
+                array (
+                    'id' => 23,
+                    'name' => 'Minh Hải',
+                    'email' => 'minhhai@honghafeed.com.vn',
+                    'password' => bcrypt('Hongha@123'),
+                    'email_verified_at' => null,
+                    'remember_token' => null,
+                    'supplier_id' => 19,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
+    ));
     }
 }
