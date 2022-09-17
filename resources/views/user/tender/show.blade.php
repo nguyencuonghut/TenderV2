@@ -89,22 +89,14 @@
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Tên hàng</strong><br>
-                                            {{$tender->material->name}} (Xuất xứ: {{$tender->origin}})<br>
+                                            <strong>Xuất xứ</strong><br>
+                                            {{$tender->origin}}<br>
                                           </address>
                                         </div>
                                     </div>
                                     <hr>
 
                                     <div class="row invoice-info">
-                                        <div class="col-sm-4 invoice-col">
-                                          <address>
-                                            <strong>Số lượng và thời gian giao hàng</strong><br>
-                                            @foreach ($quantity_and_delivery_times as $item)
-                                                - {{$item->quantity}} {{$item->quantity_unit}} ({{$item->delivery_time}})<br>
-                                            @endforeach
-                                          </address>
-                                        </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
@@ -119,17 +111,18 @@
                                             {!! $tender->delivery_condition !!}<br>
                                           </address>
                                         </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 invoice-col">
+                                            <address>
+                                              <strong>Điều kiện thanh toán</strong><br>
+                                              {!!$tender->payment_condition!!}<br>
+                                            </address>
+                                          </div>
                                     </div>
                                     <!-- /.row -->
 
                                     <hr>
                                     <div class="row invoice-info">
-                                        <div class="col-sm-4 invoice-col">
-                                          <address>
-                                            <strong>Điều kiện thanh toán</strong><br>
-                                            {!!$tender->payment_condition!!}<br>
-                                          </address>
-                                        </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
@@ -144,27 +137,34 @@
                                             {!! $tender->other_term !!}<br>
                                           </address>
                                         </div>
-                                    </div>
-                                    <!-- /.row -->
-                                    @if($tender->freight_charge)
-                                        <hr>
-                                        <div class="row invoice-info">
-                                            <div class="col-sm-12 invoice-col">
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 invoice-col">
                                             <address>
                                                 <strong>Ghi chú cước vận tải</strong><br>
                                                 {!!$tender->freight_charge!!}<br>
                                             </address>
-                                            </div>
                                         </div>
-                                    @endif
+                                    </div>
+                                    <!-- /.row -->
                                     <hr>
-                                    <div class="row invoice-info">
-                                        <div class="col-sm-12 invoice-col">
-                                          <address>
-                                            <strong>Yêu cầu chất lượng</strong><br>
-                                            {!!$tender->material->quality!!}<br>
-                                          </address>
-                                        </div>
+                                    <div class="col-sm-12 invoice-col">
+                                        <address>
+                                          <strong>Số lượng và thời gian giao hàng</strong><br>
+                                          <table id="quantity-and-delivery-table" class="table table-bordered table-hover">
+                                            <tr>
+                                              <th>Tên hàng</th>
+                                              <th>Số lượng</th>
+                                              <th>Thời gian giao</th>
+                                            </tr>
+                                            @foreach ($quantity_and_delivery_times as $item)
+                                            <tr>
+                                              <td>{{$item->material->name}}</td>
+                                              <td>{{$item->quantity}} {{$item->quantity_unit}}</td>
+                                              <td>{{$item->delivery_time}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                        </address>
                                     </div>
                                 </div>
 
@@ -217,8 +217,14 @@
                                     </tr>
                                     @foreach ($bids as $bid)
                                     <tr>
-                                      <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
-                                      <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} ({{$bid->delivery_time}})</td>
+                                      <td>
+                                        - {{$bid->quantity->material->name}} <br>
+                                        - {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} <br>
+                                        - {{$bid->quantity->delivery_time}}</td>
+                                      <td>
+                                        - {{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} <br>
+                                        - {{$bid->delivery_time}}
+                                      </td>
                                       <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                       <td>{{ $tender->origin }}</td>
                                       <td>{{ $bid->pack }}</td>
@@ -262,19 +268,19 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-8">
                                                         <div class="control-group">
                                                             <label class="required-field" class="control-label">Lượng yêu cầu</label>
                                                             <div class="input-group">
                                                                 <select name="quantity_id" id="quantity_id" class="form-control">
                                                                     @foreach ($quantity_and_delivery_times as $item)
-                                                                    <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
+                                                                    <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{$item->quantity}} {{$item->quantity_unit}} {{\Illuminate\Support\Str::limit($item->material->name, 30)}} | {{$item->delivery_time}}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-4">
                                                         <div class="control-group">
                                                             <label class="required-field" class="control-label">Lượng chào</label>
                                                             <div class="input-group">
@@ -298,7 +304,7 @@
                                                                     <option value="đồng/kg" selected>đồng/kg</option>
                                                                     <option value="USD/tấn">USD/tấn</option>
                                                                     <option value="USD/kg">USD/kg</option>
-                                                                    <option value="đồng/tấn">đồng/chiếc</option>
+                                                                    <option value="đồng/chiếc">đồng/chiếc</option>
                                                                 </select>
                                                             </div>
                                                         </div>

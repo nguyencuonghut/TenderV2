@@ -73,7 +73,7 @@
                                             <option value="đồng/kg" @if ("đồng/kg" == $bid->price_unit) selected @endif>đồng/kg</option>
                                             <option value="USD/tấn" @if ("USD/tấn" == $bid->price_unit) selected @endif>USD/tấn</option>
                                             <option value="USD/kg" @if ("USD/kg" == $bid->price_unit) selected @endif>USD/kg</option>
-                                            <option value="đồng/tấn" @if ("đồng/tấn" == $bid->price_unit) selected @endif>đồng/chiếc</option>
+                                            <option value="đồng/chiếc" @if ("đồng/chiếc" == $bid->price_unit) selected @endif>đồng/chiếc</option>
                                         </select>
                                     </div>
                                 </div>

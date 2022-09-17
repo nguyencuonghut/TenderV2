@@ -77,7 +77,7 @@
                   <strong><i class="fas fa-clock mr-1"></i> {{date('d/m/Y H:i', strtotime($bid->created_at))}}</strong>
 
                   <p class="text-muted">
-                    Đấu thầu {{$bid->tender->material->name}} : {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}
+                    Đấu thầu {{$bid->quantity->material->name}} : {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}
                   </p>
                   <p class="text-muted">
                     Chào thầu:
@@ -105,7 +105,7 @@
                                 <thead>
                                 <tr>
                                  <th>#</th>
-                                  <th style="width:35%;">Tender</th>
+                                  <th>Tender</th>
                                   <th>Tên hàng</th>
                                   <th>Gói thầu</th>
                                   <th>Giá</th>
@@ -214,7 +214,7 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
-            {data: 'material_id', name: 'material_id'},
+            {data: 'material', name: 'material'},
             {data: 'quantity_and_delivery_id', name: 'quantity_and_delivery_id'},
             {data: 'price', name: 'price'},
             {data: 'origin', name: 'origin'},

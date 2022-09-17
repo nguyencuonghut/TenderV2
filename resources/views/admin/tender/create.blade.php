@@ -52,14 +52,9 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="control-group">
-                                        <label class="required-field" class="control-label">Tên hàng</label>
+                                        <label class="control-label">Xuất xứ</label>
                                         <div class="controls">
-                                            <select name="material_id" id="material_id" class="form-control select2" style="width: 100%;">
-                                                <option selected="selected" disabled>Chọn tên hàng</option>
-                                                @foreach($materials as $key => $value)
-                                                    <option value="{{$key}}">{{$value}}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" class="form-control" name="origin" id="origin" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -68,17 +63,26 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="control-group">
-                                        <label class="control-label">Xuất xứ</label>
-                                        <div class="controls">
-                                            <input type="text" class="form-control" name="origin" id="origin" required="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="control-group">
                                         <label class="control-label">Đóng gói</label>
                                         <div class="controls">
                                             <input type="text" class="form-control" name="packing" id="packing" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="control-group">
+                                        <label class="control-label">Chứng từ cung cấp</label>
+                                        <div class="controls">
+                                            <input type="text" class="form-control" name="certificate" id="certificate" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="control-group">
+                                        <label class="control-label">Điều khoản khác</label>
+                                        <div class="controls">
+                                            <input type="text" class="form-control" name="other_term" id="other_term" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -105,24 +109,6 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="control-group">
-                                        <label class="control-label">Chứng từ cung cấp</label>
-                                        <div class="controls">
-                                            <input type="text" class="form-control" name="certificate" id="certificate" required="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="control-group">
-                                        <label class="control-label">Điều khoản khác</label>
-                                        <div class="controls">
-                                            <input type="text" class="form-control" name="other_term" id="other_term" required="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-6">
                                     <div class="control-group">

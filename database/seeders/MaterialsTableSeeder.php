@@ -143,7 +143,7 @@ class MaterialsTableSeeder extends Seeder
                 array (
                     'id' => 13,
                     'code' => 'PP001',
-                    'name' => 'Bao PP trắng cán tráng trong (cám cá), in theo mẫu loại 25kg, lồng LDPE',
+                    'name' => 'Bao 25kg PP trắng cán tráng trong (cám cá), lồng LDPE',
                     'quality' => 'Chiều rộng: 60±1. Chiều dài: 105±1. Trọng lượng: 130gr±2. In cuộn: in theo mẫu. May đáy: may 2 đường chỉ. Lồng túi PE: 30gr. Đóng kiện: 500c/kiện, 100c/bó.',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
@@ -152,7 +152,7 @@ class MaterialsTableSeeder extends Seeder
                 array (
                     'id' => 14,
                     'code' => 'PP002',
-                    'name' => 'Bao PP trắng không tráng, in theo mẫu loại 25kg, lồng LDPE',
+                    'name' => 'Bao 25kg PP trắng không tráng, lồng LDPE',
                     'quality' => 'Chiều rộng: 52±1. Chiều dài: 88±1. Trọng lượng: 101gr±2. In cuộn: in theo mẫu. May đáy: may 2 đường chỉ. Lồng túi PE: 21gr. Đóng kiện: 500c/kiện, 100c/bó.',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
@@ -161,7 +161,7 @@ class MaterialsTableSeeder extends Seeder
                 array (
                     'id' => 15,
                     'code' => 'PP003',
-                    'name' => 'Bao PP trắng không tráng, in theo mẫu loại 40kg, lồng LDPE',
+                    'name' => 'Bao 45kg PP trắng không tráng, lồng LDPE',
                     'quality' => 'Chiều rộng: 60±1. Chiều dài: 100±1. Trọng lượng: 100gr±2. In cuộn: in theo mẫu. May đáy: may 2 đường chỉ. Lồng túi PE: 30gr. Đóng kiện: 500c/kiện, 100c/bó.',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),

@@ -14,7 +14,6 @@ class Tender extends Model
     protected $fillable = [
         'code',
         'title',
-        'material_id',
         'packing',
         'origin',
         'delivery_condition',
@@ -37,11 +36,6 @@ class Tender extends Model
     public function creator()
     {
         return $this->belongsTo(Admin::class);
-    }
-
-    public function material()
-    {
-        return $this->belongsTo(Material::class);
     }
 
     public function bids()

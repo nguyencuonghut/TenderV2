@@ -98,22 +98,14 @@
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Tên hàng</strong><br>
-                                            {{$tender->material->name}} (Xuất xứ: {{$tender->origin}})<br>
+                                            <strong>Xuất xứ</strong><br>
+                                            {{$tender->origin}}<br>
                                           </address>
                                         </div>
                                     </div>
                                     <hr>
 
                                     <div class="row invoice-info">
-                                        <div class="col-sm-4 invoice-col">
-                                          <address>
-                                            <strong>Số lượng và thời gian giao hàng</strong><br>
-                                            @foreach ($quantity_and_delivery_times as $item)
-                                                - {{$item->quantity}} {{$item->quantity_unit}} ({{$item->delivery_time}})<br>
-                                            @endforeach
-                                          </address>
-                                        </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
@@ -128,17 +120,17 @@
                                             {!! $tender->delivery_condition !!}<br>
                                           </address>
                                         </div>
-                                    </div>
-                                    <!-- /.row -->
-
-                                    <hr>
-                                    <div class="row invoice-info">
                                         <div class="col-sm-4 invoice-col">
                                           <address>
                                             <strong>Điều kiện thanh toán</strong><br>
                                             {!!$tender->payment_condition!!}<br>
                                           </address>
                                         </div>
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <hr>
+                                    <div class="row invoice-info">
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
@@ -153,27 +145,34 @@
                                             {!! $tender->other_term !!}<br>
                                           </address>
                                         </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 invoice-col">
+                                        <address>
+                                            <strong>Ghi chú cước vận tải</strong><br>
+                                            {!!$tender->freight_charge!!}<br>
+                                        </address>
+                                        </div>
                                     </div>
                                     <!-- /.row -->
-                                    @if($tender->freight_charge)
-                                        <hr>
-                                        <div class="row invoice-info">
-                                            <div class="col-sm-12 invoice-col">
-                                            <address>
-                                                <strong>Ghi chú cước vận tải</strong><br>
-                                                {!!$tender->freight_charge!!}<br>
-                                            </address>
-                                            </div>
-                                        </div>
-                                    @endif
                                     <hr>
-                                    <div class="row invoice-info">
-                                        <div class="col-sm-12 invoice-col">
-                                          <address>
-                                            <strong>Yêu cầu chất lượng</strong><br>
-                                            {!!$tender->material->quality!!}<br>
-                                          </address>
-                                        </div>
+                                    <div class="col-sm-12 invoice-col">
+                                        <address>
+                                          <strong>Số lượng và thời gian giao hàng</strong><br>
+                                          <table id="quantity-and-delivery-table" class="table table-bordered table-hover">
+                                            <tr>
+                                              <th>Tên hàng</th>
+                                              <th>Số lượng</th>
+                                              <th>Thời gian giao</th>
+                                            </tr>
+                                            @foreach ($quantity_and_delivery_times as $item)
+                                            <tr>
+                                              <td>{{$item->material->name}}</td>
+                                              <td>{{$item->quantity}} {{$item->quantity_unit}}</td>
+                                              <td>{{$item->delivery_time}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                        </address>
                                     </div>
                                 </div>
 
@@ -331,8 +330,8 @@
                                                 @foreach ($tender->quantity_and_delivery_times as $quantity_and_delivery_time)
                                                 <tr>
                                                   <td>{{++$i}}</td>
-                                                  <td>{{$tender->material->code}}</td>
-                                                  <td>{{$tender->material->name}}</td>
+                                                  <td>{{$quantity_and_delivery_time->material->code}}</td>
+                                                  <td>{{$quantity_and_delivery_time->material->name}}</td>
                                                   <td>{{$quantity_and_delivery_time->quantity}} {{$quantity_and_delivery_time->quantity_unit}}</td>
                                                   <td>{{$quantity_and_delivery_time->delivery_time}}</td>
 
@@ -400,9 +399,9 @@
                                                         foreach($current_bids as $bid){
                                                           if($bid->is_selected){
                                                               if($result == ''){
-                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit;
+                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit . ' ' . $bid->quantity->material->name;
                                                               }else{
-                                                                $result = $result . '<br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit;
+                                                                $result = $result . '<br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit . ' ' . $bid->quantity->material->name;
                                                               }
                                                           }
                                                         }

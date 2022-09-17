@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -44,12 +45,16 @@ class TenderInProgress extends Notification implements ShouldQueue
     {
         $url = '/tenders/' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
+        $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
+
         return (new MailMessage)
                     ->subject('Thư chào thầu: ' . $tender->title)
                     ->line('Xin mời quý nhà cung cấp chào thầu cho: ' . $tender->title . '.')
                     ->line('Thời gian mở thầu: ' . date('d/m/Y H:i', strtotime($tender->tender_start_time)) . ' - '. date('d/m/Y H:i', strtotime($tender->tender_end_time)) . '.')
                     ->action('Mở tender', url($url))
-                    ->line('Xin cảm ơn!');
+                    ->line('Xin cảm ơn!')
+                    ->markdown('mail.tender.inprogress', ['url' => url($url), 'tender' => $tender, 'quantity_and_delivery_times' => $quantity_and_delivery_times]);
+
     }
 
     /**

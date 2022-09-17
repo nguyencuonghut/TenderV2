@@ -264,8 +264,8 @@ class AdminSupplierController extends Controller
             ->editColumn('titlelink', function ($bids) {
                 return '<a href="'.route('admin.tenders.show', $bids->tender_id).'">' . '('. $bids->tender->code . ') ' .$bids->tender->title.'</a>';
             })
-            ->editColumn('material_id', function ($bids) {
-                return $bids->tender->material->name;
+            ->editColumn('material', function ($bids) {
+                return $bids->quantity->material->name;
             })
             ->editColumn('quantity_and_delivery_id', function ($bids) {
                 return $bids->quantity->quantity . '(' . $bids->quantity->quantity_unit . ')' . ' | ' . $bids->quantity->delivery_time;

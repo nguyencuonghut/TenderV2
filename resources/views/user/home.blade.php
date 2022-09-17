@@ -219,7 +219,7 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
-            {data: 'material_id', name: 'material_id'},
+            {data: 'material', name: 'material'},
             {data: 'quantity_and_delivery_id', name: 'quantity_and_delivery_id'},
             {data: 'price', name: 'price'},
             {data: 'origin', name: 'origin'},

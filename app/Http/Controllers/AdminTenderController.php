@@ -47,10 +47,9 @@ class AdminTenderController extends Controller
     public function create()
     {
         if(Auth::user()->can('create-tender')){
-            $materials = Material::all()->pluck('name', 'id');
             $creators = Admin::all()->pluck('name', 'id');
             $suppliers = Supplier::all()->pluck('name', 'id');
-            return view('admin.tender.create', ['materials' => $materials, 'creators' => $creators, 'suppliers' => $suppliers]);
+            return view('admin.tender.create', ['creators' => $creators, 'suppliers' => $suppliers]);
         }else {
             Alert::toast('Bạn không có quyền tạo tender!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
@@ -68,27 +67,17 @@ class AdminTenderController extends Controller
         if(Auth::user()->can('store-tender')){
             $rules = [
                 'title' => 'required',
-                'material_id' => 'required',
                 'delivery_condition' => 'required',
                 'payment_condition' => 'required',
                 'date_range' => 'required',
             ];
             $messages = [
                 'title.required' => 'Bạn phải nhập tiêu đề.',
-                'material_id.required' => 'Bạn phải nhập tên hàng.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
                 'date_range.required' => 'Bạn phải nhập thời gian mở thầu.',
             ];
             $request->validate($rules,$messages);
-
-            //Check the Supplier is existed or not
-            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$request->material_id)->pluck('supplier_id')->toArray();
-            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
-            if(!$suppliers->count()) {
-                Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
-                return redirect()->route('admin.tenders.index');
-            }
 
             $last_tender = Tender::latest()->first();
             if($last_tender == null) {
@@ -100,7 +89,6 @@ class AdminTenderController extends Controller
             $tender = new Tender();
             $tender->code = 'NL' . '/' . $tender_id . '/' . Carbon::now()->month . '/' . Carbon::now()->year;
             $tender->title = $request->title;
-            $tender->material_id = $request->material_id;
             $tender->origin = $request->origin;
             $tender->packing = $request->packing;
             $tender->delivery_condition = $request->delivery_condition;
@@ -134,10 +122,11 @@ class AdminTenderController extends Controller
     public function show($id)
     {
         $tender = Tender::findOrFail($id);
+        $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
+        $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
 
         //Get the array of Selected Supplier Id
-        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
 
         //Get the array of Supplier Id that send the bid
@@ -222,14 +211,12 @@ class AdminTenderController extends Controller
         if(Auth::user()->can('update-tender')){
             $rules = [
                 'title' => 'required',
-                'material_id' => 'required',
                 'delivery_condition' => 'required',
                 'payment_condition' => 'required',
                 'date_range' => 'required',
             ];
             $messages = [
                 'title.required' => 'Bạn phải nhập tiêu đề.',
-                'material_id.required' => 'Bạn phải nhập tên hàng.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
                 'date_range.required' => 'Bạn phải nhập thời gian mở thầu.',
@@ -237,7 +224,9 @@ class AdminTenderController extends Controller
             $request->validate($rules,$messages);
 
             //Check the Supplier is existed or not
-            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$request->material_id)->pluck('supplier_id')->toArray();
+            $tender = Tender::findOrFail($request->tender_id);
+            $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
+            $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
             $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
             if(!$suppliers->count()) {
                 Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
@@ -246,7 +235,6 @@ class AdminTenderController extends Controller
 
             $tender = Tender::findOrFail($id);
             $tender->title = $request->title;
-            $tender->material_id = $request->material_id;
             $tender->origin = $request->origin;
             $tender->packing = $request->packing;
             $tender->delivery_condition = $request->delivery_condition;
@@ -301,14 +289,11 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->with('material')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'creator_id', 'status'])->get();
+        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_start_time', 'tender_end_time', 'creator_id', 'status'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($tenders) {
                 return '<a href="'.route('admin.tenders.show', $tenders->id).'">'.$tenders->title.'</a>';
-            })
-            ->editColumn('material_id', function ($tenders) {
-                return $tenders->material->name;
             })
             ->editColumn('status', function ($tenders) {
                 if($tenders->status == 'Mở') {
@@ -476,20 +461,38 @@ class AdminTenderController extends Controller
     public function createQuantityAndDeliveryTimes(Request $request)
     {
         $tender = $request->session()->get('tender');
-        return view('admin.tender.create_quantity_and_delivery_times', ['tender' => $tender]);
+        $materials = Material::all()->pluck('name', 'id');
+        return view('admin.tender.create_quantity_and_delivery_times', ['tender' => $tender, 'materials' => $materials]);
     }
 
     public function storeQuantityAndDeliveryTimes(Request $request)
     {
-        $request->validate([
+        $rules = [
+            'addmore.*.material_id' => 'required',
             'addmore.*.quantity' => 'required',
             'addmore.*.quantity_unit' => 'required',
             'addmore.*.delivery_time' => 'required',
-        ]);
+        ];
+        $messages = [
+            'addmore.*.material_id.required' => 'Bạn phải nhập tên hàng.',
+            'addmore.*.quantity.required' => 'Bạn phải nhập số lượng.',
+            'addmore.*.quantity_unit.required' => 'Bạn phải chọn đơn vị.',
+            'addmore.*.delivery_time.required' => 'Bạn phải nhập thời gian giao hàng.',
+        ];
+        $request->validate($rules,$messages);
 
         $tender = $request->session()->get('tender');
 
         foreach ($request->addmore as $key => $value) {
+            //Check the Supplier is existed or not
+            $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$value['material_id'])->pluck('supplier_id')->toArray();
+            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+            if(0 == $suppliers->count()) {
+                dd(0 == $suppliers->count());
+                Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+                return redirect()->back();
+            }
+
             QuantityAndDeliveryTime::create($value);
         }
 
@@ -501,20 +504,30 @@ class AdminTenderController extends Controller
     public function editQuantityAndDeliveryTimes(Request $request)
     {
         $tender = $request->session()->get('tender');
+        $materials = Material::all()->pluck('name', 'id');
         $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
         return view('admin.tender.edit_quantity_and_delivery_times',
                      ['tender' => $tender,
-                    'quantity_and_delivery_times' => $quantity_and_delivery_times
+                    'quantity_and_delivery_times' => $quantity_and_delivery_times,
+                    'materials' => $materials
                      ]);
     }
 
     public function updateQuantityAndDeliveryTimes(Request $request)
     {
-        $request->validate([
+        $rules = [
+            'addmore.*.material_id' => 'required',
             'addmore.*.quantity' => 'required',
             'addmore.*.quantity_unit' => 'required',
             'addmore.*.delivery_time' => 'required',
-        ]);
+        ];
+        $messages = [
+            'addmore.*.material_id.required' => 'Bạn phải nhập tên hàng.',
+            'addmore.*.quantity.required' => 'Bạn phải nhập số lượng.',
+            'addmore.*.quantity_unit.required' => 'Bạn phải chọn đơn vị.',
+            'addmore.*.delivery_time.required' => 'Bạn phải nhập thời gian giao hàng.',
+        ];
+        $request->validate($rules,$messages);
 
         $tender = $request->session()->get('tender');
 
@@ -536,9 +549,11 @@ class AdminTenderController extends Controller
     public function createSuppliers(Request $request)
     {
         $tender = $request->session()->get('tender');
-        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
+        $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
+        $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
         $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
 
+        //TODO: need to be considered again???
         if(!$suppliers->count()) {
             Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
@@ -549,12 +564,16 @@ class AdminTenderController extends Controller
 
     public function storeSuppliers(Request $request)
     {
-        //dd($request->all());
         $tender = $request->session()->get('tender');
+        //Delete all old TenderSuppliersSelectedStatus
+        $old_supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
+        foreach($old_supplier_selected_statuses as $item) {
+            $item->destroy($item->id);
+        }
 
         //Store the selected status of suppliers
-        $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$tender->material_id)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
+        $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         //dd($suppliers);
         foreach($suppliers as $key => $value){
             $supplier_selected_status = new TenderSuppliersSelectedStatus;
@@ -572,7 +591,6 @@ class AdminTenderController extends Controller
         Alert::toast('Tạo tender thành công!', 'success', 'top-right');
         return redirect()->route('admin.tenders.index');
     }
-
 
     public function createResult($id)
     {

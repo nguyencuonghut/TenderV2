@@ -13,6 +13,7 @@ class QuantityAndDeliveryTime extends Model
         'quantity',
         'quantity_unit',
         'delivery_time',
+        'material_id',
         'tender_id',
     ];
 
@@ -24,5 +25,10 @@ class QuantityAndDeliveryTime extends Model
     public function tender()
     {
         return $this->belongsTo(Tender::class);
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 }

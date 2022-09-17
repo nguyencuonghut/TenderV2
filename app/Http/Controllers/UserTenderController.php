@@ -56,7 +56,7 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::with('material')->where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'material_id', 'tender_start_time', 'tender_end_time', 'status'])->get();
+        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_start_time', 'tender_end_time', 'status'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
@@ -67,9 +67,6 @@ class UserTenderController extends Controller
             ->addIndexColumn()
             ->editColumn('title', function ($user_tenders) {
                 return '<a href="'.route('user.tenders.show', $user_tenders->id).'">'.$user_tenders->title.'</a>';
-            })
-            ->editColumn('material_id', function ($user_tenders) {
-                return $user_tenders->material->name;
             })
             ->editColumn('tender_start_time', function ($user_tenders) {
                 return date('d/m/Y H:i', strtotime($user_tenders->tender_start_time));

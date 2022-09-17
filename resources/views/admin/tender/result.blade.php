@@ -51,7 +51,11 @@
                   @foreach ($selected_bids as $bid)
                   <tr>
                     <td style="width:30%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                    <td>{{ $bid->quantity->quantity }} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
+                    <td>
+                        - {{ $bid->quantity->material->name }} <br>
+                        - {{ $bid->quantity->quantity }} {{$bid->quantity->quantity_unit}} <br>
+                        - {{$bid->quantity->delivery_time}}
+                    </td>
                     <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
                     <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                     <td>{{ $bid->delivery_time }}</td>
@@ -102,7 +106,7 @@
                                     <div class="controls">
                                         <select name="bid_id" id="bid_id" class="form-control select2">
                                             @foreach ($bids as $bid)
-                                                <option value="{{$bid->id}}">{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} | {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->quantity->delivery_time}} - {{$bid->user->supplier->name}} (Lượng giao {{$bid->bid_quantity}} {{$bid->bid_quantity_unit}})</option>
+                                                <option value="{{$bid->id}}" @if (false == $bid->is_selected) selected @else disabled @endif>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} {{\Illuminate\Support\Str::limit($bid->quantity->material->name, 30)}}| {{$bid->price}} ({{$bid->price_unit}}) | {{$bid->quantity->delivery_time}} - {{$bid->user->supplier->name}} (Lượng giao {{$bid->bid_quantity}} {{$bid->bid_quantity_unit}})</option>
                                             @endforeach
                                         </select>
                                     </div>

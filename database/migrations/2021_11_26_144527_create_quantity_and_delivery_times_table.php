@@ -19,6 +19,8 @@ class CreateQuantityAndDeliveryTimesTable extends Migration
             $table->integer('quantity');
             $table->enum('quantity_unit', ['tấn', 'kg', 'chiếc']);
             $table->text('delivery_time')->nullable();
+            $table->bigInteger('material_id')->unsigned();
+            $table->foreign('material_id')->references('id')->on('materials')->onDelete('cascade');
             $table->bigInteger('tender_id')->unsigned();
             $table->foreign('tender_id')->references('id')->on('tenders')->onDelete('cascade');
             $table->timestamps();

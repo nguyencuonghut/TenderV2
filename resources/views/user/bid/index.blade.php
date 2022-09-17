@@ -60,8 +60,15 @@
                   </tr>
                   @foreach ($bids as $bid)
                   <tr>
-                    <td>{{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
-                    <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} ({{$bid->delivery_time}})</td>
+                    <td>
+                        - {{\Illuminate\Support\Str::limit($bid->quantity->material->name, 40)}} <br>
+                        - {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} <br>
+                        - {{$bid->quantity->delivery_time}}
+                    </td>
+                    <td>
+                        - {{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} <br>
+                        - {{$bid->delivery_time}}
+                    </td>
                     <td>{{ $bid->price}} ({{$bid->price_unit}})</td>
                     <td>{{ $tender->origin }}</td>
                     <td>{{ $bid->pack }}</td>
@@ -107,19 +114,19 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="control-group">
                                     <label class="required-field" class="control-label">Số lượng</label>
                                     <div class="input-group">
                                         <select name="quantity_id" id="quantity_id" class="form-control">
                                             @foreach ($quantity_and_delivery_times as $item)
-                                            <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
+                                            <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{$item->quantity}} {{$item->quantity_unit}} {{\Illuminate\Support\Str::limit($item->material->name, 30)}} | {{$item->delivery_time}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="control-group">
                                     <label class="required-field" class="control-label">Lượng chào</label>
                                     <div class="input-group">
@@ -143,7 +150,7 @@
                                             <option value="đồng/kg" selected>đồng/kg</option>
                                             <option value="USD/tấn">USD/tấn</option>
                                             <option value="USD/kg">USD/kg</option>
-                                            <option value="đồng/tấn">đồng/chiếc</option>
+                                            <option value="đồng/chiếc">đồng/chiếc</option>
                                         </select>
                                     </div>
                                 </div>

@@ -18,8 +18,6 @@ class CreateTendersTable extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('title');
-            $table->bigInteger('material_id')->unsigned();
-            $table->foreign('material_id')->references('id')->on('materials')->onDelete('cascade');
             $table->text('packing')->nullable();
             $table->text('origin')->nullable();
             $table->text('delivery_condition');

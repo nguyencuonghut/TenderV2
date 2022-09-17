@@ -117,7 +117,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Tiêu đề</th>
-                                    <th>Tên hàng</th>
                                     <th>Trạng thái</th>
                                     <th>Bắt đầu</th>
                                     <th>Kết thúc</th>
@@ -177,7 +176,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4]
                 }
             },
             /*
@@ -185,7 +184,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4]
                 }
 
             },
@@ -193,14 +192,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4]
                 }
             },
             */
@@ -208,14 +207,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4,5]
+                    columns: [0,1,2,3,4]
                 }
             }
         ],
@@ -224,7 +223,6 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
-            {data: 'material_id', name: 'material_id'},
             {data: 'status', name: 'status'},
             {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
