@@ -227,7 +227,7 @@ class AdminSupplierController extends Controller
                     if(++$i === $length) {
                         $material_list =  $material_list . $item->name;
                     } else {
-                        $material_list = $material_list . $item->name . ', ';
+                        $material_list = $material_list . $item->name . '/ ';
                     }
                 }
                 return $material_list;
