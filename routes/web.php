@@ -40,6 +40,8 @@ Route::name('admin.')->prefix('admin')->group(function() {
     Route::group(['middleware'=>'auth:admin'], function() {
         Route::get('/', [AdminHomeController::class, 'index'])->name('home');
         Route::get('/profile', [AdminHomeController::class, 'profile'])->name('profile');
+        Route::get('/change-password', [AdminHomeController::class, 'showChangePasswordForm'])->name('change.password.get');
+        Route::post('/change-password', [AdminHomeController::class, 'submitChangePasswordForm'])->name('change.password.post');
         Route::get('users/data', [AdminUserController::class, 'anyData'])->name('users.data');
         Route::resource('users', AdminUserController::class);
         Route::post('users/import', [AdminUserController::class, 'import'])->name('users.import');
