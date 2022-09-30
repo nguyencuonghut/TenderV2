@@ -268,10 +268,10 @@ class AdminSupplierController extends Controller
                 return $bids->quantity->material->name;
             })
             ->editColumn('quantity_and_delivery_id', function ($bids) {
-                return $bids->quantity->quantity . '(' . $bids->quantity->quantity_unit . ')' . ' | ' . $bids->quantity->delivery_time;
+                return number_format($bids->quantity->quantity, 0, '.', ',') . '(' . $bids->quantity->quantity_unit . ')' . ' | ' . $bids->quantity->delivery_time;
             })
             ->editColumn('price', function ($bids) {
-                return $bids->price . '(' . $bids->price_unit . ')';
+                return number_format($bids->price, 0, '.', ',') . '(' . $bids->price_unit . ')';
             })
             ->editColumn('origin', function ($bids) {
                 return $bids->origin;

@@ -7,7 +7,7 @@ Xin mời quý nhà cung cấp chào thầu cho: {{$tender->title}}
 | Tên hàng      | Số lượng      | Thời gian giao  |
 |:-------------:|:-------------:| ---------------:|
 @foreach($quantity_and_delivery_times as $item)
-| {{\Illuminate\Support\Str::limit($item->material->name, 30)}}|  {{$item->quantity}} {{$item->quantity_unit}}|        {{$item->delivery_time}} |
+| {{\Illuminate\Support\Str::limit($item->material->name, 30)}}|  {{number_format($item->quantity, 0, '.', ',')}} {{$item->quantity_unit}}|        {{$item->delivery_time}} |
 @endforeach
 @endcomponent
 

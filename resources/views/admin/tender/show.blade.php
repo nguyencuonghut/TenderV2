@@ -61,12 +61,12 @@
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
-                                          <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
+                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ',') }} {{$bid->tender_quantity_unit}}</td>
                                           @if('đồng/kg' == $bid->price_unit
                                               || 'đồng/chiếc' == $bid->price_unit)
-                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                                          <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
                                           @else
-                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                                          <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
                                           @endif
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
@@ -167,7 +167,7 @@
                                             @foreach ($quantity_and_delivery_times as $item)
                                             <tr>
                                               <td>{{$item->material->name}}</td>
-                                              <td>{{$item->quantity}} {{$item->quantity_unit}}</td>
+                                              <td>{{number_format($item->quantity, 0, '.', ',')}} {{$item->quantity_unit}}</td>
                                               <td>{{$item->delivery_time}}</td>
                                             </tr>
                                             @endforeach
@@ -332,7 +332,7 @@
                                                   <td>{{++$i}}</td>
                                                   <td>{{$quantity_and_delivery_time->material->code}}</td>
                                                   <td>{{$quantity_and_delivery_time->material->name}}</td>
-                                                  <td>{{$quantity_and_delivery_time->quantity}} {{$quantity_and_delivery_time->quantity_unit}}</td>
+                                                  <td>{{number_format($quantity_and_delivery_time->quantity, 0, '.', ',')}} {{$quantity_and_delivery_time->quantity_unit}}</td>
                                                   <td>{{$quantity_and_delivery_time->delivery_time}}</td>
 
                                                   @foreach ($unique_bided_supplier_ids as $item)
@@ -342,8 +342,8 @@
                                                   @endphp
                                                   @if($current_bid != null)
                                                   <td>
-                                                      - Giá: {{$current_bid->price}} ({{$current_bid->price_unit}}) <br>
-                                                      - Lượng chào: {{$current_bid->bid_quantity}} {{$current_bid->bid_quantity_unit}} <br>
+                                                      - Giá: {{number_format($current_bid->price, 0, '.', ',')}} ({{$current_bid->price_unit}}) <br>
+                                                      - Lượng chào: {{number_format($current_bid->bid_quantity, 0, '.', ',')}} {{$current_bid->bid_quantity_unit}} <br>
                                                   </td>
                                                   @else
                                                   <td></td>
@@ -399,9 +399,9 @@
                                                         foreach($current_bids as $bid){
                                                           if($bid->is_selected){
                                                               if($result == ''){
-                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->tender_quantity . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
+                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . number_format($bid->tender_quantity, 0, '.', ',') . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
                                                               }else{
-                                                                $result = $result . '<br>' . '- ' . $bid->tender_quantity . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
+                                                                $result = $result . '<br>' . '- ' . number_format($bid->tender_quantity, 0, '.', ',') . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
                                                               }
                                                           }
                                                         }
@@ -469,7 +469,8 @@
 
                             @if(Auth::user()->can('approve-result')
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'Đang diễn ra')
+                            && $tender->status == 'Đang diễn ra'
+                            && 0 != $selected_bids->count())
                             <br>
                             <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
                                 <button role="button" type="button" class="btn btn-success"><i class="fas fa-check"></i> Duyệt kết quả</button>

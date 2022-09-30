@@ -43,7 +43,7 @@
                                     <div class="input-group">
                                         <select name="quantity_id" id="quantity_id" class="form-control">
                                             @foreach ($quantity_and_delivery_times as $item)
-                                            <option value="{{$item->id}}" @if ($item->id == $bid->quantity_id) selected @else disabled @endif>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
+                                            <option value="{{$item->id}}" @if ($item->id == $bid->quantity_id) selected @else disabled @endif>{{number_format($item->quantity, 0, '.', ',')}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -165,7 +165,7 @@
                                     <div class="input-group">
                                         <select name="quantity_id" id="quantity_id" class="form-control">
                                             @foreach ($quantity_and_delivery_times as $item)
-                                            <option value="{{$item->id}}" selected>{{$item->quantity}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
+                                            <option value="{{$item->id}}" selected>{{number_format($item->quantity, 0, '.', ',')}} {{$item->quantity_unit}} - {{$item->delivery_time}}</option>
                                             @endforeach
                                         </select>
                                     </div>

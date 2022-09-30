@@ -7,7 +7,7 @@ Công ty cổ phần dinh dưỡng Hồng Hà xin thông báo kết quả đấu
 | Số lượng      | Giá           | Thời gian giao  |
 |:-------------:|:-------------:| --------:|
 @foreach($selected_bids as $bid)
-| {{$bid->tender_quantity}} {{$bid->tender_quantity_unit}} - {{$bid->quantity->material->name}}     | {{$bid->price}} ({{$bid->price_unit}}) |        {{$bid->delivery_time}} |
+| {{number_format($bid->tender_quantity, 0, '.', ',')}} {{$bid->tender_quantity_unit}} - {{$bid->quantity->material->name}}     | {{number_format($bid->price, 0, '.', ',')}} ({{$bid->price_unit}}) |        {{$bid->delivery_time}} |
 @endforeach
 @endcomponent
 

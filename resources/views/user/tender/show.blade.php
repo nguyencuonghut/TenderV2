@@ -58,8 +58,8 @@
                                         </tr>
                                         @foreach ($selected_bids as $bid)
                                         <tr>
-                                          <td>{{ $bid->tender_quantity }} {{$bid->tender_quantity_unit}}</td>
-                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                                          <td>{{ number_format($bid->tender_quantity, 0, '.', ',') }} {{$bid->tender_quantity_unit}}</td>
+                                          <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
                                         @endforeach
@@ -159,7 +159,7 @@
                                             @foreach ($quantity_and_delivery_times as $item)
                                             <tr>
                                               <td>{{$item->material->name}}</td>
-                                              <td>{{$item->quantity}} {{$item->quantity_unit}}</td>
+                                              <td>{{number_format($item->quantity, 0, '.', ',')}} {{$item->quantity_unit}}</td>
                                               <td>{{$item->delivery_time}}</td>
                                             </tr>
                                             @endforeach
@@ -219,13 +219,13 @@
                                     <tr>
                                       <td>
                                         - {{$bid->quantity->material->name}} <br>
-                                        - {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}} <br>
+                                        - {{number_format($bid->quantity->quantity, 0, '.', ',')}} {{$bid->quantity->quantity_unit}} <br>
                                         - {{$bid->quantity->delivery_time}}</td>
                                       <td>
-                                        - {{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} <br>
+                                        - {{number_format($bid->bid_quantity, 0, '.', ',')}} {{$bid->bid_quantity_unit}} <br>
                                         - {{$bid->delivery_time}}
                                       </td>
-                                      <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
+                                      <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
                                       <td>{{ $tender->origin }}</td>
                                       <td>{{ $bid->pack }}</td>
                                       <td>{{ $tender->delivery_condition }}</td>
@@ -274,7 +274,7 @@
                                                             <div class="input-group">
                                                                 <select name="quantity_id" id="quantity_id" class="form-control">
                                                                     @foreach ($quantity_and_delivery_times as $item)
-                                                                    <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{$item->quantity}} {{$item->quantity_unit}} {{\Illuminate\Support\Str::limit($item->material->name, 30)}} | {{$item->delivery_time}}</option>
+                                                                    <option value="{{$item->id}}" @if(in_array($item->id, $existed_qty_ids)) disabled @else selected @endif>{{number_format($item->quantity, 0, '.', ',')}} {{$item->quantity_unit}} {{\Illuminate\Support\Str::limit($item->material->name, 30)}} | {{$item->delivery_time}}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>

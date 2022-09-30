@@ -110,7 +110,7 @@
                                 <thead>
                                 <tr>
                                  <th>#</th>
-                                  <th style="width:35%;">Tender</th>
+                                  <th>Tender</th>
                                   <th>Tên hàng</th>
                                   <th>Gói thầu</th>
                                   <th>Giá</th>

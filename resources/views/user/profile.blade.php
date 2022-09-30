@@ -77,11 +77,11 @@
                   <strong><i class="fas fa-clock mr-1"></i> {{date('d/m/Y H:i', strtotime($bid->created_at))}}</strong>
 
                   <p class="text-muted">
-                    Đấu thầu {{$bid->quantity->material->name}} : {{$bid->quantity->quantity}} {{$bid->quantity->quantity_unit}}
+                    Đấu thầu {{$bid->quantity->material->name}} : {{number_format($bid->quantity->quantity, 0, '.', ',')}} {{$bid->quantity->quantity_unit}}
                   </p>
                   <p class="text-muted">
                     Chào thầu:
-                    {{$bid->price}} ({{$bid->price_unit}})
+                    {{number_format($bid->price, 0, '.', ',')}} ({{$bid->price_unit}})
                   </p>
 
                   <hr>
