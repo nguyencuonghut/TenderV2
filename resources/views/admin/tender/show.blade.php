@@ -399,9 +399,9 @@
                                                         foreach($current_bids as $bid){
                                                           if($bid->is_selected){
                                                               if($result == ''){
-                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit . ' ' . $bid->quantity->material->name;
+                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . $bid->tender_quantity . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
                                                               }else{
-                                                                $result = $result . '<br>' . '- ' . $bid->bid_quantity . ' ' . $bid->bid_quantity_unit . ' ' . $bid->quantity->material->name;
+                                                                $result = $result . '<br>' . '- ' . $bid->tender_quantity . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
                                                               }
                                                           }
                                                         }

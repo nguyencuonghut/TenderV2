@@ -97,6 +97,7 @@
                                         <option value="tấn" selected>tấn</option>
                                         <option value="kg">kg</option>
                                         <option value="chiếc">chiếc</option>
+                                        <option value="%">%</option>
                                     </select>
                                 </div>
                             </div>

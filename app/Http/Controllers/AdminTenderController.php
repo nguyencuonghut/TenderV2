@@ -488,7 +488,6 @@ class AdminTenderController extends Controller
             $supplier_ids = MaterialSupplier::where('material_id' ,'=' ,$value['material_id'])->pluck('supplier_id')->toArray();
             $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
             if(0 == $suppliers->count()) {
-                dd(0 == $suppliers->count());
                 Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
                 return redirect()->back();
             }
