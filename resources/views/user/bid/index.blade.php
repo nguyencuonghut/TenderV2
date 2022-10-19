@@ -71,7 +71,7 @@
                         - {{$bid->delivery_time}}
                         @endif
                     </td>
-                    <td>{{ number_format($bid->price, 0, '.', ',')}} ({{$bid->price_unit}})</td>
+                    <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                     <td>{{ $tender->origin }}</td>
                     <td>{{ $bid->pack }}</td>
                     <td>{!! $tender->delivery_condition !!}</td>

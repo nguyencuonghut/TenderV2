@@ -64,9 +64,9 @@
                                           <td>{{ number_format($bid->tender_quantity, 0, '.', ',') }} {{$bid->tender_quantity_unit}}</td>
                                           @if('đồng/kg' == $bid->price_unit
                                               || 'đồng/chiếc' == $bid->price_unit)
-                                          <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           @else
-                                          <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           @endif
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
@@ -342,7 +342,7 @@
                                                   @endphp
                                                   @if($current_bid != null)
                                                   <td>
-                                                      - Giá: {{number_format($current_bid->price, 0, '.', ',')}} ({{$current_bid->price_unit}}) <br>
+                                                      - Giá: {{$current_bid->price}} ({{$current_bid->price_unit}}) <br>
                                                       - Lượng chào: {{number_format($current_bid->bid_quantity, 0, '.', ',')}} {{$current_bid->bid_quantity_unit}} <br>
                                                   </td>
                                                   @else

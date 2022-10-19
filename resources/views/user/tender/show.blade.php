@@ -59,7 +59,7 @@
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td>{{ number_format($bid->tender_quantity, 0, '.', ',') }} {{$bid->tender_quantity_unit}}</td>
-                                          <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
+                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>
                                         @endforeach
@@ -225,7 +225,7 @@
                                         - {{number_format($bid->bid_quantity, 0, '.', ',')}} {{$bid->bid_quantity_unit}} <br>
                                         - {{$bid->delivery_time}}
                                       </td>
-                                      <td>{{ number_format($bid->price, 0, '.', ',') }} ({{$bid->price_unit}})</td>
+                                      <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                       <td>{{ $tender->origin }}</td>
                                       <td>{{ $bid->pack }}</td>
                                       <td>{!! $tender->delivery_condition !!}</td>

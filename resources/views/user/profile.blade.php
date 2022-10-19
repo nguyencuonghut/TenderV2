@@ -81,7 +81,7 @@
                   </p>
                   <p class="text-muted">
                     Chào thầu:
-                    {{number_format($bid->price, 0, '.', ',')}} ({{$bid->price_unit}})
+                    {{$bid->price}} ({{$bid->price_unit}})
                   </p>
 
                   <hr>

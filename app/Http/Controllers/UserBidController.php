@@ -141,7 +141,7 @@ class UserBidController extends Controller
                 return number_format($bids->quantity->quantity, 0, '.', ',') . '(' . $bids->quantity->quantity_unit . ')' . ' | ' . $bids->quantity->delivery_time;
             })
             ->editColumn('price', function ($bids) {
-                return number_format($bids->price, 0, '.', ',') . '(' . $bids->price_unit . ')';
+                return $bids->price . '(' . $bids->price_unit . ')';
             })
             ->editColumn('origin', function ($bids) {
                 return $bids->origin;
