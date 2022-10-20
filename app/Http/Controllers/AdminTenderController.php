@@ -563,6 +563,9 @@ class AdminTenderController extends Controller
 
     public function storeSuppliers(Request $request)
     {
+        $is_users_not_existed = false;
+        $supplier_id_not_has_users = 0;
+
         $tender = $request->session()->get('tender');
         //Delete all old TenderSuppliersSelectedStatus
         $old_supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
@@ -575,20 +578,34 @@ class AdminTenderController extends Controller
         $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         //dd($suppliers);
         foreach($suppliers as $key => $value){
-            $supplier_selected_status = new TenderSuppliersSelectedStatus;
-            $supplier_selected_status->tender_id = $tender->id;
-            $supplier_selected_status->supplier_id = $value->id;
-            //dd(in_array($value->id, $request->supplier_ids));
-            $supplier_selected_status->is_selected = in_array($value->id, $request->supplier_ids);// ? 1:0;//isset($request->supplier_ids[$key]);
-            $supplier_selected_status->reason = $request->reasons[$key];
-            $supplier_selected_status->save();
+            //Check if supplier has any user
+            $users = User::where('supplier_id', $value->id)->get();
+            if(0 == $users->count()){
+                $is_users_not_existed = true;
+                $supplier_id_not_has_users = $value->id;
+                break;
+            }else{
+                $supplier_selected_status = new TenderSuppliersSelectedStatus;
+                $supplier_selected_status->tender_id = $tender->id;
+                $supplier_selected_status->supplier_id = $value->id;
+                //dd(in_array($value->id, $request->supplier_ids));
+                $supplier_selected_status->is_selected = in_array($value->id, $request->supplier_ids);// ? 1:0;//isset($request->supplier_ids[$key]);
+                $supplier_selected_status->reason = $request->reasons[$key];
+                $supplier_selected_status->save();
+            }
         }
 
-        //Send email notification
-        $tender->notify(new TenderCreated($tender->id));
+        if(true == $is_users_not_existed){
+            $supplier = Supplier::findOrFail($supplier_id_not_has_users);
+            Alert::toast($supplier->name . ' chưa được tạo tài khoản tender. Vui lòng kiểm tra lại! ', 'error', 'top-right');
+            return redirect()->back();
+        }else{
+            //Send email notification
+            $tender->notify(new TenderCreated($tender->id));
 
-        Alert::toast('Tạo tender thành công!', 'success', 'top-right');
-        return redirect()->route('admin.tenders.index');
+            Alert::toast('Tạo tender thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
     }
 
     public function createResult($id)
