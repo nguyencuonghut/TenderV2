@@ -181,6 +181,7 @@
                         </div>
                           <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                             <h2>{{$tender->title}}</h2>
+                            <h6>(Thời gian thầu: {{date('d/m/Y H:i', strtotime($tender->tender_start_time))}} - {{date('d/m/Y H:i', strtotime($tender->tender_end_time))}})</h4>
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
