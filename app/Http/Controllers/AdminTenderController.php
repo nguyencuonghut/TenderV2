@@ -733,22 +733,41 @@ class AdminTenderController extends Controller
         }
     }
 
-    public function requestApprove(Request $request, $id)
+    public function createRequestApprove($id)
     {
         $tender = Tender::findOrFail($id);
+        $approvers = Admin::where('role_id', 2)->get();
+        return view('admin.tender.request_approve', ['tender' => $tender, 'approvers' => $approvers]);
+    }
+
+    public function storeRequestApprove(Request $request, $id)
+    {
+        $rules = [
+            'manager_id' => 'required',
+        ];
+        $messages = [
+            'manager_id.required' => 'Bạn phải nhập tên người duyệt.',
+        ];
+        $request->validate($rules,$messages);
+
+        //Update tender
+        $tender = Tender::findOrFail($id);
+        $tender->manager_id = $request->manager_id;
+        $tender->save();
+
+        $approver = Admin::findOrFail($tender->approver_id);
         //Send email notification
-        $admin_managers = Admin::where('role_id', 2)->get();
-        foreach($admin_managers as $manager){
-            Notification::route('mail' , $manager->email)->notify(new TenderRequestApprove($tender->id));
-        }
+        Notification::route('mail' , $approver->email)->notify(new TenderRequestApprove($tender->id));
+
         Alert::toast('Gửi yêu cầu duyệt kết quả Tender thành công!', 'success', 'top-right');
-        return redirect()->back();
+        return redirect()->route('admin.tenders.show', $tender->id);
     }
 
     public function getApproveResult($id)
     {
-        if(Auth::user()->can('approve-result')){
-            $tender = Tender::findOrFail($id);
+        $tender = Tender::findOrFail($id);
+        if(Auth::user()->can('approve-result')
+            && $tender->manager_id == Auth::user()->id){
             return view('admin.tender.approve', ['tender' => $tender]);
         }else{
             Alert::toast('Bạn không có quyền phê duyệt tender này!', 'error', 'top-right');
@@ -760,7 +779,8 @@ class AdminTenderController extends Controller
     {
         $tender = Tender::findOrFail($id);
 
-        if(Auth::user()->can('approve-result')){
+        if(Auth::user()->can('approve-result')
+            && $tender->manager_id == Auth::user()->id){
             $rules = [
                 'approve_result' => 'required',
             ];

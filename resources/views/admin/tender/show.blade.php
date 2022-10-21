@@ -428,7 +428,7 @@
                                                 @endif
                                                 @if($tender->approve_result)
                                                 <tr>
-                                                    <td colspan="5"><b>Phê duyệt</b></td>
+                                                    <td colspan="5"><b>Phê duyệt</b> (Mr.{{$tender->manager->name}})</td>
                                                     @php
                                                         $approve_result = '';
                                                         if('Đồng ý' == $tender->approve_result){
@@ -454,17 +454,10 @@
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
                             && $tender->status == 'Đang diễn ra'
                             && 0 != $selected_bids->count())
+                            <a href="{{route('admin.tenders.createRequestApprove', $tender->id)}}">
+                                <button role="button" type="button" class="btn btn-success"> Yêu cầu duyệt</button>
+                            </a>
                             <br>
-                            <form class="form-horizontal" method="post" action="{{ route('admin.tenders.requestApprove', $tender->id) }}" name="request_approve" id="request_approve" novalidate="novalidate">
-                                @method('PATCH')
-                                {{ csrf_field() }}
-                                <input type="hidden" name="tender_id" value="{{$tender->id}}">
-                                <div class="control-group">
-                                    <div class="controls">
-                                        <input type="submit" value="Yêu cầu duyệt" class="btn btn-success">
-                                    </div>
-                                </div>
-                            </form>
                             @endif
 
                             @if(Auth::user()->can('approve-result')
