@@ -100,7 +100,7 @@
                                 <div class="col-12">
                                     <div class="control-group">
                                         <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input" id="is_competitive_bids" name="is_competitive_bids">
+                                            <input type="checkbox" class="custom-control-input" id="is_competitive_bids" name="is_competitive_bids" checked>
                                             <label class="custom-control-label" for="is_competitive_bids">Chào giá cạnh tranh</label>
                                         </div>
                                     </div>
