@@ -411,9 +411,9 @@ class AdminTenderController extends Controller
                 foreach($users as $user)  {
                     //Notify now
                     Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
-                    //Send reminder to customers 15 minutes before the Tender starts
-                    $start_time = Carbon::parse($tender->tender_start_time);
-                    $delay = $start_time->addMinutes(-15);
+                    //Send reminder to customers 15 minutes before the Tender ends
+                    $end_time = Carbon::parse($tender->tender_end_time);
+                    $delay = $end_time->addMinutes(-15);
                     Notification::route('mail' , $user->email)->notify((new ReminderTenderInProgress($tender->id))->delay($delay));
                 }
 
