@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAdminController;
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminMaterialController;
+use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminSupplierController;
 use App\Http\Controllers\AdminTenderController;
 use App\Http\Controllers\AdminUserController;
@@ -58,6 +59,9 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::post('materials/import', [AdminMaterialController::class, 'import'])->name('materials.import');
         Route::resource('materials', AdminMaterialController::class);
 
+        Route::get('roles/data', [AdminRoleController::class, 'anyData'])->name('roles.data');
+        Route::resource('roles', AdminRoleController::class);
+
         Route::patch('tenders/storeQuantityAndDeliveryTimes', [AdminTenderController::class, 'storeQuantityAndDeliveryTimes'])->name('tenders.storeQuantityAndDeliveryTimes');
         Route::get('tenders/createQuantityAndDeliveryTimes', [AdminTenderController::class, 'createQuantityAndDeliveryTimes'])->name('tenders.createQuantityAndDeliveryTimes');
         Route::get('tenders/editQuantityAndDeliveryTimes', [AdminTenderController::class, 'editQuantityAndDeliveryTimes'])->name('tenders.editQuantityAndDeliveryTimes');
@@ -76,7 +80,7 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::delete('tenders/destroyPropose/{id}', [AdminTenderController::class, 'destroyPropose'])->name('tenders.destroy.propose');
         Route::get('tenders/createRequestApprove/{id}', [AdminTenderController::class, 'createRequestApprove'])->name('tenders.createRequestApprove');
         Route::post('tenders/storeRequestApprove/{id}', [AdminTenderController::class, 'storeRequestApprove'])->name('tenders.storeRequestApprove');
-        Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'getApproveResult'])->name('tenders.getApproveResult');
+        Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'get ApproveResult'])->name('tenders.getApproveResult');
         Route::post('tenders/approveResult/{id}', [AdminTenderController::class, 'approveResult'])->name('tenders.approveResult');
         Route::get('tenders/cancel/{id}', [AdminTenderController::class, 'getCancelTender'])->name('tenders.getCancelTender');
         Route::post('tenders/cancel/{id}', [AdminTenderController::class, 'postCancelTender'])->name('tenders.postCancelTender');

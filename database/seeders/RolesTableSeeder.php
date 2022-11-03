@@ -46,6 +46,13 @@ class RolesTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ),
+            4 =>
+                array (
+                    'id' => 5,
+                    'name' => 'Trưởng phòng Thu Mua',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ),
         ));
     }
 }

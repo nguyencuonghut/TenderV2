@@ -128,6 +128,17 @@
               </p>
             </a>
           </li>
+
+          @can('create-admin')
+          <li class="nav-item">
+            <a href="{{route('admin.roles.index')}}" class="nav-link {{ Request::is('admin/roles*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-id-card-alt"></i>
+              <p>
+                Chức vụ
+              </p>
+            </a>
+          </li>
+          @endcan
           @endauth
         </ul>
       </nav>

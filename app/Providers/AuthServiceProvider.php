@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
     public static $permissions = [
+        'create-role' => ['Admin'],
+        'store-role' => ['Admin'],
+        'edit-role' => ['Admin'],
+        'update-role' => ['Admin'],
         'create-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
         'store-supplier' => ['Admin', 'Nhân viên Mua Hàng'],
         'edit-supplier' => ['Admin', 'Nhân viên Mua Hàng'],

@@ -403,9 +403,9 @@ class AdminTenderController extends Controller
                 $tender->is_competitive_bids = true;
             }
 
-            //Send notification email to suppliers
+            //Send notification email to suppliers and some admins
             if('Đang diễn ra' == $request->status) {
-                //Get the mail list
+                //Get the user's mail list
                 $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
                 $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
                 foreach($users as $user)  {
@@ -416,6 +416,15 @@ class AdminTenderController extends Controller
                     $delay = $start_time->addMinutes(-15);
                     Notification::route('mail' , $user->email)->notify((new ReminderTenderInProgress($tender->id))->delay($delay));
                 }
+
+                //Send mail to Trưởng phòng Thu Mua
+                $admins = Admin::all();
+                foreach($admins as $admin) {
+                    if('Trưởng phòng Thu Mua' == $admin->role->name){
+                        Notification::route('mail' , $admin->email)->notify(new TenderInProgress($tender->id));
+                    }
+                }
+
 
                 //Update the in-progress time
                 $tender->tender_in_progress_time = Carbon::now();
