@@ -180,7 +180,7 @@ class AdminAdminController extends Controller
 
     public function anyData()
     {
-        $admins = Admin::select(['id', 'name', 'email'])->get();
+        $admins = Admin::with('role')->select(['id', 'name', 'email', 'role_id'])->get();
         return Datatables::of($admins)
             ->addIndexColumn()
             ->editColumn('name', function ($admins) {
@@ -188,6 +188,9 @@ class AdminAdminController extends Controller
             })
             ->editColumn('email', function ($admins) {
                 return $admins->email;
+            })
+            ->editColumn('role', function ($admins) {
+                return $admins->role->name;
             })
             ->addColumn('actions', function ($admins) {
                 $action = '<a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
