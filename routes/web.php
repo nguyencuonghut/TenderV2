@@ -80,7 +80,7 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::delete('tenders/destroyPropose/{id}', [AdminTenderController::class, 'destroyPropose'])->name('tenders.destroy.propose');
         Route::get('tenders/createRequestApprove/{id}', [AdminTenderController::class, 'createRequestApprove'])->name('tenders.createRequestApprove');
         Route::post('tenders/storeRequestApprove/{id}', [AdminTenderController::class, 'storeRequestApprove'])->name('tenders.storeRequestApprove');
-        Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'get ApproveResult'])->name('tenders.getApproveResult');
+        Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'getApproveResult'])->name('tenders.getApproveResult');
         Route::post('tenders/approveResult/{id}', [AdminTenderController::class, 'approveResult'])->name('tenders.approveResult');
         Route::get('tenders/cancel/{id}', [AdminTenderController::class, 'getCancelTender'])->name('tenders.getCancelTender');
         Route::post('tenders/cancel/{id}', [AdminTenderController::class, 'postCancelTender'])->name('tenders.postCancelTender');
