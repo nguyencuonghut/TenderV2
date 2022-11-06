@@ -148,13 +148,14 @@ class AdminTenderController extends Controller
             }
 
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->get();
-            $proposes = TenderPropose::where('tender_id', $tender->id)->get();
+            $propose = $tender->propose;
             $supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
 
             $unique_bided_supplier_ids = [];
             foreach($bids as $bid) {
                 array_push($unique_bided_supplier_ids, $bid->user->supplier->id);
             }
+
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
@@ -163,7 +164,7 @@ class AdminTenderController extends Controller
                          'bided_supplier_ids' => $bided_supplier_ids,
                          'selected_bids' => $selected_bids,
                          'quantity_and_delivery_times' => $quantity_and_delivery_times,
-                         'proposes' => $proposes,
+                         'propose' => $propose,
                          'supplier_selected_statuses' => $supplier_selected_statuses,
                          'unique_bided_supplier_ids' => collect($unique_bided_supplier_ids)->unique(),
                          'selected_bided_supplier_ids' => $selected_bided_supplier_ids
@@ -696,28 +697,31 @@ class AdminTenderController extends Controller
     public function createPropose(Request $request, $id)
     {
         if(Auth::user()->can('update-tender')){
-            $rules = [
-                'propose' => 'required',
-            ];
-            $messages = [
-                'propose.required' => 'Bạn phải nhập nội dung đề xuất.',
-            ];
-            $request->validate($rules,$messages);
 
-            //Delete all old Propose
-            $old_proposes = TenderPropose::where('tender_id', $id)->get();
-            foreach($old_proposes as $propose){
-                $propose->destroy($propose->id);
+            if(null == $request->propose){
+                //Delete all old Propose
+                $old_proposes = TenderPropose::where('tender_id', $id)->get();
+                foreach($old_proposes as $propose){
+                    $propose->destroy($propose->id);
+                }
+
+                Alert::toast('Xóa đề xuất cũ thành công!', 'success', 'top-right');
+                return redirect()->back();
+            }else{
+                //Delete all old Propose
+                $old_proposes = TenderPropose::where('tender_id', $id)->get();
+                foreach($old_proposes as $propose){
+                    $propose->destroy($propose->id);
+                }
+                //Create new Propose
+                $propose = new TenderPropose();
+                $propose->tender_id = $id;
+                $propose->propose = $request->propose;
+                $propose->save();
+
+                Alert::toast('Tạo đề xuất thành công!', 'success', 'top-right');
+                return redirect()->back();
             }
-
-            //Create new Propose
-            $propose = new TenderPropose();
-            $propose->tender_id = $id;
-            $propose->propose = $request->propose;
-            $propose->save();
-
-            Alert::toast('Tạo đề xuất thành công!', 'success', 'top-right');
-            return redirect()->back();
         }else{
             Alert::toast('Bạn không có quyền tạo đề xuất cho Tender này!', 'error', 'top-right');
             return redirect()->back();

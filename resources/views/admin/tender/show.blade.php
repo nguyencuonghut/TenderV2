@@ -233,63 +233,6 @@
                                           </div>
                                         </div>
                                     </div>
-
-                                    <!--
-                                    @if($bids->count())
-                                    <table id="bids-table" class="table table-bordered table-hover">
-                                        <tr>
-                                          <th>Trúng thầu</th>
-                                          <th style="width: 30%;">Lượng trúng</th>
-                                          <th style="width: 30%;">Nhà cung cấp</th>
-                                          <th>Giá</th>
-                                          <th style="width: 30%;">Điều kiện thanh toán</th>
-                                        </tr>
-                                        @foreach ($bids as $bid)
-                                        <tr style="color:@if($bid->quantity_id % 2 == 0) #057ba9 @endif">
-                                          <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" onclick="return false;"
-                                                  @if($bid->is_selected)
-                                                      checked
-                                                  @endif
-                                                >
-                                              </div>
-                                          </td>
-                                          <td>{{$bid->bid_quantity}} {{$bid->bid_quantity_unit}} - {{$bid->quantity->delivery_time}}</td>
-                                          <td>{{$bid->user->supplier->name}} ({{$bid->user->email}})</td>
-                                          <td>{{ $bid->price }} ({{$bid->price_unit}})</td>s
-                                          <td>{{ $bid->payment_condition }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </table>
-                                    @endif
-
-                                    @if($proposes->count())
-                                    <hr>
-                                    <table id="bids-table" class="table table-bordered table-hover">
-                                        <tr>
-                                          <th>Đề xuất</th>
-                                          <th style="width: 5%;">Xóa</th>
-                                        </tr>
-                                        @foreach ($proposes as $item)
-                                        <tr>
-                                          <td>{{ $item->propose }}</td>
-                                          <td>
-                                            <form action="{{route('admin.tenders.destroy.propose', $item->id)}}" method="POST">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <button type="submit" name="submit" class="btn btn-danger" onClick="return confirm('Bạn có chắc chắn muốn xóa?')"">
-                                                <i class="fas fa-trash-alt"></i>
-                                                </button>
-
-                                                {{csrf_field()}}
-                                            </form>
-                                          </td>
-                                        </tr>
-                                        @endforeach
-                                    </table>
-                                    @endif
-                                    -->
-
                                 </div>
                                   <div class="card-footer clearfix">
                                     @if(Auth::user()->can('create-propose')
@@ -422,20 +365,10 @@
                                                     @endforeach
                                                 </tr>
                                                 @endif
-                                                @if($proposes->count())
+                                                @if($propose)
                                                 <tr>
                                                     <td colspan="5"><b>Đề xuất</b></td>
-                                                    @php
-                                                        $propose = '';
-                                                        foreach($proposes as $item){
-                                                        if($propose == ''){
-                                                            $propose = $propose . '- ' . $item->propose;
-                                                        }else{
-                                                            $propose = $propose . '<br> - ' . $item->propose;
-                                                        }
-                                                        }
-                                                    @endphp
-                                                    <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $propose !!}</td>
+                                                    <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $propose->propose !!}</td>
                                                 </tr>
                                                 @endif
                                                 @if($tender->approve_result)
@@ -506,7 +439,7 @@
                                         <div class="control-group">
                                             <label class="control-label">Đề xuất của bạn</label>
                                             <div class="controls">
-                                                <input type="text" class="form-control" name="propose" id="propose" required="">
+                                                <input type="text" class="form-control" name="propose" id="propose" required="" @if (null != $propose) value="{{$propose->propose}}" @endif>
                                             </div>
                                         </div>
                                     </div>
