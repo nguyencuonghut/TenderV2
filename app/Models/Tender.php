@@ -25,7 +25,7 @@ class Tender extends Model
         'tender_end_time',
         'creator_id',
         'status',
-        'approver_id',
+        'auditor_id',
         'tender_in_progress_time',
         'tender_closed_time',
         'is_competitive_bids',
@@ -61,5 +61,10 @@ class Tender extends Model
     public function comments()
     {
         return $this->hasMany(TenderApproveComment::class);
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(Admin::class, 'manager_id');
     }
 }

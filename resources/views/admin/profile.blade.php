@@ -53,7 +53,7 @@
                         @endif
                         @if(Auth::user()->role->name == 'Nhân viên Kiểm Soát')
                         <li class="list-group-item">
-                            <b>Số tender tôi kiểm tra</b> <a class="float-right">{{$my_approved_tenders_cnt}}</a>
+                            <b>Số tender tôi kiểm tra</b> <a class="float-right">{{$my_audited_tenders_cnt}}</a>
                         </li>
                         @endif
                     </ul>
@@ -85,7 +85,7 @@
                   @if ($tender->creator_id == Auth::user()->id)
                     Tôi tạo tender lúc {{date('d/m/Y H:i',strtotime($tender->created_at))}} <br>
                   @endif
-                  @if ($tender->approver_id == Auth::user()->id)
+                  @if ($tender->auditor_id == Auth::user()->id)
                     @if($tender->tender_in_progress_time)
                     Tôi mời thầu lúc {{date('d/m/Y H:i',strtotime($tender->tender_in_progress_time))}} <br>
                     @endif

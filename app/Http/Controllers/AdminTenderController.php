@@ -399,7 +399,7 @@ class AdminTenderController extends Controller
                 return redirect()->back();
             }
             $tender->status = $request->status;
-            $tender->approver_id = Auth::user()->id;
+            $tender->auditor_id = Auth::user()->id;
             if(null != $request->is_competitive_bids){
                 $tender->is_competitive_bids = true;
             }
@@ -768,9 +768,9 @@ class AdminTenderController extends Controller
         $tender->manager_id = $request->manager_id;
         $tender->save();
 
-        $approver = Admin::findOrFail($tender->approver_id);
+        $manager = Admin::findOrFail($tender->manager_id);
         //Send email notification
-        Notification::route('mail' , $approver->email)->notify(new TenderRequestApprove($tender->id));
+        Notification::route('mail' , $manager->email)->notify(new TenderRequestApprove($tender->id));
 
         Alert::toast('Gửi yêu cầu duyệt kết quả Tender thành công!', 'success', 'top-right');
         return redirect()->route('admin.tenders.show', $tender->id);
