@@ -12,7 +12,7 @@
           <div class="col-sm-8">
             <h1 class="m-0">{{ $tender->title }}</h1>
             @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time))
-            <div class="wrap-countdown mercado-countdown" data-expire="{{ Carbon\Carbon::parse($tender->tender_end_time)->format('Y/m/d h:i:s') }}"></div>
+            <div class="wrap-countdown mercado-countdown" data-expire="{{ Carbon\Carbon::parse($tender->tender_end_time)->format('Y/m/d H:i:s') }}"></div>
             @endif
 
           </div><!-- /.col -->
@@ -399,28 +399,27 @@
    ;(function($) {
 
     var MERCADO_JS = {
-      init: function(){
-         this.mercado_countdown();
-
-      },
+        init: function(){
+            this.mercado_countdown();
+        },
     mercado_countdown: function() {
-         if($(".mercado-countdown").length > 0){
-                $(".mercado-countdown").each( function(index, el){
-                  var _this = $(this),
-                  _expire = _this.data('expire');
-               _this.countdown(_expire, function(event) {
-                        $(this).html( event.strftime('<span><i style="color:red" class="fas fa-stopwatch"></i> <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây</span>'));
-                    });
+        if($(".mercado-countdown").length > 0){
+            $(".mercado-countdown").each( function(index, el){
+                var _this = $(this),
+                _expire = _this.data('expire');
+                _this.countdown(_expire, function(event) {
+                    $(this).html( event.strftime('<span><i style="color:red" class="fas fa-stopwatch"></i> <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây</span>'));
                 });
-         }
+            });
+        }
       },
 
    }
 
-      window.onload = function () {
-         MERCADO_JS.init();
-      }
+    window.onload = function () {
+        MERCADO_JS.init();
+    }
 
-      })(window.Zepto || window.jQuery, window, document);
+    })(window.Zepto || window.jQuery, window, document);
 </script>
 @endpush
