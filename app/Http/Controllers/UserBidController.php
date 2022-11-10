@@ -106,6 +106,7 @@ class UserBidController extends Controller
             $bid->pack = $request->pack;
             $bid->delivery_time = $request->delivery_time;
             $bid->note = $request->note;
+            $bid->seller = $request->seller;
             $bid->save();
 
             //Send notification to email
@@ -217,6 +218,7 @@ class UserBidController extends Controller
             $bid->pack = $request->pack;
             $bid->delivery_time = $request->delivery_time;
             $bid->note = $request->note;
+            $bid->seller = $request->seller;
             $bid->save();
 
             //Send notification to email

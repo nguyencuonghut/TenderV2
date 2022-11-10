@@ -230,7 +230,12 @@
                                         - {{$bid->delivery_time}}
                                       </td>
                                       <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
-                                      <td>{{ $tender->origin }}</td>
+                                      <td>{{ $tender->origin }}
+                                        @if($bid->seller)
+                                          <br>
+                                          (Bên bán: {{$bid->seller}})
+                                        @endif
+                                      </td>
                                       <td>{{ $bid->pack }}</td>
                                       <td>{!! $tender->delivery_condition !!}</td>
                                       <td>{!! $tender->payment_condition !!}</td>
@@ -362,9 +367,9 @@
                                                     </div>
                                                     <div class="col-6">
                                                         <div class="control-group">
-                                                            <label class="control-label">Ghi chú</label>
+                                                            <label class="control-label">Bên bán</label>
                                                             <div class="controls">
-                                                                <input type="text" class="form-control" name="note" id="note" required="">
+                                                                <input type="text" class="form-control" name="seller" id="seller" required="">
                                                             </div>
                                                         </div>
                                                     </div>

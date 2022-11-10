@@ -27,6 +27,7 @@ class CreateBidsTable extends Migration
             $table->float('price');
             $table->enum('price_unit', ['đồng/kg', 'USD/tấn', 'USD/kg', 'đồng/chiếc']);
             $table->text('note')->nullable();
+            $table->text('seller')->nullable();
             $table->string('pack')->nullable();
             $table->text('delivery_time')->nullable();
             $table->integer('tender_quantity')->default(0);

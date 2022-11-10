@@ -126,9 +126,9 @@
                             </div>
                             <div class="col-6">
                                 <div class="control-group">
-                                    <label class="control-label">Ghi chú</label>
+                                    <label class="control-label">Bên bán</label>
                                     <div class="controls">
-                                        <input type="text" class="form-control" name="note" id="note" value="{{$bid->note}}" required="">
+                                        <input type="text" class="form-control" name="seller" id="seller" value="{{$bid->seller}}" required="">
                                     </div>
                                 </div>
                             </div>

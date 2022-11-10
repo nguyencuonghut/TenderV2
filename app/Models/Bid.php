@@ -17,6 +17,7 @@ class Bid extends Model
         'price',
         'price_unit',
         'note',
+        'seller',
         'pack',
         'delivery_time',
         'tender_quantity',
