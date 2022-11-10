@@ -32,6 +32,8 @@ class CreateTendersTable extends Migration
             $table->enum('status', ['Mở', 'Đóng', 'Đang diễn ra', 'Hủy']);
             $table->bigInteger('auditor_id')->unsigned()->nullable();
             $table->foreign('auditor_id')->references('id')->on('admins')->onDelete('cascade');
+            $table->bigInteger('manager_id')->unsigned()->nullable();
+            $table->foreign('manager_id')->references('id')->on('admins')->onDelete('cascade');
             $table->dateTime('tender_in_progress_time')->nullable();
             $table->dateTime('tender_closed_time')->nullable();
             $table->boolean('is_competitive_bids')->default(false);
