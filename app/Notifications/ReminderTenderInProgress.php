@@ -49,10 +49,7 @@ class ReminderTenderInProgress extends Notification implements ShouldQueue
 
         return (new MailMessage)
                     ->subject('!!! Nhắc nhở !!! Thời gian chào thầu: ' . $tender->title)
-                    ->line('Chỉ còn 15 phút nữa là kết thúc đấu thầu. Xin mời quý nhà cung cấp chào thầu cho: ' . $tender->title . '.')
-                    ->line('Thời gian đóng thầu: ' . date('d/m/Y H:i', strtotime($tender->tender_end_time)) . ' - '. date('d/m/Y H:i', strtotime($tender->tender_end_time)) . '.')
                     ->action('Mở tender', url($url))
-                    ->line('Xin cảm ơn!')
                     ->markdown('mail.tender.inprogress', ['url' => url($url), 'tender' => $tender, 'quantity_and_delivery_times' => $quantity_and_delivery_times]);
 
     }
