@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   <!-- Summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
-  <!-- daterange picker -->
-  <link rel="stylesheet" href="{{asset('plugins/daterangepicker/daterangepicker.css')}}">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
 @endpush
 
 @extends('layouts.base')
@@ -119,12 +119,12 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <label class="required-field">Thời gian mở thầu</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                    <label class="required-field">Thời gian đóng thầu</label>
+                                    <div class="input-group date" id="tender_end_time_get" name="tender_end_time_get" data-target-input="nearest">
+                                        <input type="text" id="tender_end_time" name="tender_end_time" class="form-control datetimepicker-input" data-target="#tender_end_time_get"/>
+                                        <div class="input-group-append" data-target="#tender_end_time_get" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
-                                        <input type="text" class="form-control float-right" id="date_range" name="date_range">
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +151,8 @@
 <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
 <!-- date-range-picker -->
 <script src="{{asset('plugins/moment/moment.min.js')}}"></script>
-<script src="{{asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{{asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 
 <script>
     $(function () {
@@ -160,15 +161,8 @@
         theme: 'bootstrap4'
         })
 
-        //Date range picker with time picker
-        $('#date_range').daterangepicker({
-            timePicker: true,
-            startDate: moment().startOf('hour').add(30, 'minutes'),
-            endDate: moment().startOf('hour').add(60, 'minutes'),
-            locale: {
-                format: 'MM/DD hh:mm A'
-            }
-        })
+        //Date picker with time picker
+        $('#tender_end_time_get').datetimepicker({ icons: { time: 'far fa-clock' } });
 
         // Summernote
         $('#delivery_condition').summernote({

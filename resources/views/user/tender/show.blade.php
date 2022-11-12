@@ -79,14 +79,14 @@
                                     <div class="row invoice-info">
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Thời gian bắt đầu</strong><br>
-                                            {{date('d/m/Y H:i', strtotime($tender->tender_start_time))}}<br>
+                                            <strong>Thời gian mở thầu</strong><br>
+                                            {{date('d/m/Y H:i', strtotime($tender->tender_in_progress_time))}}<br>
                                           </address>
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Thời gian kết thúc</strong><br>
+                                            <strong>Thời gian đóng thầu</strong><br>
                                             {{date('d/m/Y H:i', strtotime($tender->tender_end_time));}}<br>
                                           </address>
                                         </div>

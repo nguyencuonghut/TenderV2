@@ -78,7 +78,7 @@
                   <strong><i class="fas fa-gavel mr-1" style="color:#ffc107;"></i> {{$tender->title}}</strong>
 
                   <p class="text-muted">
-                    {{date('d/m/Y H:i',strtotime($tender->tender_start_time))}} - {{date('d/m/Y H:i',strtotime($tender->tender_end_time))}} <br>
+                    {{date('d/m/Y H:i',strtotime($tender->tender_in_progress_time))}} - {{date('d/m/Y H:i',strtotime($tender->tender_end_time))}} <br>
                   </p>
 
                   <p class="text-muted">
@@ -118,8 +118,7 @@
                                     <th>#</th>
                                     <th>Tiêu đề</th>
                                     <th>Trạng thái</th>
-                                    <th>Bắt đầu</th>
-                                    <th>Kết thúc</th>
+                                    <th>Thờ gian đóng thầu</th>
                                 </tr>
                                 </thead>
                               </table>
@@ -176,7 +175,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             /*
@@ -184,7 +183,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
 
             },
@@ -192,14 +191,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             */
@@ -207,14 +206,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             }
         ],
@@ -224,7 +223,6 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
             {data: 'status', name: 'status'},
-            {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
        ]
       }).buttons().container().appendTo('#bids-table_wrapper .col-md-6:eq(0)');

@@ -25,7 +25,6 @@ class CreateTendersTable extends Migration
             $table->text('freight_charge')->nullable();
             $table->text('certificate')->nullable();
             $table->text('other_term')->nullable();
-            $table->dateTime('tender_start_time');
             $table->dateTime('tender_end_time');
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('admins')->onDelete('cascade');

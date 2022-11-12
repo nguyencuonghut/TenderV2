@@ -46,8 +46,7 @@
                   <tr>
                     <th>STT</th>
                     <th>Tiêu đề</th>
-                    <th>Bắt đầu</th>
-                    <th>Kết thúc</th>
+                    <th>Thời gian đóng thầu</th>
                     <th>Trạng thái</th>
                   </tr>
                   </thead>
@@ -97,7 +96,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             /*
@@ -105,7 +104,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
 
             },
@@ -113,14 +112,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             */
@@ -128,14 +127,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             }
         ],
@@ -144,7 +143,6 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'title', name: 'title'},
-            {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
        ]

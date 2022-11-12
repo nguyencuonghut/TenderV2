@@ -112,8 +112,7 @@
                                 <th>#</th>
                                 <th>Tiêu đề</th>
                                 <th>Trạng thái</th>
-                                <th>Bắt đầu</th>
-                                <th>Kết thúc</th>
+                                <th>Thời gian đóng thầu</th>
                             </tr>
                             </thead>
                             </table>
@@ -169,7 +168,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             /*
@@ -177,7 +176,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
 
             },
@@ -192,7 +191,7 @@
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             */
@@ -200,14 +199,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3]
                 }
             }
         ],
@@ -217,7 +216,6 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'titlelink', name: 'title'},
             {data: 'status', name: 'status'},
-            {data: 'tender_start_time', name: 'tender_start_time'},
             {data: 'tender_end_time', name: 'tender_end_time'},
        ]
       }).buttons().container().appendTo('#tenders-table_wrapper .col-md-6:eq(0)');

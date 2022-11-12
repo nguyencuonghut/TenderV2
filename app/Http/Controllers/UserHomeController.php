@@ -54,7 +54,7 @@ class UserHomeController extends Controller
     public function profile()
     {
         $my_tenders = collect();
-        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_start_time', 'tender_end_time', 'status'])->get();
+        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'status'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = [];
             $selected_supplier_ids = explode(",", $tender->supplier_ids);

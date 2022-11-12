@@ -84,14 +84,14 @@
                                     <div class="row invoice-info">
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Thời gian bắt đầu</strong><br>
-                                            {{date('d/m/Y H:i', strtotime($tender->tender_start_time))}}<br>
+                                            <strong>Thời gian mở thầu</strong><br>
+                                            {{date('d/m/Y H:i', strtotime($tender->tender_in_progress_time))}}<br>
                                           </address>
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-sm-4 invoice-col">
                                           <address>
-                                            <strong>Thời gian kết thúc</strong><br>
+                                            <strong>Thời gian đóng thầu</strong><br>
                                             {{date('d/m/Y H:i', strtotime($tender->tender_end_time)) }}<br>
                                           </address>
                                         </div>
@@ -192,7 +192,7 @@
                         </div>
                           <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                             <h2>{{$tender->title}}</h2>
-                            <h6>(Thời gian thầu: {{date('d/m/Y H:i', strtotime($tender->tender_start_time))}} - {{date('d/m/Y H:i', strtotime($tender->tender_end_time))}})</h4>
+                            <h6>(Thời gian thầu: {{date('d/m/Y H:i', strtotime($tender->tender_in_progress_time))}} - {{date('d/m/Y H:i', strtotime($tender->tender_end_time))}})</h4>
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
