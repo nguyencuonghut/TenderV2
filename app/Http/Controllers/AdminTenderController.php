@@ -296,8 +296,9 @@ class AdminTenderController extends Controller
                     return '<span class="badge badge-success">Đóng</span>';
                 } else if($tenders->status == 'Hủy'){
                     return '<span class="badge badge-secondary">Hủy</span>';
-                }
-                 else {
+                } else if($tenders->status == 'Đang kiểm tra'){
+                    return '<span class="badge badge-info">Đang kiểm tra</span>';
+                } else {
                     return '<span class="badge badge-warning">Đang diễn ra</span>';
                 }
             })

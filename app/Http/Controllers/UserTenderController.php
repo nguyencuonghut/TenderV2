@@ -78,6 +78,8 @@ class UserTenderController extends Controller
                     return '<span class="badge badge-success">Đóng</span>';
                 } else if($user_tenders->status == 'Hủy'){
                     return '<span class="badge badge-secondary">Hủy</span>';
+                } else if($user_tenders->status == 'Đang kiểm tra'){
+                    return '<span class="badge badge-info">Đang kiểm tra</span>';
                 } else {
                     return '<span class="badge badge-warning">Đang diễn ra</span>';
                 }

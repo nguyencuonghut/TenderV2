@@ -41,13 +41,19 @@ class UserHomeController extends Controller
             }
         });
 
-        $my_user_id = Auth::user()->id;
-        $my_bids = Bid::where('user_id', $my_user_id)->get();
+        $checking_tenders =  Tender::where('status', 'Đang kiểm tra')->get();
+        $my_checking_tenders = $checking_tenders->filter(function($item, $key) {
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+            $my_supplier_id = Auth::user()->supplier_id;
+            if(in_array($my_supplier_id, $selected_supplier_ids)) {
+                return $item;
+            }
+        });
 
         return view('user.home', ['my_all_tenders' => $my_all_tenders,
                                     'my_completed_tenders' =>$my_completed_tenders,
                                     'my_in_progress_tenders' =>$my_in_progress_tenders,
-                                    'my_bids' => $my_bids
+                                    'my_checking_tenders' => $my_checking_tenders
                                 ]);
     }
 

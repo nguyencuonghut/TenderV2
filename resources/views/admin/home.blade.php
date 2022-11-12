@@ -40,7 +40,7 @@
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-th-list"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Tổng số tender</span>
+                    <span class="info-box-text">Tổng tender</span>
                     <span class="info-box-number">
                     {{$all_tenders_count}}
                     </span>
@@ -55,7 +55,7 @@
                 <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Tender hoàn thành</span>
+                    <span class="info-box-text">Hoàn thành</span>
                     <span class="info-box-number">{{$completed_tenders_count}}</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -72,7 +72,7 @@
                 <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-spinner"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Tender đang diễn ra</span>
+                    <span class="info-box-text">Đang diễn ra</span>
                     <span class="info-box-number">{{$in_progress_tenders_count}}</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -82,11 +82,11 @@
             <!-- /.col -->
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box mb-3">
-                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-truck"></i></span>
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-tasks"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Số nhà cung cấp</span>
-                    <span class="info-box-number">{{$suppliers_count}}</span>
+                    <span class="info-box-text">Đang kiểm tra</span>
+                    <span class="info-box-number">{{$checking_tenders_count}}</span>
                 </div>
                 <!-- /.info-box-content -->
                 </div>

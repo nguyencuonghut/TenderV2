@@ -17,12 +17,12 @@ class AdminHomeController extends Controller
         $all_tenders_count = Tender::count();
         $completed_tenders_count = Tender::where('status', 'Đóng')->count();
         $in_progress_tenders_count= Tender::where('status', 'Đang diễn ra')->count();
-        $suppliers_count = Supplier::count();
+        $checking_tenders_count= Tender::where('status', 'Đang kiểm tra')->count();
 
         return view('admin.home', ['all_tenders_count' => $all_tenders_count,
                                     'completed_tenders_count' =>$completed_tenders_count,
                                     'in_progress_tenders_count' =>$in_progress_tenders_count,
-                                    'suppliers_count' => $suppliers_count]);
+                                    'checking_tenders_count' => $checking_tenders_count]);
     }
 
     public function profile()

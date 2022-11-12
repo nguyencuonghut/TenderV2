@@ -237,7 +237,7 @@
                                   <div class="card-footer clearfix">
                                     @if(Auth::user()->can('create-propose')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'Đang diễn ra'
+                                    && $tender->status == 'Đang kiểm tra'
                                     && $bids->count())
                                       <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
                                         <i class="fas fa-clipboard-check"></i> Đề xuất
@@ -246,7 +246,7 @@
 
                                     @if(Auth::user()->can('create-result')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                                    && $tender->status == 'Đang diễn ra'
+                                    && $tender->status == 'Đang kiểm tra'
                                     && $bids->count())
                                     <a href="{{route('admin.tenders.createResult', $tender->id)}}">
                                         <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
@@ -400,7 +400,7 @@
 
                             @if(Auth::user()->can('create-result')
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'Đang diễn ra'
+                            && $tender->status == 'Đang kiểm tra'
                             && 0 != $selected_bids->count())
                             <a href="{{route('admin.tenders.createRequestApprove', $tender->id)}}">
                                 <button role="button" type="button" class="btn btn-success"> Yêu cầu duyệt</button>
@@ -410,7 +410,7 @@
 
                             @if(Auth::user()->can('approve-result')
                             && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'Đang diễn ra'
+                            && $tender->status == 'Đang kiểm tra'
                             && 0 != $selected_bids->count())
                             <br>
                             <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
