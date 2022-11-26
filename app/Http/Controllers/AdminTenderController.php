@@ -575,12 +575,14 @@ class AdminTenderController extends Controller
 
         //Store the selected status of suppliers
         $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
-        $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
+        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         //dd($suppliers);
         foreach($suppliers as $key => $value){
             //Check if supplier has any user
             $users = User::where('supplier_id', $value->id)->get();
-            if(0 == $users->count()){
+            if(0 == $users->count()
+            && in_array($value->id, $request->supplier_ids)){
                 $is_users_not_existed = true;
                 $supplier_id_not_has_users = $value->id;
                 break;
