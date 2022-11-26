@@ -79,6 +79,14 @@ class AdminTenderController extends Controller
             ];
             $request->validate($rules,$messages);
 
+            //Validate the Tender end time
+            $tender_end_time = Carbon::parse($request->tender_end_time);
+            if(Carbon::now()->addDays(10)->lessThan($tender_end_time)){
+                //Not allow to set the tender end time > 10 days from now
+                Alert::toast('Thời gian đóng tender không quá 10 ngày từ bây giờ. Bạn vui lòng chọn lại!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+
             $last_tender = Tender::latest()->first();
             if($last_tender == null) {
                 $tender_id = 1;
