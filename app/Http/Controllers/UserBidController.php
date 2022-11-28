@@ -7,6 +7,7 @@ use App\Models\QuantityAndDeliveryTime;
 use App\Models\Tender;
 use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
+use App\Models\UserActivityLog;
 use App\Notifications\BidCreatedOrUpdated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -55,6 +56,17 @@ class UserBidController extends Controller
         if('Đóng' != $bid->tender->status
             && Carbon::now()->lessThan($bid->tender->tender_end_time)
             && in_array(Auth::user()->id, $users)) {
+
+            //Create User Activity Log
+            $activity_log = new UserActivityLog();
+            $activity_log->user_id = Auth::user()->id;
+            $activity_log->tender_id = $bid->tender_id;
+            $activity_log->activity_type = 'Xóa';
+            $activity_log->old_price = $bid->price;
+            $activity_log->old_price_unit = $bid->price_unit;
+            $activity_log->save();
+
+            //Destroy the bid
             $bid->destroy($id);
             Alert::toast('Xóa thành công!', 'success', 'top-right');
         } else {
@@ -108,6 +120,15 @@ class UserBidController extends Controller
             $bid->note = $request->note;
             $bid->seller = $request->seller;
             $bid->save();
+
+            //Create User Activity Log
+            $activity_log = new UserActivityLog();
+            $activity_log->user_id = Auth::user()->id;
+            $activity_log->tender_id = $bid->tender_id;
+            $activity_log->activity_type = 'Thêm';
+            $activity_log->new_price = $bid->price;
+            $activity_log->new_price_unit = $bid->price_unit;
+            $activity_log->save();
 
             //Send notification to email
             if($tender->is_competitive_bids){
@@ -208,6 +229,12 @@ class UserBidController extends Controller
                 'bid_quantity_unit.required' => 'Bạn phải nhập đơn vị chào.',
             ];
             $request->validate($rules,$messages);
+
+            //Store old price
+            $old_price = $bid->price;
+            $old_price_unit = $bid->price_unit;
+
+            //Update the bid
             $bid->user_id = Auth::user()->id;
             $bid->supplier_id = Auth::user()->supplier->id;
             $bid->quantity_id = $request->quantity_id;
@@ -220,6 +247,17 @@ class UserBidController extends Controller
             $bid->note = $request->note;
             $bid->seller = $request->seller;
             $bid->save();
+
+            //Create User Activity Log
+            $activity_log = new UserActivityLog();
+            $activity_log->user_id = Auth::user()->id;
+            $activity_log->tender_id = $bid->tender_id;
+            $activity_log->activity_type = 'Sửa';
+            $activity_log->new_price = $bid->price;
+            $activity_log->new_price_unit = $bid->price_unit;
+            $activity_log->old_price = $old_price;
+            $activity_log->old_price_unit = $old_price_unit;
+            $activity_log->save();
 
             //Send notification to email
             if($tender->is_competitive_bids){

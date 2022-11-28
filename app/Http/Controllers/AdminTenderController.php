@@ -14,6 +14,7 @@ use App\Models\TenderApproveComment;
 use App\Models\TenderPropose;
 use App\Models\TenderSuppliersSelectedStatus;
 use App\Models\User;
+use App\Models\UserActivityLog;
 use App\Notifications\ReminderTenderInProgress;
 use App\Notifications\TenderApproved;
 use App\Notifications\TenderCanceled;
@@ -160,6 +161,7 @@ class AdminTenderController extends Controller
                 array_push($unique_bided_supplier_ids, $bid->user->supplier->id);
             }
 
+            $activity_logs = UserActivityLog::where('tender_id', $tender->id)->orderBy('id', 'asc')->get();
             return view('admin.tender.show',
                         ['tender' => $tender,
                          'bids' => $bids,
@@ -171,7 +173,8 @@ class AdminTenderController extends Controller
                          'propose' => $propose,
                          'supplier_selected_statuses' => $supplier_selected_statuses,
                          'unique_bided_supplier_ids' => collect($unique_bided_supplier_ids)->unique(),
-                         'selected_bided_supplier_ids' => $selected_bided_supplier_ids
+                         'selected_bided_supplier_ids' => $selected_bided_supplier_ids,
+                         'activity_logs' => $activity_logs
                         ]);
         } else {
             Alert::toast('Tender đang diễn ra. Bạn không quyền xem tender này!', 'error', 'top-right');

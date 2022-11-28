@@ -2,6 +2,13 @@
 {{ 'Chi tiết tender' }}
 @endsection
 
+@push('styles')
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@endpush
+
 @extends('layouts.base')
 @section('content')
 <div class="content-wrapper">
@@ -42,10 +49,36 @@
                             <a class="nav-link" id="custom-tabs-one-profile-tab-1" data-toggle="pill" href="#custom-tabs-one-profile-1" role="tab" aria-controls="custom-tabs-one-profile-1" aria-selected="false">Kết quả</a>
                           </li>
                           @endif
+                          @if ($tender->status == 'Đang kiểm tra'
+                                || $tender->status == 'Đóng')
+                          <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-one-profile-tab-2" data-toggle="pill" href="#custom-tabs-one-profile-2" role="tab" aria-controls="custom-tabs-one-profile-2" aria-selected="false">Nhật ký</a>
+                          </li>
+                          @endif
                         </ul>
                       </div>
                       <div class="card-body">
                         <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade" id="custom-tabs-one-profile-2" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab-2">
+                                <h2>{{$tender->title}}</h2>
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                      <table id="logs-table" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                          <th>Nhà cung cấp</th>
+                                          <th>Hoạt động</th>
+                                          <th>Giá mới</th>
+                                          <th>Giá cũ</th>
+                                          <th>Thời gian</th>
+                                        </tr>
+                                        </thead>
+                                      </table>
+                                    </div>
+                                  </div>
+                            </div>
+
                             <div class="tab-pane fade" id="custom-tabs-one-profile-1" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab-1">
                                 <h2>{{$tender->title}}</h2>
                                 <div class="card">
@@ -467,3 +500,39 @@
     </section>
 </div>
 @endsection
+
+
+@push('scripts')
+<!-- DataTables  & Plugins -->
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+
+
+
+<style type="text/css">
+    .dataTables_wrapper .dt-buttons {
+    margin-bottom: -3em
+  }
+</style>
+
+
+<script>
+    $(function () {
+      $("#logs-table").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        ajax: ' {!! route('admin.logs.data', $tender->id) !!}',
+        columns: [
+            {data: 'supplier', name: 'supplier'},
+            {data: 'activity_type', name: 'activity_type'},
+            {data: 'new_price', name: 'new_price'},
+            {data: 'old_price', name: 'old_price'},
+            {data: 'created_at', name: 'created_at'},
+       ]
+      }).buttons().container().appendTo('#logs-table_wrapper .col-md-6:eq(0)');
+    });
+  </script>
+@endpush

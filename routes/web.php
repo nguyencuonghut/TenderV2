@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminMaterialController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminSupplierController;
 use App\Http\Controllers\AdminTenderController;
+use App\Http\Controllers\AdminUserActivityLogController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserBidController;
 use App\Http\Controllers\UserHomeController;
@@ -84,6 +85,8 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::post('tenders/approveResult/{id}', [AdminTenderController::class, 'approveResult'])->name('tenders.approveResult');
         Route::get('tenders/cancel/{id}', [AdminTenderController::class, 'getCancelTender'])->name('tenders.getCancelTender');
         Route::post('tenders/cancel/{id}', [AdminTenderController::class, 'postCancelTender'])->name('tenders.postCancelTender');
+
+        Route::get('logs/data/{tender_id}', [AdminUserActivityLogController::class, 'anyData'])->name('logs.data');
     });
 });
 
