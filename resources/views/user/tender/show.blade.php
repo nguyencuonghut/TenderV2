@@ -227,7 +227,9 @@
                                         - {{$bid->quantity->delivery_time}}</td>
                                       <td>
                                         - {{number_format($bid->bid_quantity, 0, '.', ',')}} {{$bid->bid_quantity_unit}} <br>
+                                        @if($bid->delivery_time)
                                         - {{$bid->delivery_time}}
+                                        @endif
                                       </td>
                                       <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                       <td>{{ $tender->origin }}
