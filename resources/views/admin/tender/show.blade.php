@@ -68,6 +68,7 @@
                                         <thead>
                                         <tr>
                                           <th>Nhà cung cấp</th>
+                                          <th>Lượng yêu cầu</th>
                                           <th>Hoạt động</th>
                                           <th>Giá mới</th>
                                           <th>Giá cũ</th>
@@ -527,6 +528,7 @@
         ajax: ' {!! route('admin.logs.data', $tender->id) !!}',
         columns: [
             {data: 'supplier', name: 'supplier'},
+            {data: 'quantity', name: 'quantity'},
             {data: 'activity_type', name: 'activity_type'},
             {data: 'new_price', name: 'new_price'},
             {data: 'old_price', name: 'old_price'},

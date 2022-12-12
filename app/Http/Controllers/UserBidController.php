@@ -61,6 +61,7 @@ class UserBidController extends Controller
             $activity_log = new UserActivityLog();
             $activity_log->user_id = Auth::user()->id;
             $activity_log->tender_id = $bid->tender_id;
+            $activity_log->quantity_id = $bid->quantity_id;
             $activity_log->activity_type = 'Xóa';
             $activity_log->old_price = $bid->price;
             $activity_log->old_price_unit = $bid->price_unit;
@@ -125,6 +126,7 @@ class UserBidController extends Controller
             $activity_log = new UserActivityLog();
             $activity_log->user_id = Auth::user()->id;
             $activity_log->tender_id = $bid->tender_id;
+            $activity_log->quantity_id = $bid->quantity_id;
             $activity_log->activity_type = 'Thêm';
             $activity_log->new_price = $bid->price;
             $activity_log->new_price_unit = $bid->price_unit;
@@ -252,6 +254,7 @@ class UserBidController extends Controller
             $activity_log = new UserActivityLog();
             $activity_log->user_id = Auth::user()->id;
             $activity_log->tender_id = $bid->tender_id;
+            $activity_log->quantity_id = $bid->quantity_id;
             $activity_log->activity_type = 'Sửa';
             $activity_log->new_price = $bid->price;
             $activity_log->new_price_unit = $bid->price_unit;

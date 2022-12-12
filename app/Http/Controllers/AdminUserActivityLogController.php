@@ -14,6 +14,9 @@ class AdminUserActivityLogController extends Controller
             ->editColumn('supplier', function ($logs) {
                 return $logs->user->supplier->name;
             })
+            ->editColumn('quantity', function ($logs) {
+                return $logs->quantity->quantity . ' (' . $logs->quantity->quantity_unit . ')' . ' - ' . $logs->quantity->delivery_time;
+            })
             ->editColumn('activity_type', function ($logs) {
                 if($logs->activity_type == 'Thêm') {
                     return '<span class="badge badge-success">Thêm</span>';

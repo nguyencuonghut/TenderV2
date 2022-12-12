@@ -19,6 +19,8 @@ class CreateUserActivityLogs extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('tender_id')->unsigned();
             $table->foreign('tender_id')->references('id')->on('tenders')->onDelete('cascade');
+            $table->bigInteger('quantity_id')->unsigned();
+            $table->foreign('quantity_id')->references('id')->on('quantity_and_delivery_times')->onDelete('cascade');
             $table->enum('activity_type', ['Thêm', 'Sửa', 'Xóa']);
             $table->float('old_price')->default(0);
             $table->enum('old_price_unit', ['đồng/kg', 'USD/tấn', 'USD/kg', 'đồng/chiếc'])->default('đồng/kg');

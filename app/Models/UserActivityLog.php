@@ -10,7 +10,9 @@ class UserActivityLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'bid_id',
+        'user_id',
+        'tender_id',
+        'quantity_id',
         'activity_type',
         'old_price',
         'old_price_unit',
@@ -25,6 +27,10 @@ class UserActivityLog extends Model
     public function tender()
     {
         return $this->belongsTo(Tender::class);
+    }
+    public function quantity()
+    {
+        return $this->belongsTo(QuantityAndDeliveryTime::class);
     }
 
 }
