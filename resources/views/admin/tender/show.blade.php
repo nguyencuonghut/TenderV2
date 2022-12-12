@@ -119,7 +119,9 @@
                                         <div class="col-sm-4 invoice-col">
                                           <address>
                                             <strong>Thời gian mở thầu</strong><br>
+                                            @if($tender->tender_in_progress_time)
                                             {{date('d/m/Y H:i', strtotime($tender->tender_in_progress_time))}}<br>
+                                            @endif
                                           </address>
                                         </div>
                                         <!-- /.col -->
