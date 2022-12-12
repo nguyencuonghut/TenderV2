@@ -117,7 +117,7 @@
                                     <div class="control-group">
                                         <label class="control-label">Ghi chú giá cước vận tải</label>
                                         <div class="controls">
-                                            <input type="text" class="form-control" name="freight_charge" id="freight_charge" required="">
+                                            <input type="text" class="form-control" name="freight_charge" id="freight_charge" required="" value="{{$tender->freight_charge}}">
                                         </div>
                                     </div>
                                 </div>
