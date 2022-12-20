@@ -669,7 +669,7 @@ class AdminTenderController extends Controller
             $bid->is_selected = true;
             $bid->save();
 
-            Alert::toast('Đề xuất kết quả thầu thành công!', 'success', 'top-right');
+            Alert::toast('Chọn kết quả thầu thành công!', 'success', 'top-right');
             return redirect()->route('admin.tenders.createResult', $id);
         }else{
             Alert::toast('Bạn không có quyền đề xuất kết quả thầu!', 'error', 'top-right');
@@ -689,7 +689,7 @@ class AdminTenderController extends Controller
 
             $tender = Tender::findOrFail($bid->tender_id);
 
-            Alert::toast('Xóa đề xuất thầu thành công!', 'success', 'top-right');
+            Alert::toast('Xóa kết quả thầu thành công!', 'success', 'top-right');
             return redirect()->route('admin.tenders.createResult', $tender->id);
         }else{
             Alert::toast('Bạn không có quyền xóa kết quả thầu!', 'error', 'top-right');
