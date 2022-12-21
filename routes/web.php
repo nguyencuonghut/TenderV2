@@ -81,6 +81,9 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::delete('tenders/destroyPropose/{id}', [AdminTenderController::class, 'destroyPropose'])->name('tenders.destroy.propose');
         Route::get('tenders/createRequestApprove/{id}', [AdminTenderController::class, 'createRequestApprove'])->name('tenders.createRequestApprove');
         Route::post('tenders/storeRequestApprove/{id}', [AdminTenderController::class, 'storeRequestApprove'])->name('tenders.storeRequestApprove');
+        Route::patch('tenders/requestAudit/{id}', [AdminTenderController::class, 'requestAudit'])->name('tenders.requestAudit');
+        Route::get('tenders/getAudit/{id}', [AdminTenderController::class, 'getAudit'])->name('tenders.getAudit');
+        Route::post('tenders/auditResult/{id}', [AdminTenderController::class, 'auditResult'])->name('tenders.auditResult');
         Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'getApproveResult'])->name('tenders.getApproveResult');
         Route::post('tenders/approveResult/{id}', [AdminTenderController::class, 'approveResult'])->name('tenders.approveResult');
         Route::get('tenders/cancel/{id}', [AdminTenderController::class, 'getCancelTender'])->name('tenders.getCancelTender');

@@ -85,15 +85,17 @@
                   @if ($tender->creator_id == Auth::user()->id)
                     Tôi tạo tender lúc {{date('d/m/Y H:i',strtotime($tender->created_at))}} <br>
                   @endif
-                  @if ($tender->auditor_id == Auth::user()->id)
-                    @if($tender->tender_in_progress_time)
+
+                  @if ($tender->auditor_id == Auth::user()->id
+                    && $tender->tender_in_progress_time)
                     Tôi mời thầu lúc {{date('d/m/Y H:i',strtotime($tender->tender_in_progress_time))}} <br>
-                    @endif
-                    @if($tender->tender_closed_time)
-                    Tôi trả kết quả lúc {{date('d/m/Y H:i',strtotime($tender->tender_closed_time))}}
-                    @endif
-                  </p>
                   @endif
+
+                  @if($tender->auditor_id == Auth::user()->id
+                    && $tender->tender_closed_time)
+                    Tôi trả kết quả lúc {{date('d/m/Y H:i',strtotime($tender->tender_closed_time))}}
+                  @endif
+                  </p>
 
                   <hr>
                   @endforeach

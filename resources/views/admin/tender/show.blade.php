@@ -276,7 +276,7 @@
                                     && $tender->status == 'Đang kiểm tra'
                                     && $bids->count())
                                       <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
-                                        <i class="fas fa-clipboard-check"></i> Đề xuất
+                                        Đề xuất
                                       </button>
                                     @endif
 
@@ -285,7 +285,7 @@
                                     && $tender->status == 'Đang kiểm tra'
                                     && $bids->count())
                                     <a href="{{route('admin.tenders.createResult', $tender->id)}}">
-                                        <button role="button" type="button" class="btn btn-success float-right"><i class="fas fa-check"></i> Chọn kết quả</button>
+                                        <button role="button" type="button" class="btn btn-success float-right"> Chọn kết quả</button>
                                     </a>
                                     @endif
                                   </div>
@@ -294,166 +294,206 @@
 
 
                             @if($bids->count())
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h5 class="card-title">Báo cáo thầu</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            @php
-                                                $i = 0;
-                                            @endphp
-                                            <table id="bids-table" class="table table-bordered">
-                                                <tr>
-                                                  <th>STT</th>
-                                                  <th>Mã hàng</th>
-                                                  <th>Tên hàng</th>
-                                                  <th>Số lượng</th>
-                                                  <th>Thời gian giao</th>
-                                                  @foreach ($unique_bided_supplier_ids as $item)
-                                                  @php
-                                                      $supplier = App\Models\Supplier::findOrFail($item);
-                                                  @endphp
-                                                  <th>{{$supplier->name}}</th>
-                                                  @endforeach
-                                                </tr>
-                                                @foreach ($tender->quantity_and_delivery_times as $quantity_and_delivery_time)
-                                                <tr>
-                                                  <td>{{++$i}}</td>
-                                                  <td>{{$quantity_and_delivery_time->material->code}}</td>
-                                                  <td>{{$quantity_and_delivery_time->material->name}}</td>
-                                                  <td>{{number_format($quantity_and_delivery_time->quantity, 0, '.', ',')}} {{$quantity_and_delivery_time->quantity_unit}}</td>
-                                                  <td>{{$quantity_and_delivery_time->delivery_time}}</td>
-
-                                                  @foreach ($unique_bided_supplier_ids as $item)
-                                                  @php
-                                                      $supplier = App\Models\Supplier::findOrFail($item);
-                                                      $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $quantity_and_delivery_time->id)->where('supplier_id', $item)->first();
-                                                  @endphp
-                                                  @if($current_bid != null)
-                                                  <td>
-                                                      - Giá: {{$current_bid->price}} ({{$current_bid->price_unit}}) <br>
-                                                      - Lượng chào: {{number_format($current_bid->bid_quantity, 0, '.', ',')}} {{$current_bid->bid_quantity_unit}} <br>
-                                                      @if($current_bid->seller)
-                                                      - Bên bán: {{$current_bid->seller}}
-                                                      @endif
-                                                  </td>
-                                                  @else
-                                                  <td></td>
-                                                  @endif
-                                                  @endforeach
-                                                </tr>
-                                                @endforeach
-                                                <tr>
-                                                  <td colspan="5"><b>Điều kiện thanh toán</b></td>
-                                                  @foreach ($unique_bided_supplier_ids as $item)
-                                                  @php
-                                                      $supplier = App\Models\Supplier::findOrFail($item);
-                                                      $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->first();
-                                                  @endphp
-                                                  @if($current_bid != null)
-                                                  <td>{{$tender->payment_condition}}</td>
-                                                  @else
-                                                  <td></td>
-                                                  @endif
-                                                  @endforeach
-                                                </tr>
-
-                                                <tr>
-                                                  <td colspan="5"><b>Xuất xứ</b></td>
-                                                  @foreach ($unique_bided_supplier_ids as $item)
-                                                  <!--
-                                                  @php
-                                                      $supplier = App\Models\Supplier::findOrFail($item);
-                                                      $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
-                                                      $origin = '';
-                                                      foreach($current_bids as $bid){
-                                                        if($origin != $bid->origin){
-                                                          if($origin != ''){
-                                                            $origin = $origin . ', ' . $bid->origin;
-                                                          }else{
-                                                            $origin = $origin . $bid->origin;
-                                                          }
-                                                        }
-                                                      }
-                                                  @endphp
-                                                  -->
-                                                  <td>{{$tender->origin}}</td>
-                                                  @endforeach
-                                                </tr>
-                                                @if($selected_bids->count())
-                                                <tr>
-                                                    <td colspan="5"><b>Kết quả</b></td>
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Báo cáo thầu</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                @php
+                                                    $i = 0;
+                                                @endphp
+                                                <table id="bids-table" class="table table-bordered">
+                                                    <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã hàng</th>
+                                                    <th>Tên hàng</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Thời gian giao</th>
                                                     @foreach ($unique_bided_supplier_ids as $item)
                                                     @php
                                                         $supplier = App\Models\Supplier::findOrFail($item);
-                                                        $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
-                                                        $result = '';
-                                                        foreach($current_bids as $bid){
-                                                          if($bid->is_selected){
-                                                              if($result == ''){
-                                                                $result = $result . 'Trúng thầu: <br>' . '- ' . number_format($bid->tender_quantity, 0, '.', ',') . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
-                                                              }else{
-                                                                $result = $result . '<br>' . '- ' . number_format($bid->tender_quantity, 0, '.', ',') . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
-                                                              }
-                                                          }
-                                                        }
                                                     @endphp
-                                                    <td>{!! $result !!}</td>
+                                                    <th>{{$supplier->name}}</th>
                                                     @endforeach
-                                                </tr>
-                                                @endif
-                                                @if($propose)
-                                                <tr>
-                                                    <td colspan="5"><b>Đề xuất</b></td>
-                                                    <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $propose->propose !!}</td>
-                                                </tr>
-                                                @endif
-                                                @if($tender->approve_result)
-                                                <tr>
-                                                    <td colspan="5"><b>Phê duyệt</b> (Mr.{{$tender->manager->name}})</td>
-                                                    @php
-                                                        $approve_result = '';
-                                                        if('Đồng ý' == $tender->approve_result){
-                                                            $approve_result = $approve_result . '<span class="badge bg-success">' . $tender->approve_result . '</span>';
-                                                        }elseif('Từ chối' == $tender->approve_result){
-                                                            $approve_result = $approve_result . '<span class="badge bg-danger">' . $tender->approve_result . '</span>' . '<br>';
-                                                            $approve_result = $approve_result . 'Bình luận:' . '<br>';
+                                                    </tr>
+                                                    @foreach ($tender->quantity_and_delivery_times as $quantity_and_delivery_time)
+                                                    <tr>
+                                                    <td>{{++$i}}</td>
+                                                    <td>{{$quantity_and_delivery_time->material->code}}</td>
+                                                    <td>{{$quantity_and_delivery_time->material->name}}</td>
+                                                    <td>{{number_format($quantity_and_delivery_time->quantity, 0, '.', ',')}} {{$quantity_and_delivery_time->quantity_unit}}</td>
+                                                    <td>{{$quantity_and_delivery_time->delivery_time}}</td>
 
-                                                            $comment = App\Models\TenderApproveComment::where('tender_id', $tender->id)->latest()->first();
-                                                            $approve_result = $approve_result . $comment->comment;
+                                                    @foreach ($unique_bided_supplier_ids as $item)
+                                                    @php
+                                                        $supplier = App\Models\Supplier::findOrFail($item);
+                                                        $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $quantity_and_delivery_time->id)->where('supplier_id', $item)->first();
+                                                    @endphp
+                                                    @if($current_bid != null)
+                                                    <td>
+                                                        - Giá: {{$current_bid->price}} ({{$current_bid->price_unit}}) <br>
+                                                        - Lượng chào: {{number_format($current_bid->bid_quantity, 0, '.', ',')}} {{$current_bid->bid_quantity_unit}} <br>
+                                                        @if($current_bid->seller)
+                                                        - Bên bán: {{$current_bid->seller}}
+                                                        @endif
+                                                    </td>
+                                                    @else
+                                                    <td></td>
+                                                    @endif
+                                                    @endforeach
+                                                    </tr>
+                                                    @endforeach
+                                                    <tr>
+                                                    <td colspan="5"><b>Điều kiện thanh toán</b></td>
+                                                    @foreach ($unique_bided_supplier_ids as $item)
+                                                    @php
+                                                        $supplier = App\Models\Supplier::findOrFail($item);
+                                                        $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->first();
+                                                    @endphp
+                                                    @if($current_bid != null)
+                                                    <td>{{$tender->payment_condition}}</td>
+                                                    @else
+                                                    <td></td>
+                                                    @endif
+                                                    @endforeach
+                                                    </tr>
+
+                                                    <tr>
+                                                    <td colspan="5"><b>Xuất xứ</b></td>
+                                                    @foreach ($unique_bided_supplier_ids as $item)
+                                                    <!--
+                                                    @php
+                                                        $supplier = App\Models\Supplier::findOrFail($item);
+                                                        $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
+                                                        $origin = '';
+                                                        foreach($current_bids as $bid){
+                                                            if($origin != $bid->origin){
+                                                            if($origin != ''){
+                                                                $origin = $origin . ', ' . $bid->origin;
+                                                            }else{
+                                                                $origin = $origin . $bid->origin;
+                                                            }
+                                                            }
                                                         }
                                                     @endphp
-                                                    <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $approve_result !!}</td>
-                                                </tr>
-                                                @endif
-                                              </table>
+                                                    -->
+                                                    <td>{{$tender->origin}}</td>
+                                                    @endforeach
+                                                    </tr>
+                                                    @if($selected_bids->count())
+                                                    <tr>
+                                                        <td colspan="5"><b>Kết quả</b></td>
+                                                        @foreach ($unique_bided_supplier_ids as $item)
+                                                        @php
+                                                            $supplier = App\Models\Supplier::findOrFail($item);
+                                                            $current_bids = App\Models\Bid::where('tender_id', $tender->id)->where('supplier_id', $item)->get();
+                                                            $result = '';
+                                                            foreach($current_bids as $bid){
+                                                            if($bid->is_selected){
+                                                                if($result == ''){
+                                                                    $result = $result . 'Trúng thầu: <br>' . '- ' . number_format($bid->tender_quantity, 0, '.', ',') . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
+                                                                }else{
+                                                                    $result = $result . '<br>' . '- ' . number_format($bid->tender_quantity, 0, '.', ',') . ' ' . $bid->tender_quantity_unit . ' ' . $bid->quantity->material->name;
+                                                                }
+                                                            }
+                                                            }
+                                                        @endphp
+                                                        <td>{!! $result !!}</td>
+                                                        @endforeach
+                                                    </tr>
+                                                    @endif
+                                                    @if($propose)
+                                                    <tr>
+                                                        <td colspan="5"><b>Đề xuất</b></td>
+                                                        <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $propose->propose !!}</td>
+                                                    </tr>
+                                                    @endif
+
+                                                    @if($tender->audit_result)
+                                                    <tr>
+                                                        <td colspan="5"><b>Kiểm tra</b> (Mr.{{$tender->auditor->name}})</td>
+                                                        @php
+                                                            $audit_result = '';
+                                                            if('Đồng ý' == $tender->audit_result){
+                                                                $audit_result = $audit_result . '<span class="badge bg-success">' . $tender->audit_result . '</span>';
+                                                            }elseif('Từ chối' == $tender->audit_result){
+                                                                $audit_result = $audit_result . '<span class="badge bg-danger">' . $tender->audit_result . '</span>' . '<br>';
+                                                            }
+                                                        @endphp
+                                                        <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $audit_result !!}</td>
+                                                    </tr>
+                                                    @endif
+
+                                                    @if($tender->approve_result)
+                                                    <tr>
+                                                        <td colspan="5"><b>Phê duyệt</b> (Mr.{{$tender->manager->name}})</td>
+                                                        @php
+                                                            $approve_result = '';
+                                                            if('Đồng ý' == $tender->approve_result){
+                                                                $approve_result = $approve_result . '<span class="badge bg-success">' . $tender->approve_result . '</span>';
+                                                            }elseif('Từ chối' == $tender->approve_result){
+                                                                $approve_result = $approve_result . '<span class="badge bg-danger">' . $tender->approve_result . '</span>' . '<br>';
+                                                                $comment = App\Models\TenderApproveComment::where('tender_id', $tender->id)->latest()->first();
+                                                                if($comment->comment){
+                                                                    $approve_result = $approve_result . 'Bình luận:' . '<br>';
+                                                                    $approve_result = $approve_result . $comment->comment;
+                                                                }
+                                                            }
+                                                        @endphp
+                                                        <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $approve_result !!}</td>
+                                                    </tr>
+                                                    @endif
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="card-footer clearfix">
+                                        @if(Auth::user()->can('create-result')
+                                            && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                            && $tender->status == 'Đang kiểm tra'
+                                            && 0 != $selected_bids->count())
+                                            <form class="form-horizontal" method="post" action="{{ route('admin.tenders.requestAudit', $tender->id) }}" name="request_approve" id="request_approve" novalidate="novalidate">
+                                                @method('PATCH')
+                                                {{ csrf_field() }}
+                                                <input type="hidden" name="tender_id" value="{{$tender->id}}">
+                                                <div class="control-group">
+                                                    <div class="controls">
+                                                        <input type="submit" value="Yêu cầu kiểm tra" class="btn btn-success float-left">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        @endif
+
+                                        @if(Auth::user()->can('request-approve')
+                                            && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                            && $tender->status == 'Đang kiểm tra'
+                                            && 0 != $selected_bids->count())
+                                            <a href="{{route('admin.tenders.createRequestApprove', $tender->id)}}">
+                                                <button role="button" type="button" class="btn btn-success float-right"> Yêu cầu duyệt</button>
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
 
-                            @if(Auth::user()->can('create-result')
-                            && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'Đang kiểm tra'
-                            && 0 != $selected_bids->count())
-                            <a href="{{route('admin.tenders.createRequestApprove', $tender->id)}}">
-                                <button role="button" type="button" class="btn btn-success"> Yêu cầu duyệt</button>
-                            </a>
-                            <br>
-                            @endif
+                                @if(Auth::user()->can('audit-result')
+                                    && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                    && $tender->status == 'Đang kiểm tra'
+                                    && 0 != $selected_bids->count())
+                                    <a href="{{route('admin.tenders.getAudit', $tender->id)}}">
+                                    <button role="button" type="button" class="btn btn-success float-left">Kiểm tra kết quả</button>
+                                </a>
+                                @endif
 
-                            @if(Auth::user()->can('approve-result')
-                            && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
-                            && $tender->status == 'Đang kiểm tra'
-                            && 0 != $selected_bids->count())
-                            <br>
-                            <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
-                                <button role="button" type="button" class="btn btn-success"><i class="fas fa-check"></i> Duyệt kết quả</button>
-                            </a>
-                            @endif
-
+                                @if($tender->manager_id == Auth::user()->id
+                                    && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
+                                    && $tender->status == 'Đang kiểm tra'
+                                    && 0 != $selected_bids->count())
+                                    <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
+                                        <button role="button" type="button" class="btn btn-success float-right">Duyệt kết quả</button>
+                                    </a>
+                                @endif
                             @endif
                         </div>
                       </div>

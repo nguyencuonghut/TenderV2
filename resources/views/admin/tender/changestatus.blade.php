@@ -53,7 +53,6 @@
                                             <select name="status" id="status" class="form-control select2">
                                                 <option value="Mở" @if("Mở" == $tender->status) selected @endif>Mở</option>
                                                 <option value="Đang diễn ra" @if("Đang diễn ra" == $tender->status) selected @endif>Đang diễn ra</option>
-                                                <option value="Đóng" @if("Đóng" == $tender->status) selected @endif>Đóng</option>
                                             </select>
                                         </div>
                                     </div>

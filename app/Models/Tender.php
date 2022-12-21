@@ -24,11 +24,13 @@ class Tender extends Model
         'tender_end_time',
         'creator_id',
         'status',
-        'auditor_id',
+        'checker_id',
         'tender_in_progress_time',
         'tender_closed_time',
         'is_competitive_bids',
         'approve_result',
+        'audit_result',
+        'auditor_id',
         'cancel_reason',
     ];
 
@@ -65,5 +67,10 @@ class Tender extends Model
     public function manager()
     {
         return $this->belongsTo(Admin::class, 'manager_id');
+    }
+
+    public function auditor()
+    {
+        return $this->belongsTo(Admin::class, 'auditor_id');
     }
 }

@@ -21,6 +21,7 @@ use App\Notifications\TenderCanceled;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
 use App\Notifications\TenderRequestApprove;
+use App\Notifications\TenderRequestAudit;
 use App\Notifications\TenderResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -400,7 +401,7 @@ class AdminTenderController extends Controller
                 return redirect()->back();
             }
             $tender->status = $request->status;
-            $tender->auditor_id = Auth::user()->id;
+            $tender->checker_id = Auth::user()->id;
             if(null != $request->is_competitive_bids){
                 $tender->is_competitive_bids = true;
             }
@@ -435,31 +436,8 @@ class AdminTenderController extends Controller
 
                 Alert::toast('Tender chuyển sang trạng thái Đang Diễn Ra. Bắt đầu đấu thầu!', 'success', 'top-right');
                 return redirect()->route('admin.tenders.index');
-            } else if('Đóng' == $request->status) {
-                //Check if bids are selected or not
-                $bids = Bid::where('tender_id', $tender->id)->where('is_selected', 1)->get();
-                if($bids->count() == 0){
-                    Alert::toast('Chưa có nhà cung cấp nào được chọn. Không cho phép chuyển sang trạng thái Đóng!', 'error', 'top-right');
-                    return redirect()->route('admin.tenders.index');
-                }else{
-                    //Get the mail list
-                    $bided_user_ids = [];
-                    $bided_user_ids = Bid::where('tender_id', $tender->id)->pluck('user_id')->toArray();
-                    $users = User::whereIn('id', $bided_user_ids)->get();
-                    foreach($users as $user)  {
-                        Notification::route('mail' , $user->email)->notify(new TenderResult($tender->id));
-                    }
-
-                    //Update the closed time
-                    $tender->tender_closed_time = Carbon::now();
-                    //Save the tender
-                    $tender->save();
-
-                    Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
-                    return redirect()->route('admin.tenders.index');
-                }
             }else{
-                Alert::toast('Không cho phép chuyển về trạng thái Mở!', 'error', 'top-right');
+                Alert::toast('Không cho phép chuyển về trạng thái khác!', 'error', 'top-right');
                 return redirect()->route('admin.tenders.index');
             }
         } else {
@@ -779,10 +757,57 @@ class AdminTenderController extends Controller
         return redirect()->route('admin.tenders.show', $tender->id);
     }
 
+    public function requestAudit($id)
+    {
+        $tender = Tender::findOrFail($id);
+        //Send email notification to Auditor
+        $tender->notify(new TenderRequestAudit($tender->id));
+        Alert::toast('Yêu cầu kiểm tra kết quả Tender đã được gửi tới Kiểm Soát Nội Bộ thành công!', 'success', 'top-right');
+        return redirect()->back();
+    }
+
+    public function getAudit($id)
+    {
+        $tender = Tender::findOrFail($id);
+        if(Auth::user()->can('audit-result')){
+            return view('admin.tender.audit', ['tender' => $tender]);
+        }else{
+            Alert::toast('Bạn không có quyền kiểm tra kết quả tender này!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
+
+    public function auditResult(Request $request, $id)
+    {
+        $tender = Tender::findOrFail($id);
+
+        if(Auth::user()->can('audit-result')){
+            $rules = [
+                'audit_result' => 'required',
+            ];
+            $messages = [
+                'audit_result.required' => 'Bạn phải chọn Đồng ý hoặc Từ chối',
+            ];
+            $request->validate($rules,$messages);
+
+            //Update tender audit result
+            $tender = Tender::findOrFail($id);
+            $tender->audit_result = $request->audit_result;
+            $tender->auditor_id = Auth::user()->id;
+            $tender->save();
+
+            Alert::toast('Kiểm tra kết quả thầu thành công!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.show', $tender->id);
+        }else{
+            Alert::toast('Bạn không có quyền kiểm tra kết quả thầu!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
+    }
+
     public function getApproveResult($id)
     {
         $tender = Tender::findOrFail($id);
-        if(Auth::user()->can('approve-result')
+        if($tender->manager_id == Auth::user()->id
             && $tender->manager_id == Auth::user()->id){
             return view('admin.tender.approve', ['tender' => $tender]);
         }else{
@@ -795,7 +820,7 @@ class AdminTenderController extends Controller
     {
         $tender = Tender::findOrFail($id);
 
-        if(Auth::user()->can('approve-result')
+        if($tender->manager_id == Auth::user()->id
             && $tender->manager_id == Auth::user()->id){
             $rules = [
                 'approve_result' => 'required',
@@ -822,6 +847,24 @@ class AdminTenderController extends Controller
                 Notification::route('mail' , $admin->email)->notify(new TenderApproved($tender->id));
             }
 
+            //Close the tender and send tender result to Users
+            if('Đồng ý' == $tender->approve_result){
+                //Update status
+                $tender->status = 'Đóng';
+                $tender->tender_closed_time = Carbon::now();
+                $tender->save();
+
+                //Get the mail list
+                $bided_user_ids = [];
+                $bided_user_ids = Bid::where('tender_id', $tender->id)->pluck('user_id')->toArray();
+                $users = User::whereIn('id', $bided_user_ids)->get();
+                foreach($users as $user)  {
+                    Notification::route('mail' , $user->email)->notify(new TenderResult($tender->id));
+                }
+
+                Alert::toast('Tender chuyển sang trạng thái Đóng. Kết thúc đấu thầu!', 'success', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
             Alert::toast('Duyệt kết quả thầu thành công!', 'success', 'top-right');
             return redirect()->route('admin.tenders.index');
         }else{
