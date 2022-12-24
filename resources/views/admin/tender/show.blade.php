@@ -411,9 +411,16 @@
                                                     </tr>
                                                     @endif
 
+                                                    @if('Đồng ý' == $tender->approve_result)
+                                                    <tr>
+                                                        <td colspan="5"><b>Người tạo</b> ({{$tender->creator->name}})</td>
+                                                        <td colspan="{{sizeof($unique_bided_supplier_ids)}}"></td>
+                                                    </tr>
+                                                    @endif
+
                                                     @if($tender->audit_result)
                                                     <tr>
-                                                        <td colspan="5"><b>Kiểm tra</b> (Mr.{{$tender->auditor->name}})</td>
+                                                        <td colspan="5"><b>Người kiểm tra</b> ({{$tender->auditor->name}})</td>
                                                         @php
                                                             $audit_result = '';
                                                             if('Đồng ý' == $tender->audit_result){
@@ -428,7 +435,7 @@
 
                                                     @if($tender->approve_result)
                                                     <tr>
-                                                        <td colspan="5"><b>Phê duyệt</b> (Mr.{{$tender->manager->name}})</td>
+                                                        <td colspan="5"><b>Người phê duyệt</b> ({{$tender->manager->name}})</td>
                                                         @php
                                                             $approve_result = '';
                                                             if('Đồng ý' == $tender->approve_result){
