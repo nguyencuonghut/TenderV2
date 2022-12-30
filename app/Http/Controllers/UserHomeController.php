@@ -59,16 +59,16 @@ class UserHomeController extends Controller
 
     public function profile()
     {
-        $my_tenders = collect();
-        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'status'])->get();
-        foreach($tenders as $tender) {
-            $selected_supplier_ids = [];
-            $selected_supplier_ids = explode(",", $tender->supplier_ids);
-            if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
-                $my_tenders->push($tender);
+        $tenders =  Tender::where('status', '<>', 'Mở')->get();
+        $my_tenders = $tenders->filter(function($item, $key) {
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $item->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+            $my_supplier_id = Auth::user()->supplier_id;
+            if(in_array($my_supplier_id, $selected_supplier_ids)) {
+                return $item;
             }
-        }
+        });
         $tenders_cnt = $my_tenders->count();
+
         $my_bids = Bid::where('user_id', Auth::user()->id)->get();
         $bids_cnt = $my_bids->count();
 
