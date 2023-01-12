@@ -150,6 +150,16 @@
                                         </div>
                                     </div>
                                     <!-- /.row -->
+                                    <!-- TODO: Only show the first material's required quality: -->
+                                    <hr>
+                                    <div class="row invoice-info">
+                                        <div class="col-sm-12 invoice-col">
+                                            <address>
+                                                <strong>Yêu cầu chất lượng</strong><br>
+                                                {!!$tender->quantity_and_delivery_times->first()->material->quality!!}<br>
+                                            </address>
+                                        </div>
+                                    </div>
                                     <hr>
                                     <div class="col-sm-12 invoice-col">
                                         <address>
