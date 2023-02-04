@@ -100,6 +100,15 @@ class UserBidController extends Controller
             ];
             $request->validate($rules,$messages);
 
+            //Check if price_unit is VNĐ, only allow to input integer
+            if('đồng/kg' == $request->price_unit
+            || 'đồng/chiếc' == $request->price_unit){
+                if(!preg_match('/^\d+$/', $request->price)){
+                    Alert::toast('Giá bạn nhập đang là số thập phân. Vui lòng nhập giá dạng số nguyên', 'error', 'top-right');
+                    return redirect()->back();
+                }
+            }
+
             //Check if exits Bid for this QuantityAndDeliveryTime
             $exited_bids = Bid::where('quantity_id', $request->quantity_id)->where('user_id', Auth::user()->id)->get();
             if($exited_bids->count()){
@@ -231,6 +240,15 @@ class UserBidController extends Controller
                 'bid_quantity_unit.required' => 'Bạn phải nhập đơn vị chào.',
             ];
             $request->validate($rules,$messages);
+
+            //Check if price_unit is VNĐ, only allow to input integer
+            if('đồng/kg' == $request->price_unit
+            || 'đồng/chiếc' == $request->price_unit){
+                if(!preg_match('/^\d+$/', $request->price)){
+                    Alert::toast('Giá bạn nhập đang là số thập phân. Vui lòng nhập giá dạng số nguyên', 'error', 'top-right');
+                    return redirect()->back();
+                }
+            }
 
             //Store old price
             $old_price = $bid->price;
