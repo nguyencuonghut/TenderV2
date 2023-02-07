@@ -51,6 +51,7 @@
                     <th>Tiêu đề</th>
                     <th>Thời gian đóng thầu</th>
                     <th>Trạng thái</th>
+                    <th style="width: 15%;">Lý do đóng</th>
                     @if('Quản lý' != Auth::user()->role->name)
                     <th>Thao tác</th>
                     @endif
@@ -102,7 +103,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             /*
@@ -110,7 +111,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
 
             },
@@ -118,14 +119,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             */
@@ -133,14 +134,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             }
         ],
@@ -151,6 +152,7 @@
             {data: 'titlelink', name: 'title'},
             {data: 'tender_end_time', name: 'tender_end_time'},
             {data: 'status', name: 'status'},
+            {data: 'close_reason', name: 'close_reason'},
             @if('Quản lý' != Auth::user()->role->name)
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
             @endif

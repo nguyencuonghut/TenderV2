@@ -28,7 +28,7 @@ class CreateTendersTable extends Migration
             $table->dateTime('tender_end_time');
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('admins')->onDelete('cascade');
-            $table->enum('status', ['Mở', 'Đóng', 'Đang diễn ra', 'Hủy', 'Đang kiểm tra']);
+            $table->enum('status', ['Mở', 'Đóng', 'Đang diễn ra', 'Đang kiểm tra']);
             $table->bigInteger('checker_id')->unsigned()->nullable();
             $table->foreign('checker_id')->references('id')->on('admins')->onDelete('cascade');
             $table->bigInteger('manager_id')->unsigned()->nullable();
@@ -40,7 +40,7 @@ class CreateTendersTable extends Migration
             $table->enum('audit_result', ['Đồng ý', 'Từ chối'])->nullable();
             $table->bigInteger('auditor_id')->unsigned()->nullable();
             $table->foreign('auditor_id')->references('id')->on('admins')->onDelete('cascade');
-            $table->text('cancel_reason')->nullable();
+            $table->text('close_reason')->nullable();
             $table->timestamps();
         });
     }

@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TenderCanceled extends Notification implements ShouldQueue
+class TenderClosed extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $tender_id;
@@ -45,9 +45,9 @@ class TenderCanceled extends Notification implements ShouldQueue
         $url = '/tenders/' . $this->tender_id;
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
-                    ->subject('!!!Thông báo hủy đấu thầu cho: ' . $tender->title)
-                    ->line('Tender: ' . $tender->title . ' đã bị chúng tôi hủy' . '.')
-                    ->line('Lý do: ' . $tender->cancel_reason)
+                    ->subject('!!!Thông báo đóng đấu thầu cho: ' . $tender->title)
+                    ->line('Tender: ' . $tender->title . ' đã bị chúng tôi đóng' . '.')
+                    ->line('Lý do: ' . $tender->close_reason)
                     ->action('Mở tender', url($url))
                     ->line('Xin cảm ơn!');
     }

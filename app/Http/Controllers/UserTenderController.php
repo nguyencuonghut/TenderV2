@@ -56,7 +56,7 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'status'])->get();
+        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'status', 'close_reason'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
@@ -74,15 +74,20 @@ class UserTenderController extends Controller
             ->editColumn('status', function ($user_tenders) {
                 if($user_tenders->status == 'Mở') {
                     return '<span class="badge badge-primary">Mở</span>';
-                } else if($user_tenders->status == 'Đóng'){
+                } else if($user_tenders->status == 'Đóng'
+                    && NULL == $user_tenders->close_reason){
                     return '<span class="badge badge-success">Đóng</span>';
-                } else if($user_tenders->status == 'Hủy'){
-                    return '<span class="badge badge-secondary">Hủy</span>';
+                } else if($user_tenders->status == 'Đóng'
+                        && NULL != $user_tenders->close_reason){
+                    return '<span class="badge badge-secondary">Đóng</span>';
                 } else if($user_tenders->status == 'Đang kiểm tra'){
                     return '<span class="badge badge-info">Đang kiểm tra</span>';
                 } else {
                     return '<span class="badge badge-warning">Đang diễn ra</span>';
                 }
+            })
+            ->editColumn('close_reason', function ($user_tenders) {
+                return $user_tenders->close_reason;
             })
             ->rawColumns(['title', 'status'])
             ->make(true);

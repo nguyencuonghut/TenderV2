@@ -31,7 +31,7 @@ class Tender extends Model
         'approve_result',
         'audit_result',
         'auditor_id',
-        'cancel_reason',
+        'close_reason',
     ];
 
     public function creator()

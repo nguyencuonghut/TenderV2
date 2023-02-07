@@ -17,7 +17,7 @@ use App\Models\User;
 use App\Models\UserActivityLog;
 use App\Notifications\ReminderTenderInProgress;
 use App\Notifications\TenderApproved;
-use App\Notifications\TenderCanceled;
+use App\Notifications\TenderClosed;
 use App\Notifications\TenderCreated;
 use App\Notifications\TenderInProgress;
 use App\Notifications\TenderRequestApprove;
@@ -294,7 +294,7 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'creator_id', 'status'])->get();
+        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'creator_id', 'status', 'close_reason'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($tenders) {
@@ -304,10 +304,12 @@ class AdminTenderController extends Controller
                 if($tenders->status == 'Mở') {
                     return '<span class="badge badge-primary">Mở</span>';
 
-                } else if($tenders->status == 'Đóng'){
+                } else if($tenders->status == 'Đóng'
+                        && NULL == $tenders->close_reason){
                     return '<span class="badge badge-success">Đóng</span>';
-                } else if($tenders->status == 'Hủy'){
-                    return '<span class="badge badge-secondary">Hủy</span>';
+                } else if($tenders->status == 'Đóng'
+                        && NULL != $tenders->close_reason){
+                    return '<span class="badge badge-secondary">Đóng</span>';
                 } else if($tenders->status == 'Đang kiểm tra'){
                     return '<span class="badge badge-info">Đang kiểm tra</span>';
                 } else {
@@ -317,6 +319,9 @@ class AdminTenderController extends Controller
             ->editColumn('tender_end_time', function ($tenders) {
                 return date('d/m/Y H:i', strtotime($tenders->tender_end_time));
             })
+            ->editColumn('close_reason', function ($tenders) {
+                return $tenders->close_reason;
+            })
             ->addColumn('actions', function ($tenders) {
                 $action = '';
                 if(Auth::user()->can('change-status')){
@@ -325,8 +330,8 @@ class AdminTenderController extends Controller
                 if(Auth::user()->can('edit-tender')){
                     $action = $action . ' <a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen"></i></a>';
                 }
-                if(Auth::user()->can('cancel-tender')){
-                    $action = $action . ' <a href="' . route("admin.tenders.getCancelTender", $tenders->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-ban"></i></a>';
+                if(Auth::user()->can('close-tender')){
+                    $action = $action . ' <a href="' . route("admin.tenders.getCloseTender", $tenders->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i></a>';
                 }
                 if(Auth::user()->can('destroy-tender')){
                     $action = $action . '<form style="display:inline" action="'. route("admin.tenders.destroy", $tenders->id) . '" method="POST">
@@ -393,11 +398,6 @@ class AdminTenderController extends Controller
             //Check status is updated or not
             if($request->status == $tender->status) {
                 Alert::toast('Trạng thái không có gì thay đổi. Bạn vui lòng kiểm tra lại!', 'warning', 'top-right');
-                return redirect()->back();
-            }
-            //Check status is Hủy
-            if('Hủy' == $tender->status) {
-                Alert::toast('Tender đang ở trạng thái Hủy. Bạn không thể chuyển trạng thái!', 'warning', 'top-right');
                 return redirect()->back();
             }
             $tender->status = $request->status;
@@ -873,38 +873,38 @@ class AdminTenderController extends Controller
         }
     }
 
-    public function getCancelTender($id)
+    public function getCloseTender($id)
     {
-        if(Auth::user()->can('cancel-tender')){
+        if(Auth::user()->can('close-tender')){
             $tender = Tender::findOrFail($id);
-            if('Hủy' == $tender->status){
-                Alert::toast('Tender đã ở trạng thái Hủy!', 'error', 'top-right');
+            if('Đóng' == $tender->status){
+                Alert::toast('Tender đã ở trạng thái Đóng!', 'error', 'top-right');
                 return redirect()->back();
             }
-            return view('admin.tender.cancel', ['tender' => $tender]);
+            return view('admin.tender.close', ['tender' => $tender]);
         }else{
-            Alert::toast('Bạn không có quyền hủy tender này!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền đóng tender này!', 'error', 'top-right');
             return redirect()->back();
         }
     }
 
-    public function postCancelTender(Request $request, $id)
+    public function postCloseTender(Request $request, $id)
     {
         $tender = Tender::findOrFail($id);
 
-        if(Auth::user()->can('cancel-tender')){
+        if(Auth::user()->can('close-tender')){
             $rules = [
-                'cancel_reason' => 'required',
+                'close_reason' => 'required',
             ];
             $messages = [
-                'cancel_reason.required' => 'Bạn phải chọn nhập lý do hủy tender',
+                'close_reason.required' => 'Bạn phải chọn nhập lý do đóng tender',
             ];
             $request->validate($rules,$messages);
 
             //Update tender approve result
             $tender = Tender::findOrFail($id);
-            $tender->status = "Hủy";
-            $tender->cancel_reason = $request->cancel_reason;
+            $tender->status = "Đóng";
+            $tender->close_reason = $request->close_reason;
             $tender->save();
 
             //Send email notification
@@ -913,13 +913,13 @@ class AdminTenderController extends Controller
             $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
             foreach($users as $user)  {
                 //Notify now
-                Notification::route('mail' , $user->email)->notify(new TenderCanceled($tender->id));
+                Notification::route('mail' , $user->email)->notify(new TenderClosed($tender->id));
             }
 
-            Alert::toast('Hủy tender thành công!', 'success', 'top-right');
+            Alert::toast('Đóng tender thành công!', 'success', 'top-right');
             return redirect()->route('admin.tenders.index');
         }else{
-            Alert::toast('Bạn không có hủy tender này!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền đóng tender này!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
         }
     }
