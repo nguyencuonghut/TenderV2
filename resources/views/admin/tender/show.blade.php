@@ -49,8 +49,8 @@
                             <a class="nav-link" id="custom-tabs-one-profile-tab-1" data-toggle="pill" href="#custom-tabs-one-profile-1" role="tab" aria-controls="custom-tabs-one-profile-1" aria-selected="false">Kết quả</a>
                           </li>
                           @endif
-                          @if ($tender->status == 'Đang kiểm tra'
-                                || $tender->status == 'Đóng')
+                          @if (($tender->status == 'Đang kiểm tra' && $activity_logs->count())
+                                || ($tender->status == 'Đóng' && $activity_logs->count()))
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab-2" data-toggle="pill" href="#custom-tabs-one-profile-2" role="tab" aria-controls="custom-tabs-one-profile-2" aria-selected="false">Nhật ký</a>
                           </li>
