@@ -496,7 +496,8 @@
                                 @if($tender->manager_id == Auth::user()->id
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
                                     && $tender->status == 'Đang kiểm tra'
-                                    && 0 != $selected_bids->count())
+                                    && 0 != $selected_bids->count()
+                                    && $tender->audit_result == 'Đồng ý')
                                     <a href="{{route('admin.tenders.getApproveResult', $tender->id)}}">
                                         <button role="button" type="button" class="btn btn-success float-right">Duyệt kết quả</button>
                                     </a>

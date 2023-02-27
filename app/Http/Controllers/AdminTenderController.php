@@ -808,7 +808,7 @@ class AdminTenderController extends Controller
     {
         $tender = Tender::findOrFail($id);
         if($tender->manager_id == Auth::user()->id
-            && $tender->manager_id == Auth::user()->id){
+            && 'Đồng ý' == $tender->audit_result){
             return view('admin.tender.approve', ['tender' => $tender]);
         }else{
             Alert::toast('Bạn không có quyền phê duyệt tender này!', 'error', 'top-right');
