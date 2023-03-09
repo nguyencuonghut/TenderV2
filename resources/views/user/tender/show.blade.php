@@ -11,7 +11,8 @@
         <div class="row mb-2">
           <div class="col-sm-8">
             <h1 class="m-0">{{ $tender->title }}</h1>
-            @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time))
+            @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time)
+                && 'Đóng' != $tender->status)
             <div class="wrap-countdown mercado-countdown" data-expire="{{ Carbon\Carbon::parse($tender->tender_end_time)->format('Y/m/d H:i:s') }}"></div>
             @endif
 
@@ -203,7 +204,8 @@
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                  @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time))
+                                  @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time)
+                                        && 'Đóng' !== $tender->status)
                                   <div class="pull-right">
                                       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_bid">
                                           <i class="fas fa-plus"></i> Thêm
