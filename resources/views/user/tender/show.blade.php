@@ -58,12 +58,14 @@
                                       <table id="bids-table" class="table table-bordered table-striped">
                                         <tr>
                                           <th>Lượng trúng</th>
+                                          <th>Tên hàng</th>
                                           <th>Giá</th>
                                           <th>Thời gian giao</th>
                                         </tr>
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td>{{ number_format($bid->tender_quantity, 0, '.', ',') }} {{$bid->tender_quantity_unit}}</td>
+                                          <td>{{$bid->quantity->material->name}}</td>
                                           <td>{{ $bid->price }} ({{$bid->price_unit}})</td>
                                           <td>{{ $bid->delivery_time }}</td>
                                         </tr>

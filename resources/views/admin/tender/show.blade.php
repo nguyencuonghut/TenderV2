@@ -88,6 +88,7 @@
                                       <table id="bids-table" class="table table-bordered table-striped">
                                         <tr>
                                           <th>Nhà cung cấp</th>
+                                          <th>Tên hàng</th>
                                           <th>Lượng trúng</th>
                                           <th>Giá</th>
                                           <th>Thời gian giao</th>
@@ -95,6 +96,7 @@
                                         @foreach ($selected_bids as $bid)
                                         <tr>
                                           <td style="width:40%;">{{$bid->user->supplier->name}} ({{ $bid->user->email }})</td>
+                                          <td>{{$bid->quantity->material->name}}</td>
                                           <td>{{ number_format($bid->tender_quantity, 0, '.', ',') }} {{$bid->tender_quantity_unit}}</td>
                                           @if('đồng/kg' == $bid->price_unit
                                               || 'đồng/chiếc' == $bid->price_unit)
