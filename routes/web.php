@@ -87,7 +87,7 @@ Route::name('admin.')->prefix('admin')->group(function() {
         Route::get('tenders/getApproveResult/{id}', [AdminTenderController::class, 'getApproveResult'])->name('tenders.getApproveResult');
         Route::post('tenders/approveResult/{id}', [AdminTenderController::class, 'approveResult'])->name('tenders.approveResult');
         Route::get('tenders/close/{id}', [AdminTenderController::class, 'getCloseTender'])->name('tenders.getCloseTender');
-        Route::post('tenders/v/{id}', [AdminTenderController::class, 'postCloseTender'])->name('tenders.postCloseTender');
+        Route::post('tenders/close/{id}', [AdminTenderController::class, 'postCloseTender'])->name('tenders.postCloseTender');
 
         Route::get('logs/data/{tender_id}', [AdminUserActivityLogController::class, 'anyData'])->name('logs.data');
     });
