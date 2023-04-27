@@ -327,6 +327,9 @@ class AdminTenderController extends Controller
                 if(Auth::user()->can('change-status')){
                     $action = $action . '<a href="' . route("admin.tenders.changeStatus", $tenders->id) . '" class="btn btn-success btn-sm"><i class="fas fa-random"></i></a>';
                 }
+                if(Auth::user()->can('clone-tender')){
+                    $action = $action . ' <a href="' . route("admin.tenders.getCloneTender", $tenders->id) . '" class="btn btn-info btn-sm"><i class="fas fa-clone"></i></a>';
+                }
                 if(Auth::user()->can('edit-tender')){
                     $action = $action . ' <a href="' . route("admin.tenders.edit", $tenders->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen"></i></a>';
                 }
@@ -920,6 +923,76 @@ class AdminTenderController extends Controller
             return redirect()->route('admin.tenders.index');
         }else{
             Alert::toast('Bạn không có quyền đóng tender này!', 'error', 'top-right');
+            return redirect()->route('admin.tenders.index');
+        }
+    }
+
+    public function getCloneTender($id)
+    {
+        if(Auth::user()->can('clone-tender')){
+            $tender = Tender::findOrFail($id);
+            return view('admin.tender.clone', ['tender' => $tender]);
+        }else{
+            Alert::toast('Bạn không có quyền tạo bản copy cho tender này!', 'error', 'top-right');
+            return redirect()->back();
+        }
+    }
+
+    public function postCloneTender(Request $request, $id)
+    {
+        if(Auth::user()->can('clone-tender')){
+            $rules = [
+                'title' => 'required',
+                'delivery_condition' => 'required',
+                'payment_condition' => 'required',
+                'tender_end_time' => 'required',
+            ];
+            $messages = [
+                'title.required' => 'Bạn phải nhập tiêu đề.',
+                'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
+                'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
+                'tender_end_time.required' => 'Bạn phải nhập thời gian đóng thầu.',
+            ];
+            $request->validate($rules,$messages);
+
+            //Check the Supplier is existed or not
+            $tender = Tender::findOrFail($request->tender_id);
+            $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
+            $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
+            $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+            if(!$suppliers->count()) {
+                Alert::toast('Hàng hóa này chưa có nhà cung cấp! Bạn cần bổ sung nhà cung cấp.', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+
+            // Calculate the new tender's code
+            $last_tender = Tender::latest()->first();
+            if($last_tender == null) {
+                $tender_id = 1;
+            } else {
+                $tender_id = $last_tender->id + 1;
+            }
+
+            // Create new tender
+            $tender = new Tender();
+            $tender->code = 'NL' . '/' . $tender_id . '/' . Carbon::now()->month . '/' . Carbon::now()->year;
+            $tender->title = $request->title;
+            $tender->origin = $request->origin;
+            $tender->packing = $request->packing;
+            $tender->delivery_condition = $request->delivery_condition;
+            $tender->payment_condition = $request->payment_condition;
+            $tender->certificate = $request->certificate;
+            $tender->other_term = $request->other_term;
+            $tender->freight_charge = $request->freight_charge;
+            $tender->creator_id = Auth::user()->id;
+            $tender->status = 'Mở';
+            $tender->tender_end_time = Carbon::parse($request->tender_end_time);
+            $tender->save();
+
+            $request->session()->put('tender', $tender);
+            return redirect()->route('admin.tenders.createQuantityAndDeliveryTimes');
+        }else {
+            Alert::toast('Bạn không có quyền tạo tender!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
         }
     }
