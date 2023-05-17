@@ -339,6 +339,7 @@
                                                         - Lượng chào: {{number_format($current_bid->bid_quantity, 0, '.', ',')}} {{$current_bid->bid_quantity_unit}} <br>
                                                         @if($current_bid->delivery_time)
                                                         - Thời gian giao: {{$current_bid->delivery_time}}
+                                                        <br>
                                                         @endif
                                                         @if($current_bid->seller)
                                                         - Bên bán: {{$current_bid->seller}}
