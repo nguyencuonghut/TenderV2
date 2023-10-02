@@ -276,7 +276,8 @@
                                     @if(Auth::user()->can('create-propose')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
                                     && $tender->status == 'Đang kiểm tra'
-                                    && $bids->count())
+                                    && $bids->count()
+                                    && 'Đồng ý' != $tender->audit_result)
                                       <button type="button" class="btn btn-success float-left" data-toggle="modal" data-target="#create_propose">
                                         Đề xuất
                                       </button>
@@ -285,7 +286,8 @@
                                     @if(Auth::user()->can('create-result')
                                     && Carbon\Carbon::now()->greaterThan($tender->tender_end_time)
                                     && $tender->status == 'Đang kiểm tra'
-                                    && $bids->count())
+                                    && $bids->count()
+                                    && 'Đồng ý' != $tender->audit_result)
                                     <a href="{{route('admin.tenders.createResult', $tender->id)}}">
                                         <button role="button" type="button" class="btn btn-success float-right"> Chọn kết quả</button>
                                     </a>
