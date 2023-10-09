@@ -449,10 +449,12 @@
                                                             }elseif('Từ chối' == $tender->approve_result){
                                                                 $approve_result = $approve_result . '<span class="badge bg-danger">' . $tender->approve_result . '</span>' . '<br>';
                                                                 $comment = App\Models\TenderApproveComment::where('tender_id', $tender->id)->latest()->first();
-                                                                if($comment->comment){
-                                                                    $approve_result = $approve_result . 'Bình luận:' . '<br>';
-                                                                    $approve_result = $approve_result . $comment->comment;
-                                                                }
+
+							                                              }
+                                                            $comment = App\Models\TenderApproveComment::where('tender_id', $tender->id)->latest()->first();
+                                                            if($comment->comment){
+								                                                $approve_result = $approve_result. ' - ';
+                                                                $approve_result = $approve_result . $comment->comment;
                                                             }
                                                         @endphp
                                                         <td colspan="{{sizeof($unique_bided_supplier_ids)}}">{!! $approve_result !!}</td>
