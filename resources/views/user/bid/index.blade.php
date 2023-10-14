@@ -108,7 +108,7 @@
                     @if('Đóng' != $tender->status
                         && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                     <td>
-
+                        @if($bid_logs_cnt < 5)
                             <a href="{{route('user.bids.edit', $bid->id)}}" class="btn btn-dark btn-sm"><i class="fas fa-pen"></i></a>
                             <form style="display:inline" action="{{ route('user.bids.destroy', $bid->id) }}" method="POST">
                               <input type="hidden" name="_method" value="DELETE">
