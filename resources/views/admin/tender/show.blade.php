@@ -336,7 +336,7 @@
                                                         $current_bid = App\Models\Bid::where('tender_id', $tender->id)->where('quantity_id', $quantity_and_delivery_time->id)->where('supplier_id', $item)->first();
                                                     @endphp
                                                     @if($current_bid != null)
-                                                    <td>
+                                                    <td style="{{$current_bid->is_selected ? 'color:blue;' : ''}}">
                                                         - Giá: {{$current_bid->price}} ({{$current_bid->price_unit}}) <br>
                                                         - Lượng chào: {{number_format($current_bid->bid_quantity, 0, '.', ',')}} {{$current_bid->bid_quantity_unit}} <br>
                                                         @if($current_bid->delivery_time)
