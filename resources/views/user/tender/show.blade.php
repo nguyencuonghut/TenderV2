@@ -228,6 +228,7 @@
                                       @if($is_rating)
                                       <th>Xếp hạng</th>
                                       @endif
+                                      <th>Số lần đã chào</th>
                                       @if('Đóng' != $tender->status
                                             && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                                       <th style="Width: 11%;">Thao tác</th>
@@ -272,9 +273,16 @@
                                         @endif
                                       </td>
                                       @endif
+                                      <td>
+                                        @php
+                                            $bid_logs_cnt = App\Models\UserActivityLog::where('quantity_id', $bid->quantity_id)->count();
+                                        @endphp
+                                            {{$bid_logs_cnt}}/5
+                                      </td>
                                       @if('Đóng' != $tender->status
                                             && Carbon\Carbon::now()->lessThan($tender->tender_end_time))
                                       <td>
+                                        @if($bid_logs_cnt < 5)
                                           <a href="{{route('user.bids.edit', $bid->id)}}" class="btn btn-dark btn-sm"><i class="fas fa-pen"></i></a>
                                           <form style="display:inline" action="{{ route('user.bids.destroy', $bid->id) }}" method="POST">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -282,6 +290,7 @@
                                             {{csrf_field()}}
                                             @method('delete')
                                           </form>
+                                        @endif
                                       </td>
                                       @endif
                                     </tr>
@@ -439,7 +448,7 @@
                 var _this = $(this),
                 _expire = _this.data('expire');
                 _this.countdown(_expire, function(event) {
-                    $(this).html( event.strftime('<span><i style="color:red" class="fas fa-stopwatch"></i> <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây</span>'));
+                    $(this).html( event.strftime('<span><i style="color:red" class="fas fa-stopwatch"></i> <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây</span> | <span>Tối đa <b style="color:purple;">5</b> lần chào giá</span>'));
                 });
             });
         }

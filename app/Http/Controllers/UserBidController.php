@@ -50,6 +50,12 @@ class UserBidController extends Controller
     public function destroy($id)
     {
         $bid = Bid::findOrFail($id);
+        $bid_logs_cnt = UserActivityLog::where('quantity_id', $bid->quantity_id)->where('activity_type', '<>', 'Xóa')->count();
+        if($bid_logs_cnt >= 5){
+            Alert::toast('Bạn đã vượt quá 5 lần sửa giá cho phép!', 'error', 'top-right');
+            return redirect()->back();
+        }
+
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $bid->tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
 
@@ -113,6 +119,12 @@ class UserBidController extends Controller
             $exited_bids = Bid::where('quantity_id', $request->quantity_id)->where('user_id', Auth::user()->id)->get();
             if($exited_bids->count()){
                 Alert::toast('Chào giá cho lượng này đã tồn tại! Bạn vui lòng chọn lượng khác', 'error', 'top-right');
+                return redirect()->back();
+            }
+
+            $bid_logs_cnt = UserActivityLog::where('quantity_id', $request->quantity_id)->where('activity_type', '<>', 'Xóa')->count();
+            if($bid_logs_cnt >= 5){
+                Alert::toast('Bạn đã vượt quá 5 lần sửa giá cho phép!', 'error', 'top-right');
                 return redirect()->back();
             }
 
@@ -198,6 +210,12 @@ class UserBidController extends Controller
     public function edit($id)
     {
         $bid = Bid::findOrFail($id);
+        $bid_logs_cnt = UserActivityLog::where('quantity_id', $bid->quantity_id)->where('activity_type', '<>', 'Xóa')->count();
+        if($bid_logs_cnt >= 5){
+            Alert::toast('Bạn đã vượt quá 5 lần sửa giá cho phép!', 'error', 'top-right');
+            return redirect()->back();
+        }
+
         $tender = Tender::findOrFail($bid->tender_id);
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
