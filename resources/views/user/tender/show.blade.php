@@ -275,7 +275,7 @@
                                       @endif
                                       <td>
                                         @php
-                                            $bid_logs_cnt = App\Models\UserActivityLog::where('quantity_id', $bid->quantity_id)->count();
+                                            $bid_logs_cnt = App\Models\UserActivityLog::where('user_id', Auth::user()->id)->where('quantity_id', $bid->quantity_id)->count();
                                         @endphp
                                             {{$bid_logs_cnt}}/5
                                       </td>

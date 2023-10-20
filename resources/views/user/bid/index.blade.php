@@ -105,7 +105,7 @@
                     @endif
                     <td>
                         @php
-                            $bid_logs_cnt = App\Models\UserActivityLog::where('quantity_id', $bid->quantity_id)->where('activity_type', '<>', 'Xóa')->count();
+                            $bid_logs_cnt = App\Models\UserActivityLog::where('user_id', Auth::user()->id)->where('quantity_id', $bid->quantity_id)->where('activity_type', '<>', 'Xóa')->count();
                         @endphp
                             {{$bid_logs_cnt}}/5
                       </td>
