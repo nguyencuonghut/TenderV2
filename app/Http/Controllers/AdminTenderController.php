@@ -307,7 +307,7 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'creator_id', 'status', 'close_reason'])->get();
+        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_in_progress_time', 'tender_end_time', 'creator_id', 'status', 'close_reason'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($tenders) {
@@ -329,8 +329,8 @@ class AdminTenderController extends Controller
                     return '<span class="badge badge-warning">Đang diễn ra</span>';
                 }
             })
-            ->editColumn('tender_end_time', function ($tenders) {
-                return date('d/m/Y H:i', strtotime($tenders->tender_end_time));
+            ->editColumn('tender_time_range', function ($tenders) {
+                return date('d/m/Y H:i', strtotime($tenders->tender_in_progress_time)) . ' - ' . date('d/m/Y H:i', strtotime($tenders->tender_end_time));
             })
             ->editColumn('close_reason', function ($tenders) {
                 return $tenders->close_reason;

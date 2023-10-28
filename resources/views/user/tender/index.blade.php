@@ -46,7 +46,7 @@
                   <tr>
                     <th>STT</th>
                     <th>Tiêu đề</th>
-                    <th>Thời gian đóng thầu</th>
+                    <th>Thời gian thầu</th>
                     <th>Trạng thái</th>
                     <th style="width: 15%;">Lý do đóng</th>
                   </tr>
@@ -144,7 +144,7 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'title', name: 'title'},
-            {data: 'tender_end_time', name: 'tender_end_time'},
+            {data: 'tender_time_range', name: 'tender_time_range'},
             {data: 'status', name: 'status'},
             {data: 'close_reason', name: 'close_reason'},
        ]

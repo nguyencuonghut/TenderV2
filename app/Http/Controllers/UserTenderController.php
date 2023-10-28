@@ -56,7 +56,7 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_end_time', 'status', 'close_reason'])->get();
+        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_in_progress_time', 'tender_end_time', 'status', 'close_reason'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {
@@ -68,8 +68,8 @@ class UserTenderController extends Controller
             ->editColumn('title', function ($user_tenders) {
                 return '<a href="'.route('user.tenders.show', $user_tenders->id).'">'.$user_tenders->title.'</a>';
             })
-            ->editColumn('tender_end_time', function ($user_tenders) {
-                return date('d/m/Y H:i', strtotime($user_tenders->tender_end_time));
+            ->editColumn('tender_time_range', function ($user_tenders) {
+                return date('d/m/Y H:i', strtotime($user_tenders->tender_in_progress_time)) . ' - ' . date('d/m/Y H:i', strtotime($user_tenders->tender_end_time));
             })
             ->editColumn('status', function ($user_tenders) {
                 if($user_tenders->status == 'Mở') {
