@@ -3,13 +3,13 @@
 @endsection
 
 @push('styles')
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css')}}">
   <!-- Select2 -->
   <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   <!-- Summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
 @endpush
 
 @extends('layouts.base')
@@ -122,12 +122,12 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <label class="required-field">Thời gian đóng thầu</label>
-                                    <div class="input-group date" id="tender_end_time_get" name="tender_end_time_get" data-target-input="nearest">
-                                        <input type="text" id="tender_end_time" name="tender_end_time" class="form-control datetimepicker-input" data-target="#tender_end_time_get"/>
-                                        <div class="input-group-append" data-target="#tender_end_time_get" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    <label class="required-field">Thời gian thầu</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text"><i class="far fa-clock"></i></span>
                                         </div>
+                                        <input type="text" class="form-control float-right" name="tender_time_range" id="tender_time_range">
                                     </div>
                                 </div>
                             </div>
@@ -152,19 +152,31 @@
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- Summernote -->
 <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
-<!-- date-range-picker -->
+<!-- Moment -->
 <script src="{{asset('plugins/moment/moment.min.js')}}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<!-- date-range-picker -->
+<script src="{{asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
 <script>
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2({
         theme: 'bootstrap4'
         })
+        var tender_in_progress_time =  {{ Js::from($tender_in_progress_time) }};
+        var tender_end_time =  {{ Js::from($tender_end_time) }};
+        console.log(tender_in_progress_time);
+        console.log(tender_end_time);
 
         //Date picker with time picker
-        $('#tender_end_time_get').datetimepicker({ icons: { time: 'far fa-clock' } });
+        $('#tender_time_range').daterangepicker({
+            timePicker: true,
+            startDate: tender_in_progress_time,
+            endDate: tender_end_time,
+            locale: {
+                format: 'Y/M/D H:mm'
+            },
+            icons: { time: 'far fa-clock' }
+        });
 
         // Summernote
         $('#delivery_condition').summernote({

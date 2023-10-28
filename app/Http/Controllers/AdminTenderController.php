@@ -71,18 +71,22 @@ class AdminTenderController extends Controller
                 'title' => 'required',
                 'delivery_condition' => 'required',
                 'payment_condition' => 'required',
-                'tender_end_time' => 'required',
+                'tender_time_range' => 'required',
             ];
             $messages = [
                 'title.required' => 'Bạn phải nhập tiêu đề.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-                'tender_end_time.required' => 'Bạn phải nhập thời gian đóng thầu.',
+                'tender_time_range.required' => 'Bạn phải nhập thời gian thầu.',
             ];
             $request->validate($rules,$messages);
 
+            //Parse date range
+            $dates = explode(' - ', $request->tender_time_range);
+            $tender_start_time = Carbon::parse($dates[0]);
+            $tender_end_time = Carbon::parse($dates[1]);
+
             //Validate the Tender end time
-            $tender_end_time = Carbon::parse($request->tender_end_time);
             if(Carbon::now()->addDays(10)->lessThan($tender_end_time)){
                 //Not allow to set the tender end time > 10 days from now
                 Alert::toast('Thời gian đóng tender không quá 10 ngày từ bây giờ. Bạn vui lòng chọn lại!', 'error', 'top-right');
@@ -108,7 +112,8 @@ class AdminTenderController extends Controller
             $tender->freight_charge = $request->freight_charge;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Mở';
-            $tender->tender_end_time = Carbon::parse($request->tender_end_time);
+            $tender->tender_in_progress_time = $tender_start_time;
+            $tender->tender_end_time = $tender_end_time;
             $tender->save();
 
             $request->session()->put('tender', $tender);
@@ -196,7 +201,9 @@ class AdminTenderController extends Controller
             $materials = Material::all()->pluck('name', 'id');
             if($tender->status == 'Mở'){
                 return view('admin.tender.edit', ['tender' => $tender,
-                                                  'materials' => $materials
+                                                  'materials' => $materials,
+                                                  'tender_in_progress_time' => $tender->tender_in_progress_time,
+                                                  'tender_end_time' => $tender->tender_end_time
                                                  ]);
             }else{
                 Alert::toast('Tender không ở trạng thái Mở nên không thể sửa!', 'error', 'top-right');
@@ -222,13 +229,13 @@ class AdminTenderController extends Controller
                 'title' => 'required',
                 'delivery_condition' => 'required',
                 'payment_condition' => 'required',
-                'tender_end_time' => 'required',
+                'tender_time_range' => 'required',
             ];
             $messages = [
                 'title.required' => 'Bạn phải nhập tiêu đề.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-                'tender_end_time.required' => 'Bạn phải nhập thời gian đóng thầu.',
+                'tender_time_range.required' => 'Bạn phải nhập thời gian thầu.',
             ];
             $request->validate($rules,$messages);
 
@@ -242,6 +249,11 @@ class AdminTenderController extends Controller
                 return redirect()->route('admin.tenders.index');
             }
 
+            //Parse date range
+            $dates = explode(' - ', $request->tender_time_range);
+            $tender_start_time = Carbon::parse($dates[0]);
+            $tender_end_time = Carbon::parse($dates[1]);
+
             $tender = Tender::findOrFail($id);
             $tender->title = $request->title;
             $tender->origin = $request->origin;
@@ -253,7 +265,8 @@ class AdminTenderController extends Controller
             $tender->freight_charge = $request->freight_charge;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Mở';
-            $tender->tender_end_time = Carbon::parse($request->tender_end_time);
+            $tender->tender_in_progress_time = $tender_start_time;
+            $tender->tender_end_time = $tender_end_time;
             $tender->save();
 
             $request->session()->put('tender', $tender);
