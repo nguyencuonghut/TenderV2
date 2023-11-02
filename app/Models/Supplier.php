@@ -12,6 +12,7 @@ class Supplier extends Model
     protected $fillable = [
         'code',
         'name',
+        'is_disabled',
     ];
 
     public function users()

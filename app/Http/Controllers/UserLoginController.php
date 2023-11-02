@@ -34,7 +34,13 @@ class UserLoginController extends Controller
     public function handleLogin(Request $req)
     {
         if(Auth::guard('web')->attempt(['email' => $req->email, 'password' => $req->password], true)) {
-            return redirect()->route('user.home');
+            //Prevent disable Suppliers from logging
+            if(true == Auth::user()->supplier->is_disabled){
+                Auth::logout();
+                return redirect('/login')->withErrors('Tài khoản của bạn đã bị khóa!');
+            }else{
+                return redirect()->route('user.home');
+            }
         }
 
         return back()->withErrors([

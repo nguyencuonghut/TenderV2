@@ -197,7 +197,7 @@ class AdminSupplierController extends Controller
 
     public function anyData()
     {
-        $suppliers = Supplier::with('users')->select(['id', 'code', 'name'])->get();
+        $suppliers = Supplier::with('users')->select(['id', 'code', 'name', 'is_disabled'])->get();
         return Datatables::of($suppliers)
             ->addIndexColumn()
             ->editColumn('code', function ($suppliers) {
@@ -232,8 +232,16 @@ class AdminSupplierController extends Controller
                 }
                 return $material_list;
             })
+            ->editColumn('is_disabled', function ($suppliers) {
+                if(true == $suppliers->is_disabled) {
+                    return '<span class="badge badge-secondary">Khóa</span>';
+                }else{
+                    return '<span class="badge badge-success">Mở</span>';
+                }
+            })
             ->addColumn('actions', function($suppliers) {
-                $action = '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                $action = '<a href="' . route("admin.suppliers.disable", $suppliers->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>
+                           <a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                            <form style="display:inline" action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
                            <input type="hidden" name="_method" value="DELETE">
                            <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
@@ -241,7 +249,7 @@ class AdminSupplierController extends Controller
                 return $action;
 
             })
-            ->rawColumns(['code','name', 'actions'])
+            ->rawColumns(['code','name', 'is_disabled', 'actions'])
             ->make(true);
     }
 
@@ -310,5 +318,35 @@ class AdminSupplierController extends Controller
             Alert::toast('Có lỗi xảy ra trong quá trình import dữ liệu. Vui lòng kiểm tra lại file!', 'error', 'top-right');
             return redirect()->back();
         }
+    }
+
+    public function disable($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        return view('admin.supplier.disable', ['supplier' => $supplier]);
+    }
+
+    public function postDisable(Request $request, $id)
+    {
+        $rules = [
+            'is_disabled' => 'required',
+        ];
+        $messages = [
+            'is_disabled.required' => 'Bạn phải chọn trạng thái.',
+        ];
+        $request->validate($rules,$messages);
+
+        $supplier = Supplier::findOrFail($id);
+        if('Khóa' == $request->is_disabled){
+            //$supplier->is_disabled = true;
+            $supplier->update(['is_disabled' => true]);
+        }else{
+            //$supplier->is_disabled = false;
+            $supplier->update(['is_disabled' => false]);
+        }
+        $supplier->save;
+
+        Alert::toast('Cập nhật thành công!', 'success', 'top-right');
+        return redirect()->route('admin.suppliers.index');
     }
 }

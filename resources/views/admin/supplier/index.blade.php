@@ -56,6 +56,7 @@
                     <th style="width:20%;">Tên nhà cung cấp</th>
                     <th style="width:20%;">Liên hệ</th>
                     <th>Hàng hóa</th>
+                    <th>Trạng thái</th>
                     <th style="width:12%;">Thao tác</th>
                   </tr>
                   </thead>
@@ -133,7 +134,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             /*
@@ -141,7 +142,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
 
             },
@@ -149,14 +150,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             */
@@ -164,14 +165,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3,4]
+                    columns: [0,1,2,3,4,5]
                 }
             }
         ],
@@ -183,6 +184,7 @@
             {data: 'name', name: 'name'},
             {data: 'users', name: 'users'},
             {data: 'materials', name: 'materials'},
+            {data: 'is_disabled', name: 'is_disabled'},
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#suppliers-table_wrapper .col-md-6:eq(0)');

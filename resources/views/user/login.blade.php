@@ -55,6 +55,16 @@
         @enderror
       </form>
 
+        <!-- Display the error message -->
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
       <p class="mb-1">
         <a href="{{route('user.forgot.password.get')}}">Tôi quên mật khẩu</a>
       </p>
