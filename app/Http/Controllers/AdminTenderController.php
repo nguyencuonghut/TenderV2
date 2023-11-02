@@ -366,6 +366,16 @@ class AdminTenderController extends Controller
     {
         if(Auth::user()->can('change-status')){
             $tender = Tender::findOrFail($id);
+
+            if('Mở' != $tender->status){
+                Alert::toast('Tender chỉ cho phép kiểm tra ở trạng thái Mở!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+            if(Carbon::now()->addMinutes(15)->greaterThan($tender->tender_in_progress_time)){
+                Alert::toast('Thời gian kiểm tra phải trước 15p so với thời gian bắt đầu!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+
             $supplier_selected_statuses = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->get();
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
 
@@ -401,63 +411,49 @@ class AdminTenderController extends Controller
     {
         if(Auth::user()->can('change-status')){
             $rules = [
-                'status' => 'required',
                 'supplier_ids' => 'required',
             ];
             $messages = [
-                'status.required' => 'Bạn phải chọn trạng thái.',
                 'supplier_ids.required' => 'Bạn phải chọn nhà thầu',
             ];
             $request->validate($rules,$messages);
 
             $tender = Tender::findOrFail($id);
-            //Check status is updated or not
-            if($request->status == $tender->status) {
-                Alert::toast('Trạng thái không có gì thay đổi. Bạn vui lòng kiểm tra lại!', 'warning', 'top-right');
-                return redirect()->back();
-            }
-            $tender->status = $request->status;
             $tender->checker_id = Auth::user()->id;
             if(null != $request->is_competitive_bids){
                 $tender->is_competitive_bids = true;
             }
 
             //Send notification email to suppliers and some admins
-            if('Đang diễn ra' == $request->status) {
-                //Get the user's mail list
-                $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
-                $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
-                foreach($users as $user)  {
-                    //Notify now
-                    Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
-                    //Send reminder to customers 15 minutes before the Tender ends
-                    $end_time = Carbon::parse($tender->tender_end_time);
-                    $delay = $end_time->addMinutes(-15);
-                    Notification::route('mail' , $user->email)->notify((new ReminderTenderInProgress($tender->id))->delay($delay));
-                }
-
-                //Send mail to Trưởng phòng Thu Mua
-                $admins = Admin::all();
-                foreach($admins as $admin) {
-                    if('Trưởng phòng Thu Mua' == $admin->role->name){
-                        Notification::route('mail' , $admin->email)->notify(new TenderInProgress($tender->id));
-                    }
-                }
-
-
-                //Update the in-progress time
-                $tender->tender_in_progress_time = Carbon::now();
-                //Save the tender
-                $tender->save();
-
-                Alert::toast('Tender chuyển sang trạng thái Đang Diễn Ra. Bắt đầu đấu thầu!', 'success', 'top-right');
-                return redirect()->route('admin.tenders.index');
-            }else{
-                Alert::toast('Không cho phép chuyển về trạng thái khác!', 'error', 'top-right');
-                return redirect()->route('admin.tenders.index');
+            //Get the user's mail list
+            $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
+            $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
+            foreach($users as $user)  {
+                //Notify now
+                Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
+                //Send reminder to customers 15 minutes before the Tender In Progress
+                $tender_in_progress_time = Carbon::parse($tender->tender_in_progress_time);
+                $delay = $tender_in_progress_time->addMinutes(-15);
+                Notification::route('mail' , $user->email)->notify((new ReminderTenderInProgress($tender->id))->delay($delay));
             }
+
+            //Send mail to Trưởng phòng Thu Mua
+            $admins = Admin::all();
+            foreach($admins as $admin) {
+                if('Trưởng phòng Thu Mua' == $admin->role->name){
+                    Notification::route('mail' , $admin->email)->notify(new TenderInProgress($tender->id));
+                }
+            }
+
+            $tender->is_checked = true;
+            //Save the tender
+            $tender->save();
+            //Schedule task RunTenders will automatically change the status of tenders at tender_in_progress_time
+
+            Alert::toast('Tender được kiểm tra xong!', 'success', 'top-right');
+            return redirect()->route('admin.tenders.index');
         } else {
-            Alert::toast('Bạn không có quyền chuyển trạng thái tender!', 'error', 'top-right');
+            Alert::toast('Bạn không có quyền kiểm tra tender!', 'error', 'top-right');
             return redirect()->route('admin.tenders.index');
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\RunTenders;
 use App\Console\Commands\UpdateTenders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -14,6 +15,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        RunTenders::class,
         UpdateTenders::class,
     ];
 
@@ -26,6 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('tender:run')->everyMinute();
         $schedule->command('tender:update')->everyMinute();
     }
 
