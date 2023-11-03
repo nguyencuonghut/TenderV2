@@ -36,7 +36,13 @@ class AdminLoginController extends Controller
     public function handleLogin(Request $req)
     {
         if(Auth::guard('admin')->attempt(['email' => $req->email, 'password' => $req->password], true)) {
-            return redirect()->route('admin.home');
+            //Prevent disable Admins from logging
+            if(true == Auth::guard('admin')->user()->is_disabled){
+                Auth::logout();
+                return redirect('/admin/login')->withErrors('Tài khoản của bạn đã bị khóa!');
+            }else{
+                return redirect()->route('admin.home');
+            }
         }
 
         return back()->withErrors([

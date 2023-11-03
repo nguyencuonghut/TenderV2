@@ -180,7 +180,7 @@ class AdminAdminController extends Controller
 
     public function anyData()
     {
-        $admins = Admin::with('role')->select(['id', 'name', 'email', 'role_id'])->get();
+        $admins = Admin::with('role')->select(['id', 'name', 'email', 'role_id', 'is_disabled'])->get();
         return Datatables::of($admins)
             ->addIndexColumn()
             ->editColumn('name', function ($admins) {
@@ -192,15 +192,50 @@ class AdminAdminController extends Controller
             ->editColumn('role', function ($admins) {
                 return $admins->role->name;
             })
+            ->editColumn('is_disabled', function ($admins) {
+                if(true == $admins->is_disabled) {
+                    return '<span class="badge badge-secondary">Khóa</span>';
+                }else{
+                    return '<span class="badge badge-success">Mở</span>';
+                }
+            })
             ->addColumn('actions', function ($admins) {
-                $action = '<a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                $action = '<a href="' . route("admin.admins.disable", $admins->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>
+                           <a href="' . route("admin.admins.edit", $admins->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                            <form style="display:inline" action="'. route("admin.admins.destroy", $admins->id) . '" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
                     <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 return $action;
             })
-            ->rawColumns(['actions'])
+            ->rawColumns(['is_disabled', 'actions'])
             ->make(true);
+    }
+
+    public function disable($id)
+    {
+        $admin = Admin::findOrFail($id);
+        return view('admin.admin.disable', ['admin' => $admin]);
+    }
+
+    public function postDisable(Request $request, $id)
+    {
+        $rules = [
+            'is_disabled' => 'required',
+        ];
+        $messages = [
+            'is_disabled.required' => 'Bạn phải chọn trạng thái.',
+        ];
+        $request->validate($rules,$messages);
+
+        $admin = Admin::findOrFail($id);
+        if('Khóa' == $request->is_disabled){
+            $admin->update(['is_disabled' => true]);
+        }else{
+            $admin->update(['is_disabled' => false]);
+        }
+
+        Alert::toast('Cập nhật thành công!', 'success', 'top-right');
+        return redirect()->route('admin.admins.index');
     }
 }
