@@ -197,6 +197,12 @@ class AdminTenderController extends Controller
     {
         if(Auth::user()->can('edit-tender')){
             $tender = Tender::findOrFail($id);
+            //Prevent to edit if tender is checked already
+            if(true == $tender->is_checked){
+                Alert::toast('Tender đã duyệt nên không thể sửa!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
+
             $materials = Material::all()->pluck('name', 'id');
             if($tender->status == 'Mở'){
                 return view('admin.tender.edit', ['tender' => $tender,
