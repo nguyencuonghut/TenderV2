@@ -306,7 +306,7 @@ class AdminTenderController extends Controller
 
     public function anyData()
     {
-        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_in_progress_time', 'tender_end_time', 'creator_id', 'status', 'close_reason'])->get();
+        $tenders = Tender::with('creator')->orderBy('id', 'desc')->select(['id', 'title', 'tender_in_progress_time', 'tender_end_time', 'creator_id', 'is_checked', 'status', 'close_reason'])->get();
         return Datatables::of($tenders)
             ->addIndexColumn()
             ->editColumn('titlelink', function ($tenders) {
@@ -314,7 +314,11 @@ class AdminTenderController extends Controller
             })
             ->editColumn('status', function ($tenders) {
                 if($tenders->status == 'Mở') {
-                    return '<span class="badge badge-primary">Mở</span>';
+                    if(true == $tenders->is_checked){
+                        return '<span class="badge badge-primary">Mở - Đã duyệt</span>';
+                    }else{
+                        return '<span class="badge badge-primary">Mở - Chưa duyệt</span>';
+                    }
 
                 } else if($tenders->status == 'Đóng'
                         && NULL == $tenders->close_reason){
@@ -365,6 +369,10 @@ class AdminTenderController extends Controller
     {
         if(Auth::user()->can('change-status')){
             $tender = Tender::findOrFail($id);
+            if(true == $tender->is_checked){
+                Alert::toast('Tender đã được duyệt rồi!', 'error', 'top-right');
+                return redirect()->route('admin.tenders.index');
+            }
 
             if('Mở' != $tender->status){
                 Alert::toast('Tender chỉ cho phép kiểm tra ở trạng thái Mở!', 'error', 'top-right');
