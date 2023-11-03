@@ -148,8 +148,7 @@ class AdminTenderController extends Controller
             array_push($bided_supplier_ids, $user->supplier_id);
         }
 
-        if(Carbon::now()->greaterThan($tender->tender_end_time)
-            || $tender->status != 'Đang diễn ra') {
+        if($tender->status != 'Đang diễn ra') {
             $bids = Bid::with('user')->where('tender_id', $tender->id)->orderBy('quantity_id', 'asc')->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
             $selected_bided_supplier_ids = [];
@@ -551,7 +550,7 @@ class AdminTenderController extends Controller
         $tender = $request->session()->get('tender');
         $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
         $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        $suppliers = Supplier::where('is_disabled', false)->whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
 
         //TODO: need to be considered again???
         if(!$suppliers->count()) {
@@ -577,7 +576,7 @@ class AdminTenderController extends Controller
         //Store the selected status of suppliers
         $material_ids = QuantityAndDeliveryTime::where('tender_id', $tender->id)->pluck('material_id')->toArray();
         $supplier_ids = MaterialSupplier::whereIn('material_id', $material_ids)->pluck('supplier_id')->toArray();
-        $suppliers = Supplier::whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
+        $suppliers = Supplier::where('is_disabled', false)->whereIn('id', $supplier_ids)->orderBy('id', 'asc')->get();
         //dd($suppliers);
         foreach($suppliers as $key => $value){
             //Check if supplier has any user
