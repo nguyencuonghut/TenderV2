@@ -338,13 +338,10 @@ class AdminSupplierController extends Controller
 
         $supplier = Supplier::findOrFail($id);
         if('Khóa' == $request->is_disabled){
-            //$supplier->is_disabled = true;
             $supplier->update(['is_disabled' => true]);
         }else{
-            //$supplier->is_disabled = false;
             $supplier->update(['is_disabled' => false]);
         }
-        $supplier->save;
 
         Alert::toast('Cập nhật thành công!', 'success', 'top-right');
         return redirect()->route('admin.suppliers.index');

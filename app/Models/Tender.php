@@ -25,6 +25,7 @@ class Tender extends Model
         'creator_id',
         'status',
         'checker_id',
+        'is_checked',
         'tender_in_progress_time',
         'tender_closed_time',
         'is_competitive_bids',
