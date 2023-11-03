@@ -46,7 +46,9 @@ class TenderCreated extends Notification
         $tender = Tender::findOrFail($this->tender_id);
         return (new MailMessage)
                     ->subject('Yêu cầu duyệt tender: ' . $tender->title)
-                    ->line('Xin mời duyệt thư chào thầu: ' . $tender->title)
+                    ->line('Xin mời duyệt thư chào thầu: ' . $tender->title . '.' . '\n')
+                    ->line('- Thời gian bắt đầu: ' . $tender->tender_in_progress_time . '.' . '\n')
+                    ->line('- Thời gian kết thúc: ' . $tender->tender_in_progress_time . '.')
                     ->action('Duyệt thư mời thầu', url($url))
                     ->line('Xin cảm ơn!');
     }
