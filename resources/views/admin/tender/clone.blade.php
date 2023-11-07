@@ -166,8 +166,8 @@
         //Date picker with time picker
         $('#tender_time_range').daterangepicker({
             timePicker: true,
-            startDate: moment().startOf('hour'),
-            endDate: moment().startOf('hour').add(30, 'minute'),
+            startDate: moment().startOf('hour').add(2, 'hour'),
+            endDate: moment().startOf('hour').add(2, 'hour').add(30, 'minute'),
             locale: {
                 format: 'Y/M/D H:mm'
             },
