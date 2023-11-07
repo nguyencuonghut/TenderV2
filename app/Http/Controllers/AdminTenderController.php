@@ -967,13 +967,13 @@ class AdminTenderController extends Controller
                 'title' => 'required',
                 'delivery_condition' => 'required',
                 'payment_condition' => 'required',
-                'tender_end_time' => 'required',
+                'tender_time_range' => 'required',
             ];
             $messages = [
                 'title.required' => 'Bạn phải nhập tiêu đề.',
                 'delivery_condition.required' => 'Bạn phải nhập điều kiện giao hàng.',
                 'payment_condition.required' => 'Bạn phải nhập điều kiện thanh toán.',
-                'tender_end_time.required' => 'Bạn phải nhập thời gian đóng thầu.',
+                'tender_time_range.required' => 'Bạn phải nhập thời gian thầu.',
             ];
             $request->validate($rules,$messages);
 
@@ -995,6 +995,11 @@ class AdminTenderController extends Controller
                 $tender_id = $last_tender->id + 1;
             }
 
+            //Parse date range
+            $dates = explode(' - ', $request->tender_time_range);
+            $tender_start_time = Carbon::parse($dates[0]);
+            $tender_end_time = Carbon::parse($dates[1]);
+
             // Create new tender
             $tender = new Tender();
             $tender->code = 'NL' . '/' . $tender_id . '/' . Carbon::now()->month . '/' . Carbon::now()->year;
@@ -1008,7 +1013,8 @@ class AdminTenderController extends Controller
             $tender->freight_charge = $request->freight_charge;
             $tender->creator_id = Auth::user()->id;
             $tender->status = 'Mở';
-            $tender->tender_end_time = Carbon::parse($request->tender_end_time);
+            $tender->tender_in_progress_time = $tender_start_time;
+            $tender->tender_end_time = $tender_end_time;
             $tender->save();
 
             $request->session()->put('tender', $tender);
