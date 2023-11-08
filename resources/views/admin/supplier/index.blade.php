@@ -57,7 +57,9 @@
                     <th style="width:20%;">Liên hệ</th>
                     <th>Hàng hóa</th>
                     <th>Trạng thái</th>
+                    @canany(['disable-supplier', 'edit-supplier', 'destroy-supplier'])
                     <th style="width:12%;">Thao tác</th>
+                    @endcanany
                   </tr>
                   </thead>
                 </table>
@@ -185,7 +187,9 @@
             {data: 'users', name: 'users'},
             {data: 'materials', name: 'materials'},
             {data: 'is_disabled', name: 'is_disabled'},
+            @canany(['disable-supplier', 'edit-supplier', 'destroy-supplier'])
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
+            @endcanany
        ]
       }).buttons().container().appendTo('#suppliers-table_wrapper .col-md-6:eq(0)');
     });

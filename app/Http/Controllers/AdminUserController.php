@@ -204,12 +204,19 @@ class AdminUserController extends Controller
                 }
             })
             ->addColumn('actions', function ($users) {
-                $action = '<a href="' . route("admin.users.disable", $users->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>
-                           <a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                           <form style="display:inline" action="'. route("admin.users.destroy", $users->id) . '" method="POST">
+                $action = '';
+                if(Auth::user()->can('disable-user')) {
+                    $action .= '<a href="' . route("admin.users.disable", $users->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>';
+                }
+                if(Auth::user()->can('edit-user')) {
+                    $action .= '<a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
+                }
+                if(Auth::user()->can('destroy-user')) {
+                    $action .= '<form style="display:inline" action="'. route("admin.users.destroy", $users->id) . '" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
                     <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                }
                 return $action;
             })
             ->rawColumns(['is_disabled', 'actions'])

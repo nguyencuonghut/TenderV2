@@ -50,7 +50,9 @@
                     <th>Email</th>
                     <th>Chức vụ</th>
                     <th>Trạng thái</th>
+                    @canany(['disable-admin', 'edit-admin', 'destroy-admin'])
                     <th style="width: 12%;">Thao tác</th>
+                    @endcanany
                   </tr>
                   </thead>
                 </table>
@@ -148,7 +150,9 @@
             {data: 'email', name: 'email'},
             {data: 'role', name: 'role'},
             {data: 'is_disabled', name: 'is_disabled'},
+            @canany(['disable-admin', 'edit-admin', 'destroy-admin'])
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
+            @endcanany
        ]
       }).buttons().container().appendTo('#admins-table_wrapper .col-md-6:eq(0)');
     });

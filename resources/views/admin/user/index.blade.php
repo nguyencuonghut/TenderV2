@@ -56,7 +56,9 @@
                     <th>Email</th>
                     <th>Công ty</th>
                     <th>Trạng thái</th>
+                    @canany(['disable-user', 'edit-user', 'destroy-user'])
                     <th style="width: 12%;">Thao tác</th>
+                    @endcanany
                   </tr>
                   </thead>
                 </table>
@@ -183,7 +185,9 @@
             {data: 'email', name: 'email'},
             {data: 'supplier_id', name: 'supplier_id'},
             {data: 'is_disabled', name: 'is_disabled'},
+            @canany(['disable-user', 'edit-user', 'destroy-user'])
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
+            @endcanany
        ]
       }).buttons().container().appendTo('#users-table_wrapper .col-md-6:eq(0)');
     });
