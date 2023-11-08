@@ -184,7 +184,7 @@ class AdminUserController extends Controller
 
     public function anyData()
     {
-        $users = User::with('supplier')->select(['id', 'name', 'email', 'supplier_id'])->get();
+        $users = User::with('supplier')->select(['id', 'name', 'email', 'supplier_id', 'is_disabled'])->get();
         return Datatables::of($users)
             ->addIndexColumn()
             ->editColumn('name', function ($users) {
@@ -196,15 +196,23 @@ class AdminUserController extends Controller
             ->editColumn('supplier_id', function ($users) {
                 return $users->supplier->name;
             })
+            ->editColumn('is_disabled', function ($users) {
+                if(true == $users->is_disabled) {
+                    return '<span class="badge badge-secondary">Khóa</span>';
+                }else{
+                    return '<span class="badge badge-success">Mở</span>';
+                }
+            })
             ->addColumn('actions', function ($users) {
-                $action = '<a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                $action = '<a href="' . route("admin.users.disable", $users->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>
+                           <a href="' . route("admin.users.edit", $users->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                            <form style="display:inline" action="'. route("admin.users.destroy", $users->id) . '" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
                     <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
                 return $action;
             })
-            ->rawColumns(['actions'])
+            ->rawColumns(['is_disabled', 'actions'])
             ->make(true);
     }
 
@@ -225,5 +233,32 @@ class AdminUserController extends Controller
             Alert::toast('Có lỗi xảy ra trong quá trình import dữ liệu. Vui lòng kiểm tra lại file!', 'error', 'top-right');
             return redirect()->back();
         }
+    }
+
+    public function disable($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.user.disable', ['user' => $user]);
+    }
+
+    public function postDisable(Request $request, $id)
+    {
+        $rules = [
+            'is_disabled' => 'required',
+        ];
+        $messages = [
+            'is_disabled.required' => 'Bạn phải chọn trạng thái.',
+        ];
+        $request->validate($rules,$messages);
+
+        $user = User::findOrFail($id);
+        if('Khóa' == $request->is_disabled){
+            $user->update(['is_disabled' => true]);
+        }else{
+            $user->update(['is_disabled' => false]);
+        }
+
+        Alert::toast('Cập nhật thành công!', 'success', 'top-right');
+        return redirect()->route('admin.users.index');
     }
 }

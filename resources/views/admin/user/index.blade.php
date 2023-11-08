@@ -55,6 +55,7 @@
                     <th>Họ tên</th>
                     <th>Email</th>
                     <th>Công ty</th>
+                    <th>Trạng thái</th>
                     <th style="width: 12%;">Thao tác</th>
                   </tr>
                   </thead>
@@ -132,7 +133,7 @@
                 extend: 'copy',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             /*
@@ -140,7 +141,7 @@
                 extend: 'csv',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
 
             },
@@ -148,14 +149,14 @@
                 extend: 'excel',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'pdf',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             */
@@ -163,14 +164,14 @@
                 extend: 'print',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             },
             {
                 extend: 'colvis',
                 footer: true,
                 exportOptions: {
-                    columns: [0,1,2,3]
+                    columns: [0,1,2,3,4]
                 }
             }
         ],
@@ -181,6 +182,7 @@
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
             {data: 'supplier_id', name: 'supplier_id'},
+            {data: 'is_disabled', name: 'is_disabled'},
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
        ]
       }).buttons().container().appendTo('#users-table_wrapper .col-md-6:eq(0)');
