@@ -55,7 +55,9 @@
                     <th>Mã</th>
                     <th style="width: 13%;">Hàng hóa</th>
                     <th>Tiêu chuẩn chất lượng</th>
+                    @canany(['edit-material', 'destroy-material'])
                     <th style="width: 12%;">Thao tác</th>
+                    @endcanany
                   </tr>
                   </thead>
                 </table>
@@ -181,7 +183,9 @@
             {data: 'code', name: 'code'},
             {data: 'name', name: 'name'},
             {data: 'quality', name: 'quality'},
+            @canany(['edit-material', 'destroy-material'])
             {data: 'actions', name: 'actions', orderable: false, searchable: false},
+            @endcanany
        ]
       }).buttons().container().appendTo('#materials-table_wrapper .col-md-6:eq(0)');
     });

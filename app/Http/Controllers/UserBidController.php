@@ -156,7 +156,7 @@ class UserBidController extends Controller
             //Send notification to email
             if($tender->is_competitive_bids){
                 $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
-                $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->get();
+                $users = User::where('id', '!=', Auth::user()->id)->whereIn('supplier_id', $selected_supplier_ids)->where('is_disabled', false)->get();
                 foreach($users as $user)  {
                     Notification::route('mail' , $user->email)->notify(new BidCreatedOrUpdated($tender->id));
                 }

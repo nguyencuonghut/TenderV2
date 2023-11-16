@@ -440,7 +440,7 @@ class AdminTenderController extends Controller
             //Send notification email to suppliers and some admins
             //Get the user's mail list
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
-            $users = User::whereIn('supplier_id', $selected_supplier_ids)->get();
+            $users = User::whereIn('supplier_id', $selected_supplier_ids)->where('is_disabled', false)->get();
             foreach($users as $user)  {
                 //Notify now
                 Notification::route('mail' , $user->email)->notify(new TenderInProgress($tender->id));
@@ -451,7 +451,7 @@ class AdminTenderController extends Controller
             }
 
             //Send mail to Trưởng phòng Thu Mua
-            $admins = Admin::all();
+            $admins = Admin::where('is_disabled', false)->get();
             foreach($admins as $admin) {
                 if('Trưởng phòng Thu Mua' == $admin->role->name){
                     Notification::route('mail' , $admin->email)->notify(new TenderInProgress($tender->id));

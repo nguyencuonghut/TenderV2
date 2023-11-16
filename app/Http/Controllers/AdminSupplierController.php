@@ -240,12 +240,19 @@ class AdminSupplierController extends Controller
                 }
             })
             ->addColumn('actions', function($suppliers) {
-                $action = '<a href="' . route("admin.suppliers.disable", $suppliers->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>
-                           <a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                           <form style="display:inline" action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
-                           <input type="hidden" name="_method" value="DELETE">
-                           <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
-                           <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                $action = '';
+                if(Auth::user()->can('disable-supplier')) {
+                    $action .= '<a href="' . route("admin.suppliers.disable", $suppliers->id) . '" class="btn btn-secondary btn-sm"><i class="fas fa-random"></i></a>';
+                }
+                if(Auth::user()->can('edit-supplier')) {
+                    $action .= '<a href="' . route("admin.suppliers.edit", $suppliers->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
+                }
+                if(Auth::user()->can('destroy-supplier')) {
+                    $action .= '<form style="display:inline" action="'. route("admin.suppliers.destroy", $suppliers->id) . '" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" name="submit" onclick="return confirm(\'Bạn có muốn xóa?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                                <input type="hidden" name="_token" value="' . csrf_token(). '"></form>';
+                }
                 return $action;
 
             })
@@ -322,8 +329,13 @@ class AdminSupplierController extends Controller
 
     public function disable($id)
     {
-        $supplier = Supplier::findOrFail($id);
-        return view('admin.supplier.disable', ['supplier' => $supplier]);
+        if(Auth::user()->can('disable-supplier')) {
+            $supplier = Supplier::findOrFail($id);
+            return view('admin.supplier.disable', ['supplier' => $supplier]);
+        }else{
+            Alert::toast('Bạn không có quyền khóa NCC!', 'error', 'top-right');
+            return redirect()->route('admin.suppliers.index');
+        }
     }
 
     public function postDisable(Request $request, $id)

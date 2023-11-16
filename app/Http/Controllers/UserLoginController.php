@@ -35,7 +35,8 @@ class UserLoginController extends Controller
     {
         if(Auth::guard('web')->attempt(['email' => $req->email, 'password' => $req->password], true)) {
             //Prevent disable Suppliers from logging
-            if(true == Auth::user()->supplier->is_disabled){
+            if(true == Auth::user()->supplier->is_disabled
+            || true == Auth::user()->is_disabled){
                 Auth::logout();
                 return redirect('/login')->withErrors('Tài khoản của bạn đã bị khóa!');
             }else{
