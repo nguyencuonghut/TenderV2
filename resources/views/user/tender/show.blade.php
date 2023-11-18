@@ -12,8 +12,15 @@
           <div class="col-sm-8">
             <h1 class="m-0">{{ $tender->title }}</h1>
             @if(Carbon\Carbon::now()->lessThan($tender->tender_end_time)
+                && Carbon\Carbon::now()->greaterThan($tender->tender_in_progress_time)
                 && 'Đóng' != $tender->status)
             <div class="wrap-countdown mercado-countdown" data-expire="{{ Carbon\Carbon::parse($tender->tender_end_time)->format('Y/m/d H:i:s') }}"></div>
+            @endif
+
+            @if(Carbon\Carbon::now()->lessThan($tender->tender_in_progress_time)
+                && 'Mở' == $tender->status
+                && true == $tender->is_checked)
+            <div class="wrap-countdown start-to-bid-countdown" data-expire="{{ Carbon\Carbon::parse($tender->tender_in_progress_time)->format('Y/m/d H:i:s') }}"></div>
             @endif
 
           </div><!-- /.col -->
@@ -38,9 +45,11 @@
                           <li class="nav-item">
                             <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Chi tiết</a>
                           </li>
+                          @if('Mở' != $tender->status)
                           <li class="nav-item">
                             <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chào hàng</a>
                           </li>
+                          @endif
                           @if($selected_bids->count()
                                 && $tender->status == 'Đóng')
                           <li class="nav-item">
@@ -436,28 +445,52 @@
 @push('scripts')
 <script src="{{ asset('plugins/jquery-countdown-timer/jquery.countdown.min.js') }}"></script>
 <script>
-   ;(function($) {
+    ;(function($) {
 
-    var MERCADO_JS = {
-        init: function(){
-            this.mercado_countdown();
-        },
-    mercado_countdown: function() {
-        if($(".mercado-countdown").length > 0){
-            $(".mercado-countdown").each( function(index, el){
-                var _this = $(this),
-                _expire = _this.data('expire');
-                _this.countdown(_expire, function(event) {
-                    $(this).html( event.strftime('<span><i style="color:red" class="fas fa-stopwatch"></i> <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây</span> | <span>Tối đa <b style="color:purple;">5</b> lần chào giá</span>'));
+        var MERCADO_JS = {
+            init: function(){
+                this.mercado_countdown();
+            },
+            mercado_countdown: function() {
+                if($(".mercado-countdown").length > 0){
+                    $(".mercado-countdown").each( function(index, el){
+                        var _this = $(this),
+                        _expire = _this.data('expire');
+                        _this.countdown(_expire, function(event) {
+                        $(this).html( event.strftime('<span><i style="color:red" class="fas fa-stopwatch"></i> <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây</span> | <span>Tối đa <b style="color:purple;">5</b> lần chào giá</span>'));
+                    });
                 });
-            });
-        }
-      },
-
-   }
+            }
+        },
+    }
 
     window.onload = function () {
         MERCADO_JS.init();
+    }
+
+    })(window.Zepto || window.jQuery, window, document);
+
+    ;(function($) {
+
+    var MERCADO_JS = {
+        init: function(){
+            this.start_to_bid_countdown();
+        },
+        start_to_bid_countdown: function() {
+            if($(".start-to-bid-countdown").length > 0){
+                $(".start-to-bid-countdown").each( function(index, el){
+                    var _this = $(this),
+                    _expire = _this.data('expire');
+                    _this.countdown(_expire, function(event) {
+                    $(this).html( event.strftime('<b style="color:orange;">Tender chưa đến hạn!</b> <br> <span><i style="color:red" class="fas fa-stopwatch"></i> Còn <b style="color:purple;">%D</b> Ngày</span> <span><b style="color:purple;">%-H</b> Giờ</span> <span><b style="color:purple;">%M</b> Phút</span> <span><b style="color:purple;">%S</b> Giây để bạn bắt đầu chào giá!</span>'));
+                });
+            });
+        }
+    },
+    }
+
+    window.onload = function () {
+    MERCADO_JS.init();
     }
 
     })(window.Zepto || window.jQuery, window, document);

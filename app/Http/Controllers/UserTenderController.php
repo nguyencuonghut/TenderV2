@@ -19,9 +19,12 @@ class UserTenderController extends Controller
         $tender = Tender::findOrFail($id);
         $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
         $users = User::whereIn('supplier_id', $selected_supplier_ids)->pluck('id')->toArray();
-        if('Mở' !=  $tender->status
-            && in_array(Auth::user()->id, $users)) {
-
+        if( in_array(Auth::user()->id, $users)) {
+            //Check condition to show the tender
+            if('Mở' == $tender->status && false == $tender->is_checked){
+                Alert::toast('Tender chưa được duyệt!', 'error', 'top-right');
+                return redirect()->route('user.tenders.index');
+            }
             $bids = Bid::where('tender_id', $tender->id)->where('user_id', Auth::user()->id)->get();
             $selected_bids = Bid::where('tender_id', $tender->id)->where('is_selected', true)->get();
             $quantity_and_delivery_times = QuantityAndDeliveryTime::where('tender_id', $tender->id)->orderBy('id', 'desc')->get();
@@ -56,7 +59,7 @@ class UserTenderController extends Controller
     public function anyData()
     {
         $user_tenders = collect();
-        $tenders = Tender::where('status', '<>', 'Mở')->orderBy('id', 'desc')->select(['id', 'title', 'tender_in_progress_time', 'tender_end_time', 'status', 'close_reason'])->get();
+        $tenders = Tender::where('is_checked', true)->orderBy('id', 'desc')->select(['id', 'title', 'tender_in_progress_time', 'tender_end_time', 'status', 'close_reason'])->get();
         foreach($tenders as $tender) {
             $selected_supplier_ids = TenderSuppliersSelectedStatus::where('tender_id', $tender->id)->where('is_selected', 1)->pluck('supplier_id')->toArray();
             if(in_array(Auth::user()->supplier_id, $selected_supplier_ids)) {

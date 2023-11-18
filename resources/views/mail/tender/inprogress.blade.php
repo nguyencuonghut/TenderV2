@@ -6,6 +6,8 @@ Xin mời quý nhà cung cấp chào thầu cho: {{$tender->title}}.
 - Thời gian bắt đầu: {{date('d/m/Y H:i', strtotime($tender->tender_in_progress_time))}}.
 <br>
 - Thời gian kết thúc: {{date('d/m/Y H:i', strtotime($tender->tender_end_time))}}.
+<br>
+Lưu ý: quý nhà cung cấp chỉ được chào thầu trong thời gian từ {{date('H:i', strtotime($tender->tender_in_progress_time))}} đến {{date('H:i', strtotime($tender->tender_end_time))}}.
 
 @component('mail::table',['quantity_and_delivery_times' => $quantity_and_delivery_times])
 | Tên hàng      | Số lượng      | Thời gian giao  |
